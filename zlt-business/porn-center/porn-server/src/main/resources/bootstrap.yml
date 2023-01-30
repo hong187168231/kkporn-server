@@ -1,0 +1,30 @@
+server:
+  port: 7300
+
+spring:
+  application:
+    name: porn-server
+  cloud:
+    nacos:
+      discovery:
+        namespace: ${zlt.naocs.server.namespace}
+#        metadata:
+#          version: zlt
+
+      config:
+        extension-configs:
+          - dataId: tip_zh.yml
+            group: language
+            refresh: true
+          - dataId: tip_en.yml
+            group: language
+            refresh: true
+          - dataId: tip_km.yml
+            group: language
+            refresh: true
+          - dataId: tip_th.yml
+            group: language
+            refresh: true
+          - dataId: tip_vi.yml
+            group: language
+            refresh: true
