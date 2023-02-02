@@ -30,8 +30,8 @@ public class SuperEntity<T extends Model<?>> extends Model<T> {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-//    private String updateBy;
-//    private String createBy;
+    private String createBy;
+    private String updateBy;
 
     @Override
     protected Serializable pkVal() {

@@ -1,5 +1,6 @@
 package com.central.gateway.filter;
 
+import com.central.common.constant.PornConstants;
 import com.central.log.properties.TraceProperties;
 import com.central.log.trace.MDCTraceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class TraceFilter implements GlobalFilter, Ordered {
                     .headers(h -> {
                         h.add(MDCTraceUtils.TRACE_ID_HEADER, MDCTraceUtils.getTraceId());
                         h.add(MDCTraceUtils.SPAN_ID_HEADER, MDCTraceUtils.getSpanId());
+                        h.add(PornConstants.Str.REHost, h.getFirst(PornConstants.Str.Host));
+                        h.add(PornConstants.Str.Referer, h.getFirst(PornConstants.Str.Referer));
                     })
                     .build();
 

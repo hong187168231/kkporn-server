@@ -1,6 +1,7 @@
 package com.central.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
+import com.central.common.constant.PornConstants;
 import eu.bitwalker.useragentutils.UserAgent;
 import com.central.gateway.utils.ReactiveAddrUtil;
 import com.central.log.monitor.PointUtil;
@@ -34,10 +35,10 @@ public class RequestStatisticsFilter implements GlobalFilter, Ordered {
         UserAgent userAgent = UserAgent.parseUserAgentString(headers.get("User-Agent"));
 
         String remoteAddr = ReactiveAddrUtil.getRemoteAddr(request);
-        log.info("remoteAddr: {}, requestPath:{}", remoteAddr,request.getPath());
+        log.info("remoteAddr: {}, requestPath:{}", remoteAddr, request.getPath());
 
         ServerHttpRequest.Builder builder = request.mutate();
-        builder.header("LoginIp", remoteAddr);
+        builder.header(PornConstants.Str.LOGINIP, remoteAddr);
 
         //埋点
         PointUtil.debug("1", "request-statistics",

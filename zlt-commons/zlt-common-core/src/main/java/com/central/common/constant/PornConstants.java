@@ -41,6 +41,10 @@ public final class PornConstants {
         public static final String SPACE = " ";
         public static final String ALL = "ALL";
         public static final String USERAGENT = "User-Agent";
+        public static final String LOGINIP = "LOGINIP";
+        public static final String REHost = "reHost";
+        public static final String Host = "Host";
+        public static final String Referer = "Referer";
         public static final String IPHONE = "iPhone";
         public static final String ANDROID = "Android";
         public static final String WINDOWS = "Windows";
