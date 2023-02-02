@@ -1,0 +1,28 @@
+package com.central.backend.service;
+
+
+import com.central.backend.co.KpnSiteAnnouncementCo;
+import com.central.backend.co.KpnSiteAnnouncementUpdateCo;
+import com.central.common.model.KpnSiteAnnouncement;
+import com.central.common.model.PageResult;
+import com.central.common.model.Result;
+import com.central.common.service.ISuperService;
+
+public interface IKpnSiteAnnouncementService extends ISuperService<KpnSiteAnnouncement> {
+
+    PageResult<KpnSiteAnnouncement> findNoticeList(KpnSiteAnnouncementCo params) ;
+
+
+    Result saveOrUpdateAnnouncement(KpnSiteAnnouncement sysNotice) throws Exception;
+
+
+
+    KpnSiteAnnouncement selectById(Long id) ;
+
+
+    boolean delAnnouncementId(Long id);
+
+    Result updateEnabled(KpnSiteAnnouncementUpdateCo params);
+
+
+}
