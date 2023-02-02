@@ -42,9 +42,10 @@ public final class PornConstants {
         public static final String ALL = "ALL";
         public static final String USERAGENT = "User-Agent";
         public static final String LOGINIP = "LOGINIP";
-        public static final String REHost = "reHost";
+        public static final String REHOST = "reHost";
+        public static final String SID = "sid";
         public static final String Host = "Host";
-        public static final String Referer = "Referer";
+        public static final String REFERER = "Referer";
         public static final String IPHONE = "iPhone";
         public static final String ANDROID = "Android";
         public static final String WINDOWS = "Windows";
@@ -68,26 +69,20 @@ public final class PornConstants {
 
     //redis
     public static final class RedisKey {
-        //缓存时间
+        //缓存时间 30天
         public static final Long EXPIRE_TIME_30_DAYS = 30 * 24 * 60 * 60L;
-        //缓存商户
-        public static final String MERCHANT_DETAIL_KEY = "LtyMerchantDetail:{}";
+        //缓存时间 30天
+        public static final Long EXPIRE_TIME_7_DAYS = 7 * 24 * 60 * 60L;
+        //缓存时间 1天
+        public static final Long EXPIRE_TIME_1_DAYS = 1 * 24 * 60 * 60L;
+        //缓存站点信息
+        public static final String SITE_INFO_KEY = "SITE:INFO:{}";
+        //缓存站点频道信息
+        public static final String SITE_CHANNEL_KEY = "SITE:CHANNEL:{}";
         //缓存后台管理员ip
         public static final String BACKEND_WHITELIST_KEY = "Whitelist";
-        // 城市
-        public static final String CITY_KEY = "CITY:{}";
-        // 盘口信息 HANDICAP:盘口名称
-        public static final String HANDICAP_KEY = "HANDICAP:{}";
-        // 城市,期号
-        public static final String LOTTERY_OPEN_RESULT = "CITY:ISSUE:{}-{}";
-        // 盘口设定明细
-        public static final String HANDICAP_SETTINGS_DEL_PREFIX = "HandicapSettings:{}:*";
-        // 盘口  HandicapSettings:10(handicap_id):2(section):2D(playType)
-        public static final String HANDICAP_SETTINGS = "HandicapSettings:{}:{}:{}";
         // 系统维护key
         public static final String SYS_PLATFORM_CONFIG = "SYS_PLATFORM_CONFIG";
-
-
     }
 
     //sql

@@ -1,7 +1,7 @@
 package com.central.oauth.handler;
 
 import cn.hutool.core.util.StrUtil;
-import com.central.common.model.CodeEnum;
+import com.central.common.model.enums.CodeEnum;
 import com.central.common.model.Result;
 import com.central.common.utils.JsonUtil;
 import com.central.oauth.service.ILogoutSuccessService;

@@ -1,11 +1,9 @@
 package com.central.oauth.service.impl;
 
-import com.central.common.constant.CommonConstant;
 import com.central.common.constant.SecurityConstants;
-import com.central.common.model.CodeEnum;
+import com.central.common.model.enums.CodeEnum;
 import com.central.common.model.LoginAppUser;
 import com.central.common.model.Result;
-import com.central.common.model.UserType;
 import com.central.common.redis.template.RedisRepository;
 import com.central.oauth.exception.CustomOAuth2Exception;
 import com.central.oauth.modle.CodeErrorAuthEnum;

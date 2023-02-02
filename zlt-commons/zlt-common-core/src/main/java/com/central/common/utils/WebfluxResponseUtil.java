@@ -2,7 +2,7 @@ package com.central.common.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import com.central.common.constant.I18nKeys;
-import com.central.common.model.CodeEnum;
+import com.central.common.model.enums.CodeEnum;
 import com.central.common.model.Result;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;

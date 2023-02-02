@@ -1,7 +1,6 @@
 package com.central.oauth.component;
 
 import com.central.common.model.LoginAppUser;
-import com.central.common.model.UserType;
 import com.central.common.utils.ServletUtil;
 import com.central.oauth.service.ProcessLoginInfoService;
 import com.central.oauth.utils.IpUtil;

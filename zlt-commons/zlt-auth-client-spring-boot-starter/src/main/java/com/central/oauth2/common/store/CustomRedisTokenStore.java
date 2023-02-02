@@ -1,8 +1,6 @@
 package com.central.oauth2.common.store;
 
 import com.central.common.constant.SecurityConstants;
-import com.central.common.model.SysUser;
-import com.central.common.model.UserType;
 import com.central.oauth2.common.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -25,7 +23,6 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

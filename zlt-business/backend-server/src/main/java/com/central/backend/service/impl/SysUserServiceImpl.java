@@ -1,21 +1,19 @@
 package com.central.backend.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.SysRoleUser;
 import com.central.backend.mapper.SysRoleMenuMapper;
 import com.central.backend.mapper.SysUserMapper;
 import com.central.backend.service.ISysRoleUserService;
 import com.central.backend.service.ISysUserService;
 import com.central.backend.util.PasswordUtil;
-import com.central.backend.util.TranslateConst;
 import com.central.backend.vo.SysUserInfoMoneyVo;
 import com.central.backend.vo.UserListInfoVo;
 import com.central.common.constant.CommonConstant;
 import com.central.common.lock.DistributedLock;
 import com.central.common.model.*;
+import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.backend.co.*;
 import lombok.extern.slf4j.Slf4j;
@@ -328,7 +326,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
         if (sysUser.getId() == null) {  // 新增加用户
             saveMark = true;
             if (StringUtils.isBlank(sysUser.getType())) {
-                sysUser.setType(UserType.BACKEND.name());
+                sysUser.setType(UserTypeEnum.BACKEND.name());
             }
             if (StringUtils.isBlank(sysUser.getPassword())) {
                 sysUser.setPassword(passwordEncoder.encode(CommonConstant.DEF_USER_PASSWORD));
@@ -351,7 +349,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
                 roleUserService.saveBatch(roleUsers);
             }
         }
-        if (saveMark && sysUser.getType().equals(UserType.APP.name()) && result) {
+        if (saveMark && sysUser.getType().equals(UserTypeEnum.APP.name()) && result) {
             //调用用户钱包接口
             /*SysUserMoney userMoney = new SysUserMoney();
             userMoney.setUserId(sysUser.getId());

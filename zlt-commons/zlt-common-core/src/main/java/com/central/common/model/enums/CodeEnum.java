@@ -1,4 +1,4 @@
-package com.central.common.model;
+package com.central.common.model.enums;
 
 /**
  * 消息错误码

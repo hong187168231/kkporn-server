@@ -2,10 +2,7 @@ package com.central.push.config;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.central.common.model.CodeEnum;
 import com.central.common.model.PushResult;
-import com.central.common.model.Result;
-import com.central.common.model.SysUser;
 import com.central.push.constant.SocketTypeConstant;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;

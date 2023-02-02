@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.constant.CommonConstant;
 import com.central.common.lock.DistributedLock;
 import com.central.common.model.*;
+import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.user.mapper.SysRoleMenuMapper;
 import com.central.user.mapper.SysUserMapper;
@@ -325,7 +326,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
         if (sysUser.getId() == null) {  // 新增加用户
             saveMark = true;
             if (StringUtils.isBlank(sysUser.getType())) {
-                sysUser.setType(UserType.BACKEND.name());
+                sysUser.setType(UserTypeEnum.BACKEND.name());
             }
             if (StringUtils.isBlank(sysUser.getPassword())) {
                 sysUser.setPassword(passwordEncoder.encode(CommonConstant.DEF_USER_PASSWORD));
@@ -348,7 +349,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
                 roleUserService.saveBatch(roleUsers);
             }
         }
-        if (saveMark && sysUser.getType().equals(UserType.APP.name()) && result) {
+        if (saveMark && sysUser.getType().equals(UserTypeEnum.APP.name()) && result) {
             //创建钱包
            /* SysUserMoney userMoney = new SysUserMoney();
             userMoney.setUserId(sysUser.getId());

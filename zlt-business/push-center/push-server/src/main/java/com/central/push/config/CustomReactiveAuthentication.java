@@ -1,6 +1,6 @@
 package com.central.push.config;
 
-import com.central.common.model.CodeEnum;
+import com.central.common.model.enums.CodeEnum;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.push.feign.UaaService;

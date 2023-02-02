@@ -1,4 +1,4 @@
-package com.central.common.model;
+package com.central.common.model.enums;
 
 /**
  * 正则表达式汇总

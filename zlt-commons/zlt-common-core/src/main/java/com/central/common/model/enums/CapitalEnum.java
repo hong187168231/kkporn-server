@@ -1,4 +1,4 @@
-package com.central.common.model;
+package com.central.common.model.enums;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;

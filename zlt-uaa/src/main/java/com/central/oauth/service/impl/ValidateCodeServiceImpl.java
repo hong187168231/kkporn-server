@@ -7,7 +7,7 @@ import com.central.common.constant.SecurityConstants;
 import com.central.common.model.LoginAppUser;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
-import com.central.common.model.UserType;
+import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.utils.GoogleAuthUtil;
 import com.central.oauth.exception.CustomOAuth2Exception;
@@ -15,7 +15,6 @@ import com.central.oauth.modle.CodeErrorAuthEnum;
 import com.central.oauth.service.IValidateCodeService;
 import com.central.user.feign.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -166,7 +165,7 @@ public class ValidateCodeServiceImpl implements IValidateCodeService {
         }
         LoginAppUser loginAppUser = userService.findByUsername(username);
         // TODO 通过类型来判断用户的处理方式是错误的
-        if (loginAppUser == null || !UserType.APP.name().equals(loginAppUser.getType())) {
+        if (loginAppUser == null || !UserTypeEnum.APP.name().equals(loginAppUser.getType())) {
             throw new CustomOAuth2Exception(CodeErrorAuthEnum.ERROR_AUTH_USERNAME_PASSWORD.getCode(), "用户名或密码错误");
         }
     }

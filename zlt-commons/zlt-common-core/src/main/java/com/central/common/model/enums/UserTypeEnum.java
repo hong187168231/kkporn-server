@@ -1,10 +1,10 @@
-package com.central.common.model;
+package com.central.common.model.enums;
 
 
 /**
  * 用户类型
  */
-public enum UserType {
+public enum UserTypeEnum {
 
 	/**
 	 * 前端app用户

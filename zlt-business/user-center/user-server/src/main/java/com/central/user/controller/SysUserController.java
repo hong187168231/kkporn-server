@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.central.common.annotation.LoginUser;
 import com.central.common.constant.CommonConstant;
 import com.central.common.model.*;
+import com.central.common.model.enums.RegexEnum;
 import com.central.common.utils.GoogleAuthUtil;
 import com.central.common.utils.PwdEncoderUtil;
 import com.central.user.model.co.GaBindCo;

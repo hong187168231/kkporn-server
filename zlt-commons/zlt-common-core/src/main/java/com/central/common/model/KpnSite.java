@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @TableName("kpn_site")
-@ApiModel("下载站")
+@ApiModel("站点信息")
 public class KpnSite extends SuperEntity{
 
     @ApiModelProperty(value = "站点编码")
@@ -33,11 +33,11 @@ public class KpnSite extends SuperEntity{
     private Boolean repairStatus;
 
     @ApiModelProperty(value = "币种编码")
-    private Boolean currency_code;
+    private String currencyCode;
 
     @ApiModelProperty(value = "会员数")
-    private Boolean memberNum;
+    private Long memberNum;
 
     @ApiModelProperty(value = "VIP数")
-    private Boolean vipNum;
+    private Long vipNum;
 }

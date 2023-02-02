@@ -12,4 +12,11 @@ public interface IKpnSiteService extends ISuperService<KpnSite> {
      * @return
      */
     KpnSite getInfoByReferer(String referer);
+
+    /**
+     * 根据id查询
+     * @param id
+     * @return
+     */
+    KpnSite getInfoById(Long id);
 }
