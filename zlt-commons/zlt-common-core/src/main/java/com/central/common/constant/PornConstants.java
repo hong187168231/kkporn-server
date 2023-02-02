@@ -79,6 +79,10 @@ public final class PornConstants {
         public static final String SITE_INFO_KEY = "SITE:INFO:{}";
         //缓存站点频道信息
         public static final String SITE_CHANNEL_KEY = "SITE:CHANNEL:{}";
+        //缓存站点广告信息
+        public static final String SITE_ADVERTISE_KEY = "SITE:AD:{}";
+        //缓存站点专题信息
+        public static final String SITE_TOPIC_KEY = "SITE:TOPIC:{}";
         //缓存后台管理员ip
         public static final String BACKEND_WHITELIST_KEY = "Whitelist";
         // 系统维护key

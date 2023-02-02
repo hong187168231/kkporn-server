@@ -1,6 +1,5 @@
 package com.central.porn.entity.vo;
 
-import com.central.common.model.KpnSiteChannel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,4 +22,7 @@ public class KpnSiteVo implements Serializable {
 
     @ApiModelProperty("站点频道")
     private List<KpnSiteChannelVo> channels;
+
+    @ApiModelProperty("站点专题")
+    private List<KpnSiteTopicVo> topics;
 }

@@ -19,12 +19,12 @@ import java.util.List;
 public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMapper, KpnSiteChannel> implements IKpnSiteChannelService {
 
     @Override
-    public List<KpnSiteChannel> getBySiteId(Long siteId) {
-        String channelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_CHANNEL_KEY, siteId);
+    public List<KpnSiteChannel> getBySiteId(Long sid) {
+        String channelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_CHANNEL_KEY, sid);
         List<KpnSiteChannel> siteChannels = (List<KpnSiteChannel>) RedisRepository.get(channelRedisKey);
         if (CollectionUtil.isEmpty(siteChannels)) {
             siteChannels = this.lambdaQuery()
-                    .eq(KpnSiteChannel::getSiteId, siteId)
+                    .eq(KpnSiteChannel::getSiteId, sid)
                     .or()
                     .eq(KpnSiteChannel::getIsStable, true)
                     .orderByDesc(KpnSiteChannel::getIsStable)

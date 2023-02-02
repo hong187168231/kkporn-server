@@ -5,15 +5,13 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
-import com.central.common.model.KpnSite;
-import com.central.common.model.KpnSiteChannel;
-import com.central.common.model.Result;
+import com.central.common.model.*;
 import com.central.common.utils.I18nUtil;
-import com.central.porn.entity.vo.FullSourceVo;
-import com.central.porn.entity.vo.KpnSiteChannelVo;
-import com.central.porn.entity.vo.KpnSiteVo;
+import com.central.porn.entity.vo.*;
+import com.central.porn.service.IKpnSiteAdvertiseService;
 import com.central.porn.service.IKpnSiteChannelService;
 import com.central.porn.service.IKpnSiteService;
+import com.central.porn.service.IKpnSiteTopicService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * API
@@ -39,6 +40,12 @@ public class PornController {
     @Autowired
     private IKpnSiteChannelService siteChannelService;
 
+    @Autowired
+    private IKpnSiteTopicService siteTopicService;
+
+    @Autowired
+    private IKpnSiteAdvertiseService siteAdvertiseService;
+
     /**
      * 获取站点信息
      *
@@ -47,62 +54,80 @@ public class PornController {
      */
     @GetMapping("/info")
     @ApiOperation(value = "获取站点信息")
-    public Result<KpnSiteVo> get(HttpServletRequest request) {
-        String referer = request.getHeader(PornConstants.Str.REFERER);
-        String host = request.getHeader(PornConstants.Str.REHOST);
-        String sid = request.getHeader(PornConstants.Str.SID);
-        log.info("sid: {},referer: {},host: {}", sid, referer, host);
-
-        KpnSite site = null;
-        if (StrUtil.isBlank(sid)) {
-            site = siteService.getInfoByReferer(referer);
-            if (ObjectUtil.isEmpty(site)) {
-                site = siteService.getInfoByReferer(host);
-            }
-        } else {
-            site = siteService.getInfoById(Long.parseLong(sid));
-        }
-
-        // TODO 异常统一处理
-        if(ObjectUtil.isEmpty(site)){
-            throw new RuntimeException("站点不存在");
-        }
-
-        //频道
-        List<KpnSiteChannel> channelList = siteChannelService.getBySiteId(site.getId());
-        List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
-            KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
-            BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
-            return kpnSiteChannelVo;
-        }).collect(Collectors.toList());
-
-        //专题
-
-        //站点信息
-        KpnSiteVo kpnSiteVo = new KpnSiteVo();
-        kpnSiteVo.setSid(site.getId());
-        kpnSiteVo.setCurrencyCode(site.getCurrencyCode());
-        kpnSiteVo.setLogoUrl(site.getLogoUrl());
-        kpnSiteVo.setChannels(channelVos);
-
-
-        return Result.succeed(kpnSiteVo);
-    }
-
-    /**
-     * 获取会员频道,非会员返回站点4固定频道
-     */
-    @ApiOperation(value = "获取会员频道")
-    @GetMapping("getChannel")
-    public Result<String> getChannel() {
+    public Result<KpnSiteVo> getSiteInfo(HttpServletRequest request) {
         try {
-            return Result.succeed("succeed");
+            String referer = request.getHeader(PornConstants.Str.REFERER);
+            String host = request.getHeader(PornConstants.Str.REHOST);
+            String sid = request.getHeader(PornConstants.Str.SID);
+            log.info("获取站点信息 -> sid: {},referer: {},host: {}", sid, referer, host);
+
+            KpnSite site = null;
+            if (StrUtil.isBlank(sid)) {
+                site = siteService.getInfoByReferer(referer);
+                if (ObjectUtil.isEmpty(site)) {
+                    site = siteService.getInfoByReferer(host);
+                }
+            } else {
+                site = siteService.getInfoById(Long.parseLong(sid));
+            }
+
+            // TODO 异常统一处理
+            if (ObjectUtil.isEmpty(site)) {
+                throw new RuntimeException("站点不存在");
+            }
+
+            //频道
+            List<KpnSiteChannel> channelList = siteChannelService.getBySiteId(site.getId());
+            List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
+                KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
+                BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
+                return kpnSiteChannelVo;
+            }).collect(Collectors.toList());
+
+            //专题
+            List<KpnSiteTopic> siteTopicList = siteTopicService.getBySiteId(site.getId());
+            List<KpnSiteTopicVo> topicVos = siteTopicList.stream().map(kpnSiteTopic -> {
+                KpnSiteTopicVo topicVo = new KpnSiteTopicVo();
+                BeanUtil.copyProperties(kpnSiteTopic, topicVo);
+                return topicVo;
+            }).collect(Collectors.toList());
+
+            //站点信息
+            KpnSiteVo kpnSiteVo = new KpnSiteVo();
+            kpnSiteVo.setSid(site.getId());
+            kpnSiteVo.setCurrencyCode(site.getCurrencyCode());
+            kpnSiteVo.setLogoUrl(site.getLogoUrl());
+            kpnSiteVo.setChannels(channelVos);
+            kpnSiteVo.setTopics(topicVos);
+
+            return Result.succeed(kpnSiteVo, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
         }
     }
 
+    /**
+     * 获取站点广告
+     *
+     * @return
+     */
+    @GetMapping("/ads")
+    @ApiOperation(value = "获取站点信息")
+    public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid) {
+        List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid);
+        List<KpnSiteAdvertiseVo> siteAdVos = siteAds.stream().map(ad -> {
+            KpnSiteAdvertiseVo adVo = new KpnSiteAdvertiseVo();
+            BeanUtil.copyProperties(ad, adVo);
+            return adVo;
+        }).collect(Collectors.toList());
+
+        //分组统计
+        Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>> siteAdVoMap = siteAdVos.stream()
+                .collect(groupingBy(KpnSiteAdvertiseVo::getDevice, groupingBy(KpnSiteAdvertiseVo::getPosition)));
+
+        return Result.succeed(siteAdVoMap,"succeed");
+    }
 
     /**
      * token续期
