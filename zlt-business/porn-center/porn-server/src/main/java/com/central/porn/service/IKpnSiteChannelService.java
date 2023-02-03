@@ -18,6 +18,7 @@ public interface IKpnSiteChannelService extends ISuperService<KpnSiteChannel> {
 
     /**
      * 获取会员频道
+     *
      * @param uid 会员id
      * @return
      */
@@ -25,8 +26,29 @@ public interface IKpnSiteChannelService extends ISuperService<KpnSiteChannel> {
 
     /**
      * 保存会员频道
-     * @param uid 会员id
+     *
+     * @param uid            会员id
      * @param channelSortCos 排序集合
      */
     void saveMemberChannelsSort(Long uid, List<MemberChannelSortCo> channelSortCos);
+
+    /**
+     * 会员增加频道
+     *
+     * @param uid       会员id
+     * @param username  会员账号
+     * @param siteId    站点id
+     * @param siteCode  站点编码
+     * @param siteName  站点名称
+     * @param channelId 频道id
+     */
+    void addChannel(Long uid, String username, Long siteId, String siteCode, String siteName, Long channelId);
+
+    /**
+     * 会员移除频道
+     *
+     * @param uid       会员id
+     * @param channelId 频道id
+     */
+    void removeChannel(Long uid, Long channelId);
 }

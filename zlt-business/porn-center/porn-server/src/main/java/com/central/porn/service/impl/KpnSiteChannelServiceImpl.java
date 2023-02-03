@@ -49,7 +49,7 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
 
     @Override
     public List<KpnSiteChannel> getMemberChannels(Long uid) {
-        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_MEMBER_CHANNEL_KEY, uid);
+        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_USER_CHANNEL_KEY, uid);
         List<KpnSiteChannel> memberChannels = (List<KpnSiteChannel>) RedisRepository.get(userChannelRedisKey);
         if (CollectionUtil.isEmpty(memberChannels)) {
             memberChannels = this.baseMapper.getMemberChannels(uid);
@@ -62,9 +62,8 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
 
     @Override
     @Async
-    @Transactional
     public void saveMemberChannelsSort(Long uid, @RequestBody List<MemberChannelSortCo> channelSortCos) {
-        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_MEMBER_CHANNEL_KEY, uid);
+        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_USER_CHANNEL_KEY, uid);
         RedisRepository.delete(userChannelRedisKey);
 
         if (CollectionUtil.isNotEmpty(channelSortCos)) {
@@ -79,6 +78,51 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         }
         //重新缓存
         getMemberChannels(uid);
+        log.info("频道排序完成 userId: {}", uid);
+    }
+
+    @Override
+    @Async
+    @Transactional
+    public void addChannel(Long uid, String username, Long siteId, String siteCode, String siteName, Long channelId) {
+        //增加排序值
+        userChannelService.lambdaUpdate().eq(KpnSiteUserChannel::getUserId, uid)
+                .setSql(" `sort` = `sort` + 1")
+                .update();
+
+        //新增频道
+        KpnSiteUserChannel siteUserChannel = new KpnSiteUserChannel();
+        siteUserChannel.setSiteId(siteId);
+        siteUserChannel.setSiteCode(siteCode);
+        siteUserChannel.setSiteName(siteName);
+        siteUserChannel.setChannelId(channelId);
+        siteUserChannel.setUserId(uid);
+        siteUserChannel.setUserName(username);
+        siteUserChannel.setChannelId(channelId);
+        siteUserChannel.setSort(PornConstants.Numeric.DEFAULT_SORT_VALUE);
+        userChannelService.save(siteUserChannel);
+
+        //重置缓存
+        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_USER_CHANNEL_KEY, uid);
+        RedisRepository.delete(userChannelRedisKey);
+        getMemberChannels(uid);
+        log.info("频道添加完成 userId: {},channelId: {}", uid, channelId);
+    }
+
+    @Override
+    @Async
+    @Transactional
+    public void removeChannel(Long uid, Long channelId) {
+        userChannelService.lambdaUpdate()
+                .eq(KpnSiteUserChannel::getUserId, uid)
+                .eq(KpnSiteUserChannel::getChannelId, channelId)
+                .remove();
+
+        //重置缓存
+        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_USER_CHANNEL_KEY, uid);
+        RedisRepository.delete(userChannelRedisKey);
+        getMemberChannels(uid);
+        log.info("频道移除完成 userId: {},channelId: {}", uid, channelId);
     }
 
 
