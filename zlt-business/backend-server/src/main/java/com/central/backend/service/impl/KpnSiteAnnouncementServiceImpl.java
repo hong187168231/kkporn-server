@@ -57,7 +57,7 @@ public class KpnSiteAnnouncementServiceImpl extends SuperServiceImpl<KpnSiteAnno
     }
 
     @Override
-    public Result saveOrUpdateAnnouncement(KpnSiteAnnouncement announcement) throws Exception {
+    public Result saveOrUpdateAnnouncement(KpnSiteAnnouncement announcement) {
         boolean insert =false;
         String moduleName=null;
         //新增

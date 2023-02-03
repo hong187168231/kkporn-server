@@ -47,7 +47,7 @@ public class KpnSiteController {
 
     @ApiOperation(value = "新增or更新站点")
     @PostMapping(value = "/saveOrUpdateSite",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Result saveOrUpdateSite(@Valid KpnSite kpnSite, @Valid @RequestParam("file") MultipartFile file, @LoginUser SysUser sysUser) throws Exception {
+    public Result saveOrUpdateSite(@Valid KpnSite kpnSite, @Valid @RequestParam("file") MultipartFile file, @LoginUser SysUser sysUser) {
   /*     if (kpnSite.getId() == null) {
            kpnSite.setUpdateBy(sysUser.getUsername());
            kpnSite.setCreateBy(sysUser.getUsername());

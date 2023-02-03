@@ -13,7 +13,7 @@ public interface IKpnSiteAnnouncementService extends ISuperService<KpnSiteAnnoun
     PageResult<KpnSiteAnnouncement> findNoticeList(KpnSiteAnnouncementCo params) ;
 
 
-    Result saveOrUpdateAnnouncement(KpnSiteAnnouncement sysNotice) throws Exception;
+    Result saveOrUpdateAnnouncement(KpnSiteAnnouncement sysNotice) ;
 
 
 

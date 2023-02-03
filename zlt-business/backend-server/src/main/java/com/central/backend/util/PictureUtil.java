@@ -22,9 +22,6 @@ public class PictureUtil {
     public final static String gif = ".gif";
     public final static String mp4 = ".mp4";
 
-
-
-
     /**
      * 校验格式
      * @param file

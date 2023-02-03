@@ -48,7 +48,7 @@ public class KpnSiteAnnouncementController {
      */
     @ApiOperation(value = "新增or更新公告")
     @PostMapping("/saveOrUpdate")
-    public Result saveOrUpdate(@RequestBody KpnSiteAnnouncement announcement, @LoginUser SysUser sysUser) throws Exception {
+    public Result saveOrUpdate(@RequestBody KpnSiteAnnouncement announcement, @LoginUser SysUser sysUser)  {
     /*    if (announcement.getId() == null) {
             announcement.setUpdateBy(sysUser.getUsername());
             announcement.setCreateBy(sysUser.getUsername());
