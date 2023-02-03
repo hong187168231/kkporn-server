@@ -40,6 +40,12 @@ public class KpnSitePromotionController {
     @ApiOperation(value = "保存配置")
     @PostMapping("/saveOrUpdatePromotion")
     public Result saveOrUpdatePromotion(@RequestBody KpnSitePromotion info, @LoginUser SysUser sysUser) throws Exception {
+   /*     if (info.getId() == null) {
+            info.setUpdateBy(sysUser.getUsername());
+            info.setCreateBy(sysUser.getUsername());
+        }else {
+            info.setUpdateBy(sysUser.getUsername());
+        }*/
         Boolean aBoolean = promotionService.saveOrUpdatePromotion(info);
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }
