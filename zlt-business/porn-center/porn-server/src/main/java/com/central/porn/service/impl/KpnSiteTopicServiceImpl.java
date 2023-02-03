@@ -28,8 +28,9 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
                     .eq(KpnSiteTopic::getSiteId, sid)
                     .eq(KpnSiteTopic::getStatus, SiteTopicEnum.ON_SHELF.getStatus())
                     .list();
-
-            RedisRepository.set(topicKey, siteTopicList);
+            if (CollectionUtil.isNotEmpty(siteTopicList)) {
+                RedisRepository.set(topicKey, siteTopicList);
+            }
         }
 
         return siteTopicList;

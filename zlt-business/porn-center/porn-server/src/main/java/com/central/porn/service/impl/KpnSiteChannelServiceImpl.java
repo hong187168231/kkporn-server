@@ -31,10 +31,24 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
                     .orderByDesc(KpnSiteChannel::getSort)
                     .orderByDesc(KpnSiteChannel::getCreateTime)
                     .list();
-
-            RedisRepository.set(channelRedisKey, siteChannels);
+            if (CollectionUtil.isNotEmpty(siteChannels)) {
+                RedisRepository.set(channelRedisKey, siteChannels);
+            }
         }
         return siteChannels;
+    }
+
+    @Override
+    public List<KpnSiteChannel> getMemberChannels(Long uid) {
+        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_MEMBER_CHANNEL_KEY, uid);
+        List<KpnSiteChannel> memberChannels = (List<KpnSiteChannel>) RedisRepository.get(userChannelRedisKey);
+        if (CollectionUtil.isEmpty(memberChannels)) {
+            memberChannels = this.baseMapper.getMemberChannels(uid);
+            if (CollectionUtil.isNotEmpty(memberChannels)) {
+                RedisRepository.set(userChannelRedisKey, memberChannels);
+            }
+        }
+        return memberChannels;
     }
 
 
