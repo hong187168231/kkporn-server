@@ -40,7 +40,7 @@ public class MemberController {
      */
     @GetMapping("/channels")
     @ApiOperation(value = "获取会员自定义频道")
-    public Result<List<KpnMemberChannelVo>> getMemberChannels(@LoginUser SysUser user) {
+    public Result<List<KpnMemberChannelVo>> getUserChannels(@LoginUser SysUser user) {
         try {
             List<KpnSiteChannel> memberChannels = siteChannelService.getMemberChannels(user.getId());
 
@@ -65,9 +65,47 @@ public class MemberController {
      */
     @PostMapping("/changeChannelsSort")
     @ApiOperation(value = "会员自定义频道排序")
-    public Result changeChannelsSort(@LoginUser SysUser user, @RequestBody List<MemberChannelSortCo> channelSortCos) {
+    public Result<String> changeChannelsSort(@LoginUser SysUser user, @RequestBody List<MemberChannelSortCo> channelSortCos) {
         try {
             siteChannelService.saveMemberChannelsSort(user.getId(), channelSortCos);
+            return Result.succeed("succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 会员自定义频道-新增
+     *
+     * @param user      登录会员
+     * @param channelId 添加频道id
+     * @return
+     */
+    @PostMapping("/addChannel")
+    @ApiOperation(value = "会员自定义频道-添加")
+    public Result<String> addChannel(@LoginUser SysUser user, Long channelId) {
+        try {
+            siteChannelService.addChannel(user.getId(), user.getUsername(), user.getSiteId(), user.getSiteCode(), user.getSiteName(), channelId);
+            return Result.succeed("succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 会员自定义频道-移除频道
+     *
+     * @param user      登录会员
+     * @param channelId 添加频道id
+     * @return
+     */
+    @PostMapping("/removeChannel")
+    @ApiOperation(value = "会员自定义频道-添加")
+    public Result<String> removeChannel(@LoginUser SysUser user, Long channelId) {
+        try {
+            siteChannelService.removeChannel(user.getId(), channelId);
             return Result.succeed("succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);

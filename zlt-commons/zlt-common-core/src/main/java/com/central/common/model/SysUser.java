@@ -23,7 +23,7 @@ import java.util.List;
 public class SysUser extends SuperEntity {
 
     @ApiModelProperty("站点id")
-    private Integer siteId;
+    private Long siteId;
     @ApiModelProperty("站点编码")
     private String siteCode;
     @ApiModelProperty("站点名称")

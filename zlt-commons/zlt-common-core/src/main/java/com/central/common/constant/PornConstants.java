@@ -29,10 +29,10 @@ public final class PornConstants {
     public static final class Numeric {
         // 30分钟的秒数
         public static final long MINUTE_30_IN_SECONDS = 30 * 60;
-        // 主单号长度
-        public static final int LEN_ORDER = 16;
-        // 子单号长度
-        public static final int LEN_DETAIL_ORDER = 22;
+        // 订单号长度
+        public static final int LEN_DETAIL_ORDER = 20;
+        // 默认排序sort
+        public static final long DEFAULT_SORT_VALUE = 0L;
     }
 
     //字符串常量
@@ -84,7 +84,7 @@ public final class PornConstants {
         //缓存站点专题信息 siteid
         public static final String SITE_TOPIC_KEY = "SITE:TOPIC:{}";
         //缓存会员频道信息 userid
-        public static final String SITE_MEMBER_CHANNEL_KEY = "SITE:MEMBER:CHANNEL:{}";
+        public static final String SITE_USER_CHANNEL_KEY = "SITE:USER:CHANNEL:{}";
         //缓存后台管理员ip
         public static final String BACKEND_WHITELIST_KEY = "Whitelist";
         // 系统维护key
