@@ -50,7 +50,7 @@ public class LoginController {
     }
 
     /**
-     * 视讯app登陆
+     * app登陆
      */
     @PostMapping("/app")
     @ApiOperation(value = "app登陆", notes = "实际请求地址 post请求请求接口：/oauth/token")
@@ -89,7 +89,7 @@ public class LoginController {
     }
 
     /**
-     * 视讯后台管理系统登陆登陆
+     * 后台管理系统登陆登陆
      */
     @PostMapping("/backend")
     @ApiOperation(value = "后台管理系统登陆", notes = "实际请求地址 post请求请求接口：/oauth/token")
