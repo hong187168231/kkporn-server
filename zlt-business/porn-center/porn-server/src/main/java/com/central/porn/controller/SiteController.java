@@ -26,13 +26,13 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 
 /**
- * API
+ * 站点相关
  */
 @Slf4j
 @RestController
 @RequestMapping("/v1/site")
-@Api(tags = "api接口")
-public class PornController {
+@Api(tags = "站点相关api接口")
+public class SiteController {
 
     @Autowired
     private IKpnSiteService siteService;
@@ -115,19 +115,28 @@ public class PornController {
     @GetMapping("/ads")
     @ApiOperation(value = "获取站点信息")
     public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid) {
-        List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid);
-        List<KpnSiteAdvertiseVo> siteAdVos = siteAds.stream().map(ad -> {
-            KpnSiteAdvertiseVo adVo = new KpnSiteAdvertiseVo();
-            BeanUtil.copyProperties(ad, adVo);
-            return adVo;
-        }).collect(Collectors.toList());
+        try {
+            List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid);
+            List<KpnSiteAdvertiseVo> siteAdVos = siteAds.stream().map(ad -> {
+                KpnSiteAdvertiseVo adVo = new KpnSiteAdvertiseVo();
+                BeanUtil.copyProperties(ad, adVo);
+                return adVo;
+            }).collect(Collectors.toList());
 
-        //分组统计
-        Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>> siteAdVoMap = siteAdVos.stream()
-                .collect(groupingBy(KpnSiteAdvertiseVo::getDevice, groupingBy(KpnSiteAdvertiseVo::getPosition)));
+            //分组统计
+            Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>> siteAdVoMap = siteAdVos.stream()
+                    .collect(groupingBy(KpnSiteAdvertiseVo::getDevice, groupingBy(KpnSiteAdvertiseVo::getPosition)));
 
-        return Result.succeed(siteAdVoMap,"succeed");
+            return Result.succeed(siteAdVoMap, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
     }
+
+    /**
+     * 我的频道
+     */
 
     /**
      * token续期

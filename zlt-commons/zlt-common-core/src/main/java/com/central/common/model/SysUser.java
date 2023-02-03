@@ -1,8 +1,6 @@
 package com.central.common.model;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -23,36 +21,43 @@ import java.util.List;
 @TableName("sys_user")
 @ApiModel("用户实体")
 public class SysUser extends SuperEntity {
-    private static final long serialVersionUID = -5886012896705137070L;
 
     @ApiModelProperty("站点id")
     private Integer siteId;
     @ApiModelProperty("站点编码")
     private String siteCode;
+    @ApiModelProperty("站点名称")
+    private String siteName;
     @ApiModelProperty("上级id")
     private Long parentId;
     @ApiModelProperty("上级账号")
     private Long parentName;
+    @ApiModelProperty(value = "邀请码")
+    private String inviteCode;
     @ApiModelProperty(value = "用户名")
     private String username;
     @ApiModelProperty(value = "密码")
     private String password;
     @ApiModelProperty(value = "昵称")
     private String nickname;
-    @ApiModelProperty(value = "推广码")
+    @ApiModelProperty(value = "我的推广码")
     private String promotionCode;
-    @ApiModelProperty(value = "账号类型：APP：前端app用户，BACKEND：后端管理用户")
-    private String type;
     @ApiModelProperty(value = "头像地址")
     private String headImgUrl;
-    @ApiModelProperty("会员等级 0/false:普通会员,1/true:vip")
-    private Boolean vip;
-    @ApiModelProperty("VIP到期日期")
-    private Date vipExpire;
     @ApiModelProperty(value = "手机号")
     private String mobile;
     @ApiModelProperty(value = "性别")
     private Integer sex;
+    @ApiModelProperty(value = "账号类型：APP：前端app用户，BACKEND：后端管理用户")
+    private String type;
+    @ApiModelProperty("会员等级 0/false:普通会员,1/true:vip")
+    private Boolean vip;
+    @ApiModelProperty("vip到期时间")
+    private Date vipExpire;
+    @ApiModelProperty("K币余额")
+    private BigDecimal kBalance;
+    @ApiModelProperty("管理站点")
+    private String roleSites;
     @ApiModelProperty(value = "备注")
     private String remark;
     @ApiModelProperty(value = "状态：0/false.禁用，1/true.启用")
@@ -60,23 +65,17 @@ public class SysUser extends SuperEntity {
     @ApiModelProperty(value = "逻辑删除 0/false: 未删除，1/true: 已删除")
     private Boolean isDel;
     @ApiModelProperty(value = "是否登录过 0/false：未登录，1/true：已登录")
-    private boolean isLogin;
-    @ApiModelProperty(value = "逻辑删除 0：未删除，1：已删除")
+    private Boolean isLogin;
+    @ApiModelProperty(value = "最后登录时间")
+    private Date loginTime;
+    @ApiModelProperty(value = "最后登录ip")
     private String loginIp;
-	@ApiModelProperty(value = "最后登录时间")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date loginTime;
-
 	@ApiModelProperty(value = "谷歌验证码是否绑定1 1：已绑定，其他：未绑定")
 	private Integer gaBind;
-
     @ApiModelProperty(value = "谷歌验证码KEY")
     private String gaKey;
-
     @ApiModelProperty(value = "是否验证 1：是，其他：否")
     private Integer verify;
-
-
 
     @TableField(exist = false)
     private List<SysRole> roles;

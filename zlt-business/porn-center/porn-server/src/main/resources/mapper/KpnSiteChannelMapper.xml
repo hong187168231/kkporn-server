@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.central.porn.mapper.KpnSiteChannelMapper">
+
+    <select id="getMemberChannels" resultType="com.central.common.model.KpnSiteChannel">
+        select b.id, b.name_zh,b.name_en,b.name_kh,a.sort
+        from kpn_site_user_channel a
+                 left join kpn_site_channel b on b.id = a.channel_id
+        where a.user_id = #{uid}
+          and b.status = 1
+        order by a.sort desc, a.create_time desc
+    </select>
+</mapper>
