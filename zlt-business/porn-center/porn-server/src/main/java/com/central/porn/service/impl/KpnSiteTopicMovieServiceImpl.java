@@ -28,6 +28,7 @@ public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicM
         List<String> topicMovieIdList = (ArrayList) RedisRepository.getList(topicMovieIdRedisKey, start, end);
         if (CollectionUtil.isEmpty(topicMovieIdList)) {
             List<KpnSiteTopicMovie> siteTopicMovies = this.lambdaQuery()
+                    .eq(KpnSiteTopicMovie::getSiteId, sid)
                     .eq(KpnSiteTopicMovie::getTopicId, topicId)
                     .orderByAsc(KpnSiteTopicMovie::getId)
                     .list();
