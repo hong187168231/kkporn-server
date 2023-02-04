@@ -1,10 +1,16 @@
-package com.central.common.model;
+package com.central.backend.model.vo;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.central.common.model.KpnActor;
+import com.central.common.model.SuperEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,10 +23,10 @@ import java.util.Date;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
-@TableName("kpn_actor")
-public class KpnActor extends SuperEntity {
+public class KpnActorVO{
     private static final long serialVersionUID=1L;
-
+    @ApiModelProperty(value = "演员ID")
+    private Long id;
     @ApiModelProperty(value = "中文名")
     private String nameZh;
     @ApiModelProperty(value = "英文名")
@@ -49,4 +55,20 @@ public class KpnActor extends SuperEntity {
     private String interest;
     @ApiModelProperty(value = "简介")
     private String remark;
+    @ApiModelProperty(value = "影片数量")
+    private Integer total;
+    @ApiModelProperty(value = "影片收藏量")
+    private Integer favorites;
+    @ApiModelProperty(value = "播放量")
+    private Integer vv;
+
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
+    @ApiModelProperty(value = "更新时间")
+    private Date updateTime;
+    @ApiModelProperty(value = "创建人")
+    private String createBy;
+    @ApiModelProperty(value = "更新人")
+    private String updateBy;
+
     }

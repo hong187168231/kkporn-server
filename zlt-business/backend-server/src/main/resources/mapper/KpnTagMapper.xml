@@ -2,7 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.central.backend.mapper.KpnTagMapper">
-    <select id="findList" resultType="com.central.common.model.KpnTag">
+    <select id="findList" resultType="com.central.backend.model.vo.KpnTagVO">
         select * from kpn_tag t
+        LEFT JOIN
+        <if test="headquarters == null || headquarters == '' || headquarters == '1'">
+            (SELECT mt.tag_id,count(mt.movie_id),sum(m.vv) as vv FROM kpn_movie_tag mt LEFT JOIN kpn_movie m ON mt.movie_id= m.id WHERE m.status='1' GROUP BY mt.tag_category_id,mt.tag_id) s
+        </if>
+        <if test="headquarters != null and  headquarters != '' and  headquarters == '0'">
+            (SELECT mt.tag_id,count(mt.movie_id),sum(sm.vv) as vv FROM kpn_movie_tag mt LEFT JOIN  kpn_site_movie sm ON mt.movie_id= sm.movie_id LEFT JOIN kpn_movie m ON sm.movie_id= m.id WHERE sm.status='1' and sm.site_id = #{siteId}  GROUP BY mt.tag_category_id,mt.tag_id) s
+        </if>
+        ON a.id=s.tag_id
+        <where>
+            1=1
+            <if test="id != null and  id != '' and  id != '0'">
+                and t.id = #{id}
+            </if>
+            <if test="nameZh != null and  nameZh != ''">
+                and t.name_zh LIKE CONCAT('%',#{nameZh},'%')
+            </if>
+            <if test="nameEn != null and  nameEn != ''">
+                and t.name_en LIKE CONCAT('%',#{nameEn},'%')
+            </if>
+            <if test="nameKh != null and  nameKh != ''">
+                and t.name_kh LIKE CONCAT('%',#{nameKh},'%')
+            </if>
+
+        </where>
     </select>
 </mapper>

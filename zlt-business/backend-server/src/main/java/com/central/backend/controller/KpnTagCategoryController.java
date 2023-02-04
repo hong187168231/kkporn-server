@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.central.backend.service.IKpnTagCategoryService;
@@ -34,12 +35,23 @@ public class KpnTagCategoryController {
      */
     @ApiOperation(value = "查询列表")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "分类名称", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "id", value = "分类ID", required = false, dataType = "Long"),
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
     public PageResult list(@RequestParam Map<String, Object> params) {
         return kpnTagCategoryService.findList(params);
+    }
+
+    /**
+     * 查询所有分类
+     */
+    @ApiOperation(value = "查询所有分类")
+    @GetMapping("/all")
+    public List<KpnTagCategory> listAll() {
+        return kpnTagCategoryService.findList();
     }
 
     /**

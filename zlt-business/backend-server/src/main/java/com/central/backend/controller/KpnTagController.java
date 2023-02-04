@@ -34,6 +34,11 @@ public class KpnTagController {
      */
     @ApiOperation(value = "查询列表")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "nameZh", value = "标签名称(中文)", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "nameEn", value = "标签名称(英文)", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "nameKh", value = "标签名称(柬文)", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "id", value = "标签ID", required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "categoryId", value = "分类ID", required = false, dataType = "Long"),
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })

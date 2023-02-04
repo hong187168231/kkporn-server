@@ -1,5 +1,6 @@
 package com.central.backend.mapper;
 
+import com.central.backend.model.vo.KpnActorVO;
 import com.central.common.model.KpnActor;
 import com.central.db.mapper.SuperMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,5 +24,5 @@ public interface KpnActorMapper extends SuperMapper<KpnActor> {
      * @param params
      * @return
      */
-    List<KpnActor> findList(Page<KpnActor> page, @Param("p") Map<String, Object> params);
+    List<KpnActorVO> findList(Page<KpnActorVO> page, @Param("p") Map<String, Object> params);
 }

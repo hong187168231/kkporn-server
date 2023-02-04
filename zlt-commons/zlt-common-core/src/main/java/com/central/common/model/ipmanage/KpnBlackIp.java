@@ -24,12 +24,4 @@ public class KpnBlackIp extends SuperEntity {
     private String ipSection;
     @ApiModelProperty(value = "备注")
     private String remark;
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
-    @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
-    @ApiModelProperty(value = "创建人")
-    private String createBy;
-    @ApiModelProperty(value = "更新人")
-    private String updateBy;
     }

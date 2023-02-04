@@ -1,6 +1,7 @@
 package com.central.backend.service.impl;
 
 import com.central.backend.mapper.KpnTagCategoryMapper;
+import com.central.backend.model.vo.KpnTagCategoryVO;
 import com.central.backend.service.IKpnTagCategoryService;
 import com.central.common.model.KpnTagCategory;
 import com.central.common.service.impl.SuperServiceImpl;
@@ -29,9 +30,14 @@ public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMa
      * @return
      */
     @Override
-    public PageResult<KpnTagCategory> findList(Map<String, Object> params){
-        Page<KpnTagCategory> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
-        List<KpnTagCategory> list  =  baseMapper.findList(page, params);
-        return PageResult.<KpnTagCategory>builder().data(list).count(page.getTotal()).build();
+    public PageResult<KpnTagCategoryVO> findList(Map<String, Object> params){
+        Page<KpnTagCategoryVO> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
+        List<KpnTagCategoryVO> list  =  baseMapper.findList(page, params);
+        return PageResult.<KpnTagCategoryVO>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public List<KpnTagCategory> findList(){
+        List<KpnTagCategory> list  =  baseMapper.findListAll();
+        return list;
     }
 }

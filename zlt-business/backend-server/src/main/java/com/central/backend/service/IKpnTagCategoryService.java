@@ -1,10 +1,12 @@
 package com.central.backend.service;
 
 
+import com.central.backend.model.vo.KpnTagCategoryVO;
 import com.central.common.model.KpnTagCategory;
 import com.central.common.model.PageResult;
 import com.central.common.service.ISuperService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +21,8 @@ public interface IKpnTagCategoryService extends ISuperService<KpnTagCategory> {
      * @param params
      * @return
      */
-    PageResult<KpnTagCategory> findList(Map<String, Object> params);
+    PageResult<KpnTagCategoryVO> findList(Map<String, Object> params);
+
+    public List<KpnTagCategory> findList();
 }
 
