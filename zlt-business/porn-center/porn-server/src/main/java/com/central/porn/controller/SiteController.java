@@ -76,22 +76,6 @@ public class SiteController {
                 throw new RuntimeException("站点不存在");
             }
 
-            //频道
-//            List<KpnSiteChannel> channelList = siteChannelService.getBySiteId(site.getId());
-//            List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
-//                KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
-//                BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
-//                return kpnSiteChannelVo;
-//            }).collect(Collectors.toList());
-
-            //专题
-//            List<KpnSiteTopic> siteTopicList = siteTopicService.getBySiteId(site.getId());
-//            List<KpnSiteTopicVo> topicVos = siteTopicList.stream().map(kpnSiteTopic -> {
-//                KpnSiteTopicVo topicVo = new KpnSiteTopicVo();
-//                BeanUtil.copyProperties(kpnSiteTopic, topicVo);
-//                return topicVo;
-//            }).collect(Collectors.toList());
-
             //站点信息
             KpnSiteVo kpnSiteVo = new KpnSiteVo();
             kpnSiteVo.setSid(site.getId());

@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class MemberController {
      */
     @GetMapping("/channels")
     @ApiOperation(value = "获取会员自定义频道")
-    public Result<List<KpnMemberChannelVo>> getUserChannels(@LoginUser SysUser user) {
+    public Result<List<KpnMemberChannelVo>> getUserChannels(@ApiIgnore @LoginUser SysUser user) {
         try {
             List<KpnSiteChannel> memberChannels = siteChannelService.getMemberChannels(user.getId());
 
@@ -65,7 +66,7 @@ public class MemberController {
      */
     @PostMapping("/changeChannelsSort")
     @ApiOperation(value = "会员自定义频道排序")
-    public Result<String> changeChannelsSort(@LoginUser SysUser user, @RequestBody List<MemberChannelSortCo> channelSortCos) {
+    public Result<String> changeChannelsSort(@ApiIgnore @LoginUser SysUser user, @RequestBody List<MemberChannelSortCo> channelSortCos) {
         try {
             siteChannelService.saveMemberChannelsSort(user.getId(), channelSortCos);
             return Result.succeed("succeed");
@@ -76,7 +77,7 @@ public class MemberController {
     }
 
     /**
-     * 会员自定义频道-新增
+     * 会员自定义频道-添加
      *
      * @param user      登录会员
      * @param channelId 添加频道id
@@ -84,7 +85,7 @@ public class MemberController {
      */
     @PostMapping("/addChannel")
     @ApiOperation(value = "会员自定义频道-添加")
-    public Result<String> addChannel(@LoginUser SysUser user, Long channelId) {
+    public Result<String> addChannel(@ApiIgnore @LoginUser SysUser user, Long channelId) {
         try {
             siteChannelService.addChannel(user.getId(), user.getUsername(), user.getSiteId(), user.getSiteCode(), user.getSiteName(), channelId);
             return Result.succeed("succeed");
@@ -102,8 +103,8 @@ public class MemberController {
      * @return
      */
     @PostMapping("/removeChannel")
-    @ApiOperation(value = "会员自定义频道-添加")
-    public Result<String> removeChannel(@LoginUser SysUser user, Long channelId) {
+    @ApiOperation(value = "会员自定义频道-移除")
+    public Result<String> removeChannel(@ApiIgnore @LoginUser SysUser user, Long channelId) {
         try {
             siteChannelService.removeChannel(user.getId(), channelId);
             return Result.succeed("succeed");
