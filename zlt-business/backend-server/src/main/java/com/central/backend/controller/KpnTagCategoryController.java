@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.central.backend.service.IKpnTagCategoryService;
+import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnTagCategory;
+import com.central.common.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
@@ -41,8 +43,8 @@ public class KpnTagCategoryController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public PageResult list(@RequestParam Map<String, Object> params) {
-        return kpnTagCategoryService.findList(params);
+    public PageResult list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        return kpnTagCategoryService.findList(params,user);
     }
 
     /**

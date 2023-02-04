@@ -3,6 +3,7 @@ package com.central.backend.service;
 import com.central.backend.model.vo.KpnTagVO;
 import com.central.common.model.KpnTag;
 import com.central.common.model.PageResult;
+import com.central.common.model.SysUser;
 import com.central.common.service.ISuperService;
 
 import java.util.Map;
@@ -20,6 +21,6 @@ public interface IKpnTagService extends ISuperService<KpnTag> {
      * @param params
      * @return
      */
-    PageResult<KpnTagVO> findList(Map<String, Object> params);
+    PageResult<KpnTagVO> findList(Map<String, Object> params, SysUser user);
 }
 
