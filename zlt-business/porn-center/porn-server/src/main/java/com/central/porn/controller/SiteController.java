@@ -8,10 +8,7 @@ import com.central.common.dto.I18nSourceDTO;
 import com.central.common.model.*;
 import com.central.common.utils.I18nUtil;
 import com.central.porn.entity.vo.*;
-import com.central.porn.service.IKpnSiteAdvertiseService;
-import com.central.porn.service.IKpnSiteChannelService;
-import com.central.porn.service.IKpnSiteService;
-import com.central.porn.service.IKpnSiteTopicService;
+import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +39,9 @@ public class SiteController {
 
     @Autowired
     private IKpnSiteTopicService siteTopicService;
+
+    @Autowired
+    private IKpnSiteTopicMovieService siteTopicMovieService;
 
     @Autowired
     private IKpnSiteAdvertiseService siteAdvertiseService;
@@ -77,30 +77,72 @@ public class SiteController {
             }
 
             //频道
-            List<KpnSiteChannel> channelList = siteChannelService.getBySiteId(site.getId());
-            List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
-                KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
-                BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
-                return kpnSiteChannelVo;
-            }).collect(Collectors.toList());
+//            List<KpnSiteChannel> channelList = siteChannelService.getBySiteId(site.getId());
+//            List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
+//                KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
+//                BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
+//                return kpnSiteChannelVo;
+//            }).collect(Collectors.toList());
 
             //专题
-            List<KpnSiteTopic> siteTopicList = siteTopicService.getBySiteId(site.getId());
-            List<KpnSiteTopicVo> topicVos = siteTopicList.stream().map(kpnSiteTopic -> {
-                KpnSiteTopicVo topicVo = new KpnSiteTopicVo();
-                BeanUtil.copyProperties(kpnSiteTopic, topicVo);
-                return topicVo;
-            }).collect(Collectors.toList());
+//            List<KpnSiteTopic> siteTopicList = siteTopicService.getBySiteId(site.getId());
+//            List<KpnSiteTopicVo> topicVos = siteTopicList.stream().map(kpnSiteTopic -> {
+//                KpnSiteTopicVo topicVo = new KpnSiteTopicVo();
+//                BeanUtil.copyProperties(kpnSiteTopic, topicVo);
+//                return topicVo;
+//            }).collect(Collectors.toList());
 
             //站点信息
             KpnSiteVo kpnSiteVo = new KpnSiteVo();
             kpnSiteVo.setSid(site.getId());
             kpnSiteVo.setCurrencyCode(site.getCurrencyCode());
             kpnSiteVo.setLogoUrl(site.getLogoUrl());
-            kpnSiteVo.setChannels(channelVos);
-            kpnSiteVo.setTopics(topicVos);
+//            kpnSiteVo.setChannels(channelVos);
+//            kpnSiteVo.setTopics(topicVos);
 
             return Result.succeed(kpnSiteVo, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 获取站点频道
+     *
+     * @param sid 站点id
+     * @return
+     */
+    @GetMapping("/channels")
+    @ApiOperation(value = "获取站点频道")
+    public Result<List<KpnSiteChannelVo>> getChannels(@RequestHeader("sid") Long sid) {
+        try {
+            List<KpnSiteChannel> channelList = siteChannelService.getBySiteId(sid);
+            List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
+                KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
+                BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
+                return kpnSiteChannelVo;
+            }).collect(Collectors.toList());
+
+            return Result.succeed(channelVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 获取站点专题
+     *
+     * @param sid 站点id
+     * @return
+     */
+    @GetMapping("/topics")
+    @ApiOperation(value = "获取站点专题")
+    public Result<List<KpnSiteTopicVo>> getTopics(@RequestHeader("sid") Long sid) {
+        try {
+            List<KpnSiteTopicVo> siteTopicVos = siteTopicService.getBySiteId(sid);
+            return Result.succeed(siteTopicVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
@@ -113,7 +155,7 @@ public class SiteController {
      * @return
      */
     @GetMapping("/ads")
-    @ApiOperation(value = "获取站点信息")
+    @ApiOperation(value = "获取站点广告")
     public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid) {
         try {
             List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid);
@@ -134,9 +176,6 @@ public class SiteController {
         }
     }
 
-    /**
-     * 我的频道
-     */
 
     /**
      * token续期

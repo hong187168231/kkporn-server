@@ -443,7 +443,7 @@ public class RedisRepository {
      * @param list the list
      * @return the long
      */
-    public static Long leftPushAll(String key, List<String> list) {
+    public static Long leftPushAll(String key, List list) {
         return opsForList().leftPushAll(key, list);
     }
 

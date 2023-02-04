@@ -83,6 +83,9 @@ public final class PornConstants {
         public static final String SITE_ADVERTISE_KEY = "SITE:AD:{}";
         //缓存站点专题信息 siteid
         public static final String SITE_TOPIC_KEY = "SITE:TOPIC:{}";
+        //缓存站点专题影片id信息 list类型  siteid,topicid
+        public static final String SITE_TOPIC_MOVIEID_KEY = "SITE:TOPIC:MOVIEID:{}:{}";
+
         //缓存会员频道信息 userid
         public static final String SITE_USER_CHANNEL_KEY = "SITE:USER:CHANNEL:{}";
         //缓存后台管理员ip
