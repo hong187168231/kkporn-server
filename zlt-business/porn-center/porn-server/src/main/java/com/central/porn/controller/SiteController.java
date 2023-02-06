@@ -91,6 +91,8 @@ public class SiteController {
         }
     }
 
+
+
     /**
      * 获取站点频道
      *
@@ -164,16 +166,16 @@ public class SiteController {
     /**
      * token续期
      */
-    @ApiOperation(value = "token续期,每10分钟调用一次")
-    @PostMapping("/refreshAccessToken")
-    public Result<String> refreshAccessToken() {
-        try {
-            return Result.succeed("succeed");
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return Result.failed("failed");
-        }
-    }
+//    @ApiOperation(value = "token续期,每10分钟调用一次")
+//    @PostMapping("/refreshAccessToken")
+//    public Result<String> refreshAccessToken() {
+//        try {
+//            return Result.succeed("succeed");
+//        } catch (Exception e) {
+//            log.error(e.getMessage(), e);
+//            return Result.failed("failed");
+//        }
+//    }
 
     /**
      * 语言包-H5
