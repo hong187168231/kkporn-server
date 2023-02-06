@@ -33,7 +33,7 @@ public class MovieController {
      * @return
      */
     @PostMapping("/ids")
-    @ApiOperation(value = "获取影片信息")
+    @ApiOperation(value = "按id获取影片信息")
     public Result<List<KpnMovieVo>> getMovieByIds(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
         try {
             List<KpnMovieVo> siteMovieVos = movieService.getMovieByIds(movieIds);
