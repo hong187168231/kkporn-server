@@ -9,16 +9,13 @@ import java.util.List;
 
 @Data
 @ApiModel("影片")
-public class KpnMovieVo implements Serializable {
+public class KpnMovieBaseVo implements Serializable {
 
     @ApiModelProperty("影片id")
     private Long id;
 
     @ApiModelProperty("唯一编码 20位")
     private String code;
-
-    @ApiModelProperty("影片url")
-    private String url;
 
     @ApiModelProperty("影片封面url")
     private String coverUrl;
@@ -40,21 +37,6 @@ public class KpnMovieVo implements Serializable {
 
     @ApiModelProperty("影片柬文名")
     private String nameKh;
-
-    @ApiModelProperty("演员id")
-    private Long actorId;
-
-    @ApiModelProperty("演员中文名")
-    private String actorNameZh;
-
-    @ApiModelProperty("演员英文名")
-    private String actorNameEn;
-
-    @ApiModelProperty("演员柬文名")
-    private String actorNameKh;
-
-    @ApiModelProperty("简介")
-    private String remark;
 
     @ApiModelProperty("影片标签")
     private List<KpnTagVo> tagVos;

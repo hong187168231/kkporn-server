@@ -5,16 +5,22 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnMovie;
+import com.central.common.model.KpnSiteMovie;
+import com.central.common.model.enums.SiteMovieStatusEnum;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
+import com.central.porn.entity.vo.KpnMovieBaseVo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnTagVo;
 import com.central.porn.mapper.KpnMovieMapper;
 import com.central.porn.service.IKpnMovieService;
 import com.central.porn.service.IKpnMovieTagService;
+import com.central.porn.service.IKpnSiteMovieService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +34,8 @@ public class KpnMovieServiceImpl extends SuperServiceImpl<KpnMovieMapper, KpnMov
     private IKpnMovieTagService movieTagService;
 
     @Override
-    public List<KpnMovieVo> getMovieByIds(List<Long> movieIds) {
-        List<KpnMovieVo> kpnMovieVos = new ArrayList<>();
+    public List<KpnMovieBaseVo> getMovieByIds(List<Long> movieIds) {
+        List<KpnMovieBaseVo> kpnMovieVos = new ArrayList<>();
 
         //从缓存中获取影片信息
         for (Long movieId : movieIds) {
@@ -49,15 +55,24 @@ public class KpnMovieServiceImpl extends SuperServiceImpl<KpnMovieMapper, KpnMov
             }
 
             if (ObjectUtil.isNotEmpty(kpnMovie)) {
-                KpnMovieVo kpnMovieVo = new KpnMovieVo();
-                BeanUtil.copyProperties(kpnMovie, kpnMovieVo);
+                KpnMovieBaseVo kpnMovieBaseVo = new KpnMovieBaseVo();
+                BeanUtil.copyProperties(kpnMovie, kpnMovieBaseVo);
 
                 //获取标签信息
                 List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
-                kpnMovieVo.setTagVos(kpnTagVos);
-                kpnMovieVos.add(kpnMovieVo);
+                kpnMovieBaseVo.setTagVos(kpnTagVos);
+                kpnMovieVos.add(kpnMovieBaseVo);
             }
         }
         return kpnMovieVos;
+    }
+
+    @Async
+    @Override
+    public void addMovieVv(Long movieId) {
+        this.lambdaUpdate()
+                .eq(KpnMovie::getId, movieId)
+                .setSql(" `vv` = `vv` + 1")
+                .update();
     }
 }

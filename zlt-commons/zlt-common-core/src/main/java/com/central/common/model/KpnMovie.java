@@ -12,9 +12,11 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @TableName("kpn_movie")
-public class KpnMovie extends SuperEntity{
+public class KpnMovie extends SuperEntity {
     @ApiModelProperty("播放地址")
     private String url;
+    @ApiModelProperty("唯一编码 20位")
+    private String code;
     @ApiModelProperty("播放地址")
     private String coverUrl;
     @ApiModelProperty("中文名称")
@@ -33,8 +35,8 @@ public class KpnMovie extends SuperEntity{
     private String subtitleType;
     @ApiModelProperty("付费类型 0/false:免费,1/true:付费")
     private Boolean payType;
-    @ApiModelProperty("影片时长(单位:秒)")
-    private Integer duration;
+    @ApiModelProperty("影片时长(HH:mm:ss 如00:10:02)")
+    private String duration;
     @ApiModelProperty("番号")
     private String serialNumber;
     @ApiModelProperty("制作商")
@@ -53,6 +55,8 @@ public class KpnMovie extends SuperEntity{
     private Boolean status;
     @ApiModelProperty("影片处理状态 0/false:未处理 , 1/true:处理完成")
     private Boolean handleStatus;
+    @ApiModelProperty("简介")
+    private String remark;
     @ApiModelProperty("影片播放量(所有站点播放量之和)")
     private Long vv;
     @ApiModelProperty("影片收藏量")
