@@ -12,4 +12,12 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * @param movieId 影片id
      */
     Long addSiteMovieVv(Long sid, Long movieId);
+
+    /**
+     * 增加站点影片收藏量
+     *
+     * @param sid  站点id
+     * @param movieId 影片id
+     */
+    Long addSiteMovieFavorites(Long sid, Long movieId);
 }

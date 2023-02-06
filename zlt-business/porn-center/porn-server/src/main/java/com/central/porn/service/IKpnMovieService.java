@@ -24,4 +24,10 @@ public interface IKpnMovieService extends ISuperService<KpnMovie> {
      */
     void addMovieVv(Long movieId);
 
+    /**
+     * 影片总播放量统计
+     *
+     * @param movieId
+     */
+    void addMovieFavorites(Long movieId);
 }

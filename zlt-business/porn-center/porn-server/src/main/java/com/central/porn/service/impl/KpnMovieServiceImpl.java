@@ -75,4 +75,13 @@ public class KpnMovieServiceImpl extends SuperServiceImpl<KpnMovieMapper, KpnMov
                 .setSql(" `vv` = `vv` + 1")
                 .update();
     }
+
+    @Async
+    @Override
+    public void addMovieFavorites(Long movieId) {
+        this.lambdaUpdate()
+                .eq(KpnMovie::getId, movieId)
+                .setSql(" `favorites` = `favorites` + 1")
+                .update();
+    }
 }

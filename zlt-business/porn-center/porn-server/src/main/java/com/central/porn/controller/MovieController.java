@@ -53,7 +53,7 @@ public class MovieController {
      *
      * @return
      */
-    @PostMapping("/vv")
+    @PostMapping("/count/vv")
     @ApiOperation(value = "统计影片点播量(注意暂停后,再点播不掉该接口)")
     public Result<Long> countVv(@RequestHeader("sid") Long sid, Long movieId) {
         try {
@@ -64,7 +64,24 @@ public class MovieController {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
         }
+    }
 
+    /**
+     * 统计影片收藏量
+     *
+     * @return
+     */
+    @PostMapping("/count/favorites")
+    @ApiOperation(value = "统计影片收藏量")
+    public Result<Long> countFavorites(@RequestHeader("sid") Long sid, Long movieId) {
+        try {
+            Long siteMovieFavorites = siteMovieService.addSiteMovieFavorites(sid, movieId);
+
+            return Result.succeed(siteMovieFavorites,"succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
     }
 
 

@@ -28,4 +28,14 @@ public class AsyncServiceImpl implements IAsyncService {
                 .setSql(" `vv` = `vv` + 1")
                 .update();
     }
+
+    @Async
+    @Override
+    public void addSiteMovieFavorites(Long sid, Long movieId) {
+        siteMovieService.lambdaUpdate()
+                .eq(KpnSiteMovie::getSiteId, sid)
+                .eq(KpnSiteMovie::getMovieId, movieId)
+                .setSql(" `favorites` = `favorites` + 1")
+                .update();
+    }
 }

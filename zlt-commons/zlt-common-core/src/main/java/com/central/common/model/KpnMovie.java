@@ -59,6 +59,6 @@ public class KpnMovie extends SuperEntity {
     private String remark;
     @ApiModelProperty("影片播放量(所有站点播放量之和)")
     private Long vv;
-    @ApiModelProperty("影片收藏量")
+    @ApiModelProperty("影片收藏量(所有站点收藏量之和)")
     private Long favorites;
 }
