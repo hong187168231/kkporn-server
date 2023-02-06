@@ -5,6 +5,8 @@ import com.central.common.annotation.LoginUser;
 import com.central.common.model.*;
 import com.central.common.model.KpnSiteSign;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,10 @@ public class KpnSiteSignController {
     @ApiOperation("查询签到列表")
     @ResponseBody
     @GetMapping("/findSignList")
-    public Result< List<KpnSiteSign>> findSignList( String siteCode) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "siteCode", value = "站点编码", required = true, dataType = "String"),
+    })
+    public Result< List<KpnSiteSign>> findSignList(@RequestParam("siteCode") String siteCode) {
         List<KpnSiteSign> signList = signService.findSignList(siteCode);
         return Result.succeed(signList);
     }

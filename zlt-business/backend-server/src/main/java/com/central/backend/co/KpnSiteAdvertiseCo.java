@@ -13,7 +13,7 @@ public class KpnSiteAdvertiseCo extends PageCo {
     @ApiModelProperty(value = "广告名称")
     private String name;
 
-    @ApiModelProperty(value = "站点编码")
+    @ApiModelProperty(value = "站点编码",required = true)
     private String siteCode;
 
 

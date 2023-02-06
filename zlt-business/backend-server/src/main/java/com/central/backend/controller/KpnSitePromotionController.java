@@ -6,6 +6,8 @@ import com.central.common.model.KpnSitePromotion;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,10 @@ public class KpnSitePromotionController {
     @ApiOperation("查询推广好友信息")
     @ResponseBody
     @GetMapping("/findPromotionInfo")
-    public Result<KpnSitePromotion> findPromotionInfo(String siteCode) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "siteCode", value = "站点编码", required = true, dataType = "String"),
+    })
+    public Result<KpnSitePromotion> findPromotionInfo(@RequestParam("siteCode") String siteCode) {
         KpnSitePromotion promotion = promotionService.findPromotionInfo(siteCode);
         return Result.succeed(promotion);
     }
