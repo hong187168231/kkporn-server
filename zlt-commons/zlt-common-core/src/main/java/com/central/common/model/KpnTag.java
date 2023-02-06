@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
+
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @TableName("kpn_tag")
 public class KpnTag extends SuperEntity {
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "标签分类id")
     private Long categoryId;
     @ApiModelProperty(value = "标签分类名称")
@@ -31,4 +32,4 @@ public class KpnTag extends SuperEntity {
     private String nameKh;
     @ApiModelProperty(value = "描述")
     private String remark;
-    }
+}

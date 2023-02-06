@@ -1,7 +1,8 @@
 package com.central.porn.controller;
 
+import com.central.common.model.KpnMovie;
 import com.central.common.model.Result;
-import com.central.porn.entity.vo.KpnSiteMovieVo;
+import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.service.IKpnMovieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,10 +33,10 @@ public class MovieController {
      * @return
      */
     @PostMapping("/ids")
-    @ApiOperation(value = "批量获取影片信息")
-    public Result<List<KpnSiteMovieVo>> getUserChannels(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
+    @ApiOperation(value = "获取影片信息")
+    public Result<List<KpnMovieVo>> getMovieByIds(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
         try {
-            List<KpnSiteMovieVo> siteMovieVos = new ArrayList<>();
+            List<KpnMovieVo> siteMovieVos = movieService.getMovieByIds(movieIds);
 
             return Result.succeed(siteMovieVos, "succeed");
         } catch (Exception e) {

@@ -12,7 +12,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @TableName("kpn_movie")
-public class KpnMovie {
+public class KpnMovie extends SuperEntity{
     @ApiModelProperty("播放地址")
     private String url;
     @ApiModelProperty("播放地址")

@@ -8,11 +8,11 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@ApiModel("站点影片")
-public class KpnSiteMovieVo implements Serializable {
+@ApiModel("影片")
+public class KpnMovieVo implements Serializable {
 
     @ApiModelProperty("影片id")
-    private Long movieId;
+    private Long id;
 
     @ApiModelProperty("影片url")
     private String url;

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class KpnTagVo implements Serializable {
 
     @ApiModelProperty("标签主键")
-    private Long tagId;
+    private Long id;
 
     @ApiModelProperty("标签中文名")
     private String nameZh;
