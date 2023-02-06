@@ -71,7 +71,7 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
             return  Result.failed("文件仅支持MP4,JPG,GIF,PNG,JPEG,且大小不超过10M");
          }
          //随机生成文件名字
-         PictureUtil.generateRandomName(file);
+         file = PictureUtil.generateRandomName(file);
          ObjectInfo objectInfo = minioTemplate.upload(file);
          advertise.setUrl(objectInfo.getObjectPath());
       }

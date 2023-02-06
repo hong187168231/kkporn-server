@@ -69,4 +69,16 @@ public class KpnSiteController {
 
 
 
+    @ApiOperation(value = "随机生成站点编号")
+    @GetMapping("/randomNumber")
+    public Result randomNumber() {
+        String name =siteService.getStringRandom(6);
+        return Result.succeed(name,"操作成功");
+    }
+
+
+
+
+
+
 }

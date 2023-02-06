@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Random;
 
 
 @Slf4j
@@ -51,7 +52,7 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
                 return  Result.failed("文件仅支持MP4,JPG,GIF,PNG,JPEG,且大小不超过10M");
             }
             //随机生成文件名字
-            PictureUtil.generateRandomName(file);
+            file = PictureUtil.generateRandomName(file);
             ObjectInfo objectInfo = minioTemplate.upload(file);
             kpnSite.setLogoUrl(objectInfo.getObjectPath());
         }
@@ -76,4 +77,27 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
         int i = baseMapper.updateById(siteInfo);
         return i>0 ? Result.succeed(siteInfo, "更新成功"): Result.failed("更新失败");
     }
+
+
+
+    @Override
+    public  String getStringRandom(int length) {
+        String val = "";
+        Random random = new Random();
+
+        //参数length，表示生成几位随机数
+        for(int i = 0; i < length; i++) {
+            String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num";
+            //输出字母还是数字
+            if( "char".equalsIgnoreCase(charOrNum) ) {
+                //输出是大写字母还是小写字母
+                int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
+                val += (char)(random.nextInt(26) + temp);
+            } else if( "num".equalsIgnoreCase(charOrNum) ) {
+                val += String.valueOf(random.nextInt(10));
+            }
+        }
+        return val;
+    }
+
 }

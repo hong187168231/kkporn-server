@@ -43,7 +43,7 @@ public class PictureUtil {
     }
 
 
-    public static void generateRandomName(MultipartFile file){
+    public static MultipartFile generateRandomName(MultipartFile file){
         //修改名称
         String originalFilename=file.getOriginalFilename();
         String newFileName = UUID.randomUUID().toString();
@@ -59,5 +59,6 @@ public class PictureUtil {
                 IOException e) {
             e.printStackTrace();
         }
+        return file;
     }
 }

@@ -25,4 +25,7 @@ public interface IKpnSiteService extends ISuperService<KpnSite> {
 
 
     Result updateEnabledSite(KpnSiteUpdateCo params);
+
+    String getStringRandom(int length) ;
+
 }
