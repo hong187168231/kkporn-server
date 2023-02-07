@@ -4,5 +4,11 @@
 <mapper namespace="com.central.backend.mapper.pay.KpnSiteBankMapper">
     <select id="findList" resultType="com.central.common.model.pay.KpnSiteBank">
         select * from kpn_site_bank t
+        <where>
+            1=1
+            <if test="siteId != null and  siteId != '' and  siteId != '0'">
+                and t.site_id = #{siteId}
+            </if>
+        </where>
     </select>
 </mapper>

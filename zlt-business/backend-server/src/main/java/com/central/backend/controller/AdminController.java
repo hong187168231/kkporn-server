@@ -3,14 +3,20 @@ package com.central.backend.controller;
 import com.central.backend.co.EnabledUserCo;
 import com.central.backend.co.GaBindCo;
 import com.central.backend.service.ISysUserService;
+import com.central.common.annotation.LoginUser;
+import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @Api(tags = "管理员中心")
@@ -25,6 +31,22 @@ public class AdminController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    /**
+     * 管理员列表
+     */
+    @ApiOperation(value = "查询管理员列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "管理员账号", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "enabled", value = "状态：0禁用，1启用", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "type", value = "APP：前端app用户，BACKEND：后端管理用户", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
+    })
+    @GetMapping
+    public PageResult list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+        return userService.findList(params,user);
+    }
 
 
     /**

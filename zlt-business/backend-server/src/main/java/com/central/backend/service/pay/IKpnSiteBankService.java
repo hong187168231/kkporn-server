@@ -1,6 +1,7 @@
 package com.central.backend.service.pay;
 
 import com.central.common.model.PageResult;
+import com.central.common.model.SysUser;
 import com.central.common.model.pay.KpnSiteBank;
 import com.central.common.service.ISuperService;
 
@@ -18,6 +19,6 @@ public interface IKpnSiteBankService extends ISuperService<KpnSiteBank> {
      * @param params
      * @return
      */
-    PageResult<KpnSiteBank> findList(Map<String, Object> params);
+    PageResult<KpnSiteBank> findList(Map<String, Object> params, SysUser user);
 }
 

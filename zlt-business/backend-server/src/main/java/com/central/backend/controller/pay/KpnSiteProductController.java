@@ -3,6 +3,8 @@ package com.central.backend.controller.pay;
 import java.util.Map;
 
 import com.central.backend.service.pay.IKpnSiteProductService;
+import com.central.common.annotation.LoginUser;
+import com.central.common.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
@@ -38,8 +40,8 @@ public class KpnSiteProductController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public PageResult list(@RequestParam Map<String, Object> params) {
-        return kpnSiteProductService.findList(params);
+    public PageResult list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        return kpnSiteProductService.findList(params,user);
     }
 
     /**

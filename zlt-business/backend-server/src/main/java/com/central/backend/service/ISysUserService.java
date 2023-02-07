@@ -18,6 +18,7 @@ import java.util.Set;
  * Github: https://github.com/zlt2000
  */
 public interface ISysUserService extends ISuperService<SysUser> {
+	PageResult<SysUser> findList(Map<String, Object> params, SysUser user);
 	/**
 	 * 获取UserDetails对象
 	 * @param username

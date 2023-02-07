@@ -2,6 +2,7 @@ package com.central.backend.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.SysRoleUser;
 import com.central.backend.mapper.SysRoleMenuMapper;
 import com.central.backend.mapper.SysUserMapper;
@@ -51,6 +52,43 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
 
     @Autowired
     private DistributedLock lock;
+
+    @Override
+    public PageResult<SysUser> findList(Map<String, Object> params, SysUser user){
+        QueryWrapper wrapper = new QueryWrapper<SysUser>();
+        if(user.getSiteId()==null || user.getSiteId()==0){//
+        }else {
+            wrapper.eq("siteId", user.getSiteId());
+        }
+        String username = MapUtils.getString(params, "limit");
+        if(null!=username&&!"".equals(username)){
+            wrapper.eq("username", username);
+        }
+        String enabled = MapUtils.getString(params, "enabled");
+        if(null!=enabled&&!"".equals(enabled)) {
+            if("1".equals(enabled)) {
+                wrapper.eq("enabled", true);
+            }else {
+                wrapper.eq("enabled", false);
+            }
+        }
+        wrapper.eq("isDel", false);
+        //账号类型：APP：前端app用户，BACKEND：后端管理用户
+        String type = MapUtils.getString(params, "type");
+        if(null!=type&&!"".equals(type)){
+            wrapper.eq("type", type);
+        }
+
+        Page<SysUser> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
+        Page<SysUser> list = baseMapper.selectPage(page, wrapper);
+        for (SysUser sysUser:list.getRecords()){
+            List<SysRole> sysRoles = roleUserService.findRolesByUserId(sysUser.getId());
+            // 设置角色
+            sysUser.setRoles(sysRoles);
+        }
+
+        return PageResult.<SysUser>builder().data(list.getRecords()).count(page.getTotal()).build();
+    }
 
     @Override
 //    @Cacheable(key="'findByUsername::' + #p0")
