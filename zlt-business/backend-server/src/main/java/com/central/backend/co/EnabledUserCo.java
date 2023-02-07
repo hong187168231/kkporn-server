@@ -14,4 +14,7 @@ public class EnabledUserCo {
     @ApiModelProperty(value = "是否启用(状态：0.禁用，1.启用)")
     private Boolean enabled;
 
+
+    private String updateBy;
+
 }

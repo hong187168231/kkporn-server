@@ -1,6 +1,7 @@
 package com.central.backend.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.SysRoleUser;
@@ -280,8 +281,10 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             return Result.failed("用户不存在");
         }
         appUser.setEnabled(enabled);
+        if (params.getUpdateBy()!=null){
+            appUser.setUpdateBy(params.getUpdateBy());
+        }
         appUser.setUpdateTime(new Date());
-
         int i = baseMapper.updateById(appUser);
         log.info("修改用户：{}", appUser);
 
@@ -415,4 +418,96 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
 //    })
     public void cacheEvictUser(SysUser sysUser) {
     }
+
+
+
+
+    /**
+     * 查询会员管理列表
+     * @param params
+     * @return SysUser
+     * @Author: Lulu
+     * @Date: 2023/2/7
+     */
+    @Override
+    public PageResult<SysUser> findUserList(SysUserCo params) {
+        Page<SysUser> page = new Page<>(params.getPage(), params.getLimit());
+        LambdaQueryWrapper<SysUser> wrapper=new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(params.getSiteCode())){
+            wrapper.eq(SysUser::getSiteCode, params.getSiteCode());
+        }
+        if (StringUtils.isNotBlank(params.getUsername())){
+            wrapper.eq(SysUser::getUsername, params.getUsername());
+        }
+        if (StringUtils.isNotBlank(params.getMobile())){
+            wrapper.eq(SysUser::getMobile, params.getMobile());
+        }
+        if (params.getVip()!=null){
+            wrapper.eq(SysUser::getVip, params.getVip());
+        }
+
+        if (StringUtils.isNotBlank(params.getStartTime())) {
+            wrapper.ge(SysUser::getCreateTime, params.getStartTime());
+        }
+        if (StringUtils.isNotBlank(params.getEndTime())) {
+            wrapper.le(SysUser::getCreateTime, params.getEndTime());
+        }
+
+        wrapper.eq(SysUser::getType,UserTypeEnum.APP.name());
+        wrapper.orderByDesc(SysUser::getCreateTime);
+        Page<SysUser> list = baseMapper.selectPage(page, wrapper);
+        long total = page.getTotal();
+        return PageResult.<SysUser>builder().data(list.getRecords()).count(total).build();
+    }
+
+
+    /**
+     * 添加会员
+     * @param user
+     * @return
+     * @Author: Lulu
+     * @Date: 2023/2/7
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result saveOrUpdateUserInfo(SysUser user) {
+        boolean insert =false;
+        //新增
+        if (user.getId() == null) {
+            LambdaQueryWrapper<SysUser> wrapper=new LambdaQueryWrapper<>();
+            if (StringUtils.isNotBlank(user.getUsername())){
+                wrapper.eq(SysUser::getUsername, user.getUsername());
+            }
+            Integer integer = baseMapper.selectCount(wrapper);
+            if (integer>0){
+                return Result.failed("会员账号已存在");
+            }
+
+            if (StringUtils.isBlank(user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(CommonConstant.DEF_USER_PASSWORD));
+            } else {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            user.setType(UserTypeEnum.APP.name());
+            user.setEnabled(Boolean.TRUE);
+            insert = super.save(user);
+        }else {
+            SysUser userInfo = baseMapper.selectById(user.getId());
+            if (userInfo == null) {
+                return Result.failed("会员不存在");
+            }
+            userInfo.setMobile(user.getMobile());
+            userInfo.setUpdateBy(user.getUpdateBy());
+            int i = baseMapper.updateById(userInfo);
+            insert=i>0 ? true:false;
+        }
+        if(insert){
+            return  Result.succeed(user, "操作成功");
+        }
+        return Result.failed("操作失败");
+    }
+
+
+
+
 }

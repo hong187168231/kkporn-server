@@ -36,7 +36,7 @@ import java.util.*;
  */
 @Slf4j
 @RestController
-@Api(tags = "用户模块api")
+//@Api(tags = "用户模块api")
 @Validated
 public class SysUserController {
     private static final String ADMIN_CHANGE_MSG = "超级管理员不给予修改";

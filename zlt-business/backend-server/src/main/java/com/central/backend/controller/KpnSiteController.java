@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +29,19 @@ public class KpnSiteController {
     private IKpnSiteService siteService;
 
 
+    @Value("${zlt.minio.externalEndpoint}")
+    private String externalEndpoint;
+
     @ApiOperation("查询站点列表")
     @ResponseBody
     @GetMapping("/findSiteList")
     public Result<PageResult<KpnSite>> findSiteList(@ModelAttribute KpnSiteCo params) {
         PageResult<KpnSite> siteList = siteService.findSiteList(params);
+        siteList.getData().stream().forEach(info->{
+            if (info.getLogoUrl()!=null){
+                info.setLogoUrl(externalEndpoint+"/"+info.getLogoUrl());
+            }
+        });
         return Result.succeed(siteList);
     }
 

@@ -137,4 +137,17 @@ public interface ISysUserService extends ISuperService<SysUser> {
 	List<SysUser> findListByIds(List<Long> ids);
 
 	List<SysUserInfoMoneyVo> findListByUserIds(List<Long> userIdList);
+
+
+
+	/**
+	 * 查询会员管理列表
+	 * @param params
+	 * @return SysUser
+	 * @Author: Lulu
+	 */
+	PageResult<SysUser> findUserList(SysUserCo params);
+
+	Result saveOrUpdateUserInfo( SysUser user);
+
 }
