@@ -10,6 +10,7 @@ import com.central.common.model.KpnSiteUserMovieFavorites;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
+import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
 import com.central.porn.mapper.KpnSiteMovieMapper;
@@ -65,6 +66,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             if (ObjectUtil.isNotEmpty(kpnMovie)) {
                 KpnSiteMovieBaseVo kpnSiteMovieBaseVo = new KpnSiteMovieBaseVo();
                 BeanUtil.copyProperties(kpnMovie, kpnSiteMovieBaseVo);
+                kpnSiteMovieBaseVo.setName(LanguageUtil.getLanguageName(kpnSiteMovieBaseVo));
 
                 //获取标签信息
                 List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());

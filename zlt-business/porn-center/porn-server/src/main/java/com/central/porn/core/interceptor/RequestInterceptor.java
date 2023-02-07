@@ -24,12 +24,6 @@ public class RequestInterceptor implements HandlerInterceptor {
         String language = ServletUtil.getHeader(request, PornConstants.Str.LANGUAGE, Charset.defaultCharset());
         LanguageThreadLocal.setLanguage(language);
 
-//        // 校验维护状态
-//        SysPlatformConfig sysPlatformConfig = platformConfigService.queryConfig();
-//        if (sysPlatformConfig.getRepairState()) {
-//            throw new SystemConfigException();
-//        }
-
         return true;
     }
 }

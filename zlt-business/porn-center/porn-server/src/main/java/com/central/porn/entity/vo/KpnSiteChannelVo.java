@@ -8,18 +8,19 @@ import java.io.Serializable;
 
 @Data
 @ApiModel("站点频道")
-public class KpnSiteChannelVo implements Serializable {
-    @ApiModelProperty(value = "频道名称(中文)")
+public class KpnSiteChannelVo extends LanguageNameVo implements Serializable {
+    @ApiModelProperty(value = "主键")
     private Long id;
-
-    @ApiModelProperty(value = "频道名称(中文)")
-    private String nameZh;
-
-    @ApiModelProperty(value = "频道名称(英文)")
-    private String nameEn;
-
-    @ApiModelProperty(value = "频道名称(柬文)")
-    private String nameKh;
+    @ApiModelProperty(value = "频道名称(多语言)")
+    private String name;
+//    @ApiModelProperty(value = "频道名称(中文)")
+//    private String nameZh;
+//
+//    @ApiModelProperty(value = "频道名称(英文)")
+//    private String nameEn;
+//
+//    @ApiModelProperty(value = "频道名称(柬文)")
+//    private String nameKh;
 
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;

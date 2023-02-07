@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @ApiModel("影片")
-public class KpnMovieVo implements Serializable {
+public class KpnMovieVo extends LanguageNameVo implements Serializable {
 
     @ApiModelProperty("影片id")
     private Long id;
@@ -32,14 +32,17 @@ public class KpnMovieVo implements Serializable {
     @ApiModelProperty("站点收藏量")
     private Long favorites;
 
-    @ApiModelProperty("影片中文名")
-    private String nameZh;
+    @ApiModelProperty(value = "影片名称(多语言)")
+    private String name;
 
-    @ApiModelProperty("影片英文名")
-    private String nameEn;
-
-    @ApiModelProperty("影片柬文名")
-    private String nameKh;
+//    @ApiModelProperty("影片中文名")
+//    private String nameZh;
+//
+//    @ApiModelProperty("影片英文名")
+//    private String nameEn;
+//
+//    @ApiModelProperty("影片柬文名")
+//    private String nameKh;
 
     @ApiModelProperty("演员id")
     private Long actorId;

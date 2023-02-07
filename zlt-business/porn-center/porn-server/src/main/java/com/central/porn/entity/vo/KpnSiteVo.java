@@ -19,10 +19,4 @@ public class KpnSiteVo implements Serializable {
 
     @ApiModelProperty("币种")
     private String currencyCode;
-
-//    @ApiModelProperty("站点频道")
-//    private List<KpnSiteChannelVo> channels;
-
-//    @ApiModelProperty("站点专题")
-//    private List<KpnSiteTopicVo> topics;
 }

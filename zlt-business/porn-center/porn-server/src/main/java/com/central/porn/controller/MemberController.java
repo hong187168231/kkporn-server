@@ -5,6 +5,7 @@ import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSiteChannel;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
+import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.KpnMemberChannelVo;
 import com.central.porn.service.IKpnMovieService;
@@ -58,6 +59,7 @@ public class MemberController {
                 KpnMemberChannelVo memberChannelVo = new KpnMemberChannelVo();
                 memberChannelVo.setChannelId(kpnSiteChannel.getId());
                 BeanUtil.copyProperties(kpnSiteChannel, memberChannelVo);
+                memberChannelVo.setName(LanguageUtil.getLanguageName(memberChannelVo));
                 return memberChannelVo;
             }).collect(Collectors.toList());
 

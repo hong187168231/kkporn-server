@@ -1,11 +1,9 @@
 package com.central.porn.core.language;
 
-import cn.hutool.core.util.StrUtil;
-
 public enum LanguageEnum {
     EN("en", "en_us", "英文"),
     ZH("zh", "zh_cn", "中文"),
-    KM("km", "khm", "高棉语"),
+    KH("kh", "khm", "高棉语"),
     TH("th", "th", "泰语"),
     VI("vi", "vi", "越南语");
 

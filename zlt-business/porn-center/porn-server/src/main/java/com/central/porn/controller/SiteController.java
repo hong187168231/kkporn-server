@@ -7,6 +7,7 @@ import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
 import com.central.common.model.*;
 import com.central.common.utils.I18nUtil;
+import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.*;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
@@ -105,6 +106,7 @@ public class SiteController {
             List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
                 KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
                 BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
+                kpnSiteChannelVo.setName(LanguageUtil.getLanguageName(kpnSiteChannelVo));
                 return kpnSiteChannelVo;
             }).collect(Collectors.toList());
 

@@ -8,6 +8,7 @@ import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnTag;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
+import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.KpnTagVo;
 import com.central.porn.mapper.KpnMovieTagMapper;
 import com.central.porn.service.IKpnMovieTagService;
@@ -51,6 +52,7 @@ public class KpnMovieTagServiceImpl extends SuperServiceImpl<KpnMovieTagMapper, 
         //获取标签信息
         for (String tagId : tagIds) {
             KpnTagVo kpnTagVo = tagService.getByTagId(Long.valueOf(tagId));
+            kpnTagVo.setName(LanguageUtil.getLanguageName(kpnTagVo));
             result.add(kpnTagVo);
         }
         return result;
