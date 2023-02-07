@@ -7,7 +7,9 @@ import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.KpnMemberChannelVo;
+import com.central.porn.service.IKpnMovieService;
 import com.central.porn.service.IKpnSiteChannelService;
+import com.central.porn.service.IKpnSiteMovieService;
 import com.central.porn.service.IKpnSiteUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +35,13 @@ public class MemberController {
 
     @Autowired
     private IKpnSiteChannelService siteChannelService;
+
+
+    @Autowired
+    private IKpnMovieService movieService;
+
+    @Autowired
+    private IKpnSiteMovieService siteMovieService;
 
     /**
      * 获取会员自定义频道
@@ -64,7 +73,7 @@ public class MemberController {
      *
      * @return
      */
-    @PostMapping("/changeChannelsSort")
+    @PostMapping("/channel/sort")
     @ApiOperation(value = "会员自定义频道排序")
     public Result<String> changeChannelsSort(@ApiIgnore @LoginUser SysUser user, @RequestBody List<MemberChannelSortCo> channelSortCos) {
         try {
@@ -83,7 +92,7 @@ public class MemberController {
      * @param channelId 添加频道id
      * @return
      */
-    @PostMapping("/addChannel")
+    @PostMapping("/channel/add")
     @ApiOperation(value = "会员自定义频道-添加")
     public Result<String> addChannel(@ApiIgnore @LoginUser SysUser user, Long channelId) {
         try {
@@ -102,12 +111,48 @@ public class MemberController {
      * @param channelId 添加频道id
      * @return
      */
-    @PostMapping("/removeChannel")
+    @PostMapping("/channel/remove")
     @ApiOperation(value = "会员自定义频道-移除")
     public Result<String> removeChannel(@ApiIgnore @LoginUser SysUser user, Long channelId) {
         try {
             siteChannelService.removeChannel(user.getId(), channelId);
             return Result.succeed("succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 会员影片收藏量-增加
+     *
+     * @return 影片收藏量
+     */
+    @PostMapping("/favorites/add")
+    @ApiOperation(value = "收藏影片")
+    public Result<Long> addFavorites(@ApiIgnore @LoginUser SysUser user, Long movieId) {
+        try {
+            Long siteMovieFavorites = siteMovieService.addSiteMovieFavorites(user.getSiteId(), user.getId(), movieId);
+
+            return Result.succeed(siteMovieFavorites, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 会员影片收藏-移除
+     *
+     * @return 影片收藏量
+     */
+    @PostMapping("/favorites/remove")
+    @ApiOperation(value = "取消影片收藏")
+    public Result<Long> removeFavorites(@ApiIgnore @LoginUser SysUser user, Long movieId) {
+        try {
+            Long siteMovieFavorites = siteMovieService.removeSiteMovieFavorites(user.getSiteId(), user.getId(), movieId);
+
+            return Result.succeed(siteMovieFavorites, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

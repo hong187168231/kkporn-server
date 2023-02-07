@@ -25,6 +25,6 @@ public class KpnSiteTopicVo implements Serializable {
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;
 
-    @ApiModelProperty(value = "专题影片Id")
-    private List<Long> movieIds;
+    @ApiModelProperty(value = "影片信息")
+    private List<KpnSiteMovieBaseVo> movieBaseVos;
 }

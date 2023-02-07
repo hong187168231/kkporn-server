@@ -31,16 +31,16 @@ public class Oauth2AuthSuccessHandler implements ServerAuthenticationSuccessHand
         Object principal = authentication.getPrincipal();
         //客户端模式只返回一个clientId
         if (principal instanceof SysUser) {
-            SysUser user = (SysUser)authentication.getPrincipal();
+            SysUser user = (SysUser) authentication.getPrincipal();
             headerValues.add(SecurityConstants.USER_ID_HEADER, String.valueOf(user.getId()));
             headerValues.add(SecurityConstants.USER_HEADER, user.getUsername());
             headerValues.add(SecurityConstants.USER_TYPE_HEADER, user.getType());
-            headerValues.add(SecurityConstants.USER_SITE_ID_HEADER, String.valueOf(user.getSiteId()));
-            headerValues.add(SecurityConstants.USER_SITE_CODE_HEADER, String.valueOf(user.getSiteCode()));
-            headerValues.add(SecurityConstants.USER_SITE_NAME_HEADER, String.valueOf(user.getSiteName()));
+            headerValues.add(SecurityConstants.USER_SITE_ID_HEADER, user.getSiteId() == null ? null : String.valueOf(user.getSiteId()));
+            headerValues.add(SecurityConstants.USER_SITE_CODE_HEADER, user.getSiteCode());
+            headerValues.add(SecurityConstants.USER_SITE_NAME_HEADER, user.getSiteName());
 //            headerValues.add(SecurityConstants.USER_PARENT_HEADER, user.getParent());
         }
-        OAuth2Authentication oauth2Authentication = (OAuth2Authentication)authentication;
+        OAuth2Authentication oauth2Authentication = (OAuth2Authentication) authentication;
         String clientId = oauth2Authentication.getOAuth2Request().getClientId();
         headerValues.add(SecurityConstants.TENANT_HEADER, clientId);
         headerValues.add(SecurityConstants.ROLE_HEADER, CollectionUtil.join(authentication.getAuthorities(), ","));

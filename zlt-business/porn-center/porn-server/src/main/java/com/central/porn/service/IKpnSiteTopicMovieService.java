@@ -14,8 +14,8 @@ public interface IKpnSiteTopicMovieService extends ISuperService<KpnSiteTopicMov
      * @param sid      站点id
      * @param topicId  专题id
      * @param currPage 当前页
-     * @param size     每页条数
+     * @param pageSize 每页条数
      * @return
      */
-    List<Long> getMovieIds(Long sid, Long topicId, Integer currPage, Integer size);
+    List<Long> getMovieIds(Long sid, Long topicId, Integer currPage, Integer pageSize);
 }

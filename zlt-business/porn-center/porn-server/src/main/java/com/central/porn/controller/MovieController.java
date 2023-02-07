@@ -1,15 +1,18 @@
 package com.central.porn.controller;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.central.common.annotation.LoginUser;
 import com.central.common.model.Result;
-import com.central.porn.entity.vo.KpnMovieBaseVo;
-import com.central.porn.entity.vo.KpnMovieVo;
-import com.central.porn.service.IKpnMovieService;
+import com.central.common.model.SysUser;
+import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.service.IKpnSiteMovieService;
+import com.central.porn.service.IKpnSiteUserMovieHistoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -23,10 +26,13 @@ import java.util.List;
 public class MovieController {
 
     @Autowired
-    private IKpnMovieService movieService;
+    private IKpnSiteUserMovieHistoryService userMovieHistoryService;
 
     @Autowired
     private IKpnSiteMovieService siteMovieService;
+
+//    @Autowired
+//    private TaskExecutor taskExecutor;
 
     /**
      * 获取影片
@@ -37,9 +43,9 @@ public class MovieController {
      */
     @PostMapping("/ids")
     @ApiOperation(value = "按id获取影片信息")
-    public Result<List<KpnMovieBaseVo>> getMovieByIds(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
+    public Result<List<KpnSiteMovieBaseVo>> getMovieByIds(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
         try {
-            List<KpnMovieBaseVo> siteMovieVos = movieService.getMovieByIds(movieIds);
+            List<KpnSiteMovieBaseVo> siteMovieVos = siteMovieService.getSiteMovieByIds(sid, movieIds);
 
             return Result.succeed(siteMovieVos, "succeed");
         } catch (Exception e) {
@@ -53,36 +59,21 @@ public class MovieController {
      *
      * @return
      */
-    @PostMapping("/count/vv")
-    @ApiOperation(value = "统计影片点播量(注意暂停后,再点播不掉该接口)")
-    public Result<Long> countVv(@RequestHeader("sid") Long sid, Long movieId) {
+    @PostMapping("/add/vv")
+    @ApiOperation(value = "影片开始播放时调用(注意暂停后,再点播不掉该接口)")
+    public Result<Long> addVv(@RequestHeader("sid") Long sid, @ApiIgnore @LoginUser SysUser sysUser, Long movieId) {
         try {
             Long siteMovieVv = siteMovieService.addSiteMovieVv(sid, movieId);
 
-            return Result.succeed(siteMovieVv,"succeed");
+            //放入浏览历史
+            if (ObjectUtil.isNotEmpty(sysUser)) {
+                userMovieHistoryService.addUserMovieHistory(sysUser.getId(), movieId);
+            }
+
+            return Result.succeed(siteMovieVv, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
         }
     }
-
-    /**
-     * 统计影片收藏量
-     *
-     * @return
-     */
-    @PostMapping("/count/favorites")
-    @ApiOperation(value = "统计影片收藏量")
-    public Result<Long> countFavorites(@RequestHeader("sid") Long sid, Long movieId) {
-        try {
-            Long siteMovieFavorites = siteMovieService.addSiteMovieFavorites(sid, movieId);
-
-            return Result.succeed(siteMovieFavorites,"succeed");
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return Result.failed("failed");
-        }
-    }
-
-
 }

@@ -2,6 +2,7 @@ package com.central.common.resolver;
 
 import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
+import com.central.common.constant.PornConstants;
 import com.central.common.constant.SecurityConstants;
 import com.central.common.model.SysRole;
 import com.central.common.model.SysUser;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 @Slf4j
 public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
-//    private UserService userService;
+    //    private UserService userService;
 //
 //    public TokenArgumentResolver(UserService userService) {
 //        this.userService = userService;
@@ -43,6 +44,7 @@ public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
 
     /**
      * 处理 @LoginUser 参数注解
+     *
      * @param methodParameter       入参集合
      * @param modelAndViewContainer model 和 view
      * @param nativeWebRequest      web相关
@@ -62,6 +64,7 @@ public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
         String username = request.getHeader(SecurityConstants.USER_HEADER);
         String type = request.getHeader(SecurityConstants.USER_TYPE_HEADER);
         String roles = request.getHeader(SecurityConstants.ROLE_HEADER);
+        String siteId = request.getHeader(SecurityConstants.USER_SITE_ID_HEADER);
         //账号类型
         String accountType = request.getHeader(SecurityConstants.ACCOUNT_TYPE_HEADER);
 
@@ -75,10 +78,11 @@ public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
 //        if (isFull) {
 //            user = userService.selectByUsername(username);
 //        } else {
-            user = new SysUser();
-            user.setId(Long.valueOf(userId));
-            user.setUsername(username);
-            user.setType(type);
+        user = new SysUser();
+        user.setId(Long.valueOf(userId));
+        user.setUsername(username);
+        user.setType(type);
+        user.setSiteId(StrUtil.isBlank(siteId) ? null : Long.valueOf(siteId));
 //        }
         List<SysRole> sysRoleList = new ArrayList<>();
         Arrays.stream(roles.split(",")).forEach(role -> {

@@ -100,6 +100,12 @@ public class RedisRepository {
         }
     }
 
+    public static void setExpire(final String key, final long time, TimeUnit timeUnit) {
+        if (time > 0) {
+            redisTemplate.expire(key, time, timeUnit);
+        }
+    }
+
     public static void setExpire(final String key, final Object value, final long time, final TimeUnit timeUnit, RedisSerializer<Object> valueSerializer) {
         byte[] rawKey = rawKey(key);
         byte[] rawValue = rawValue(value, valueSerializer);
@@ -321,8 +327,18 @@ public class RedisRepository {
      * @param key the key
      * @return the long
      */
-    public static long incr(final String key) {
+    public static Long incr(final String key) {
         return redisTemplate.opsForValue().increment(key);
+    }
+
+    /**
+     * 对某个主键对应的值减1,value值必须是全数字的字符串
+     *
+     * @param key the key
+     * @return the long
+     */
+    public static Long decr(final String key) {
+        return redisTemplate.opsForValue().decrement(key);
     }
 
     /**

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,6 +44,7 @@ public class KpnMovieTagServiceImpl extends SuperServiceImpl<KpnMovieTagMapper, 
 
             if (CollectionUtil.isNotEmpty(tagIds)) {
                 RedisRepository.leftPushAll(movieTagRedisKey, tagIds);
+                RedisRepository.setExpire(movieTagRedisKey, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
             }
         }
 

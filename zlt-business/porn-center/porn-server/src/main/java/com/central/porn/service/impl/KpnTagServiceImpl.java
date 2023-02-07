@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -27,7 +28,7 @@ public class KpnTagServiceImpl extends SuperServiceImpl<KpnTagMapper, KpnTag> im
         if (ObjectUtil.isEmpty(kpnTag)) {
             kpnTag = this.getById(tagId);
             if (ObjectUtil.isNotEmpty(kpnTag)) {
-                RedisRepository.set(tagRedisKey, kpnTag);
+                RedisRepository.setExpire(tagRedisKey, kpnTag, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
             }
         }
 
