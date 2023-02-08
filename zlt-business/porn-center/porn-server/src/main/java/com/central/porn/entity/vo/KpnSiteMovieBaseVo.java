@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@ApiModel("站点影片")
+@ApiModel("站点影片基本信息")
 public class KpnSiteMovieBaseVo extends LanguageNameVo implements Serializable {
 
     @ApiModelProperty("影片id")

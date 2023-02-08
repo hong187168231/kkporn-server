@@ -2,6 +2,7 @@ package com.central.porn.service;
 
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 
 import java.util.List;
@@ -10,13 +11,22 @@ import java.util.List;
 public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
 
     /**
-     * 获取站点影片信息
+     * 获取站点影片列表基本信息
      *
      * @param sid      站点id
      * @param movieIds 影片id集合
      * @return
      */
     List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds);
+
+    /**
+     * 获取影片详情
+     *
+     * @param sid     站点id
+     * @param movieId 影片id
+     * @return
+     */
+    KpnMovieVo getSiteMovieDetail(Long sid, Long movieId);
 
     /**
      * 获取站点影片信息

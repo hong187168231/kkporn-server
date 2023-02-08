@@ -89,6 +89,8 @@ public final class PornConstants {
         public static final String KPN_MOVIEID_KEY = "KPN:MOVIEID:{}";
         //缓存影片标签信息 list movieid
         public static final String KPN_MOVIEID_TAGS_KEY = "KPN:MOVIEID:TAGS:{}";
+        //缓存影片标签信息 str actorid
+        public static final String KPN_ACTOR_KEY = "KPN:ACTOR:{}";
         //缓存标签信息 str tagid
         public static final String KPN_TAGID_KEY = "KPN:TAGID:{}";
         //缓存影片播放量 siteid,movieid

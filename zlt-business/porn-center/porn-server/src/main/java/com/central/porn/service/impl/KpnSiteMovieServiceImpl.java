@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
+import com.central.common.model.KpnActor;
 import com.central.common.model.KpnMovie;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.model.KpnSiteUserMovieFavorites;
@@ -11,6 +12,8 @@ import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.core.language.LanguageUtil;
+import com.central.porn.entity.vo.KpnActorVo;
+import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
 import com.central.porn.mapper.KpnSiteMovieMapper;
@@ -41,6 +44,12 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
     @Autowired
     private IKpnSiteUserMovieFavoritesService siteUserMovieFavoritesService;
+
+    @Autowired
+    private IKpnActorService actorService;
+
+    @Autowired
+    private IKpnSiteActorService siteActorService;
 
     @Override
     public List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds) {
@@ -80,6 +89,54 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             }
         }
         return siteMovieVos;
+    }
+
+    @Override
+    public KpnMovieVo getSiteMovieDetail(Long sid, Long movieId) {
+        List<KpnSiteMovieBaseVo> siteMovieVos = new ArrayList<>();
+
+        //从缓存中查询影片信息
+        String movieRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_MOVIEID_KEY, movieId);
+        KpnMovie kpnMovie = (KpnMovie) RedisRepository.get(movieRedisKey);
+
+        //缓存影片信息
+        if (ObjectUtil.isEmpty(kpnMovie)) {
+            kpnMovie = movieService.lambdaQuery()
+                    .eq(KpnMovie::getHandleStatus, true)
+                    .eq(KpnMovie::getStatus, true)
+                    .in(KpnMovie::getId, movieId)
+                    .one();
+            if (ObjectUtil.isNotEmpty(kpnMovie)) {
+                RedisRepository.setExpire(movieRedisKey, kpnMovie, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
+            }
+        }
+
+        KpnMovieVo kpnMovieVo = new KpnMovieVo();
+        if (ObjectUtil.isNotEmpty(kpnMovie)) {
+            BeanUtil.copyProperties(kpnMovie, kpnMovieVo);
+            kpnMovieVo.setName(LanguageUtil.getLanguageName(kpnMovieVo));
+
+            //获取标签信息
+            List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
+            kpnMovieVo.setTagVos(kpnTagVos);
+            siteMovieVos.add(kpnMovieVo);
+
+            //获取播放量
+            KpnSiteMovie siteMovie = siteMovieService.getSiteMovie(sid, kpnMovie.getId());
+            kpnMovieVo.setVv(siteMovie.getVv());
+            kpnMovieVo.setFavorites(siteMovie.getFavorites());
+
+            //获取影片演员
+            KpnActor kpnActor = actorService.getActorById(kpnMovie.getActorId());
+            KpnActorVo kpnActorVo = new KpnActorVo();
+            BeanUtil.copyProperties(kpnActor, kpnActorVo);
+            kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
+            //todo 站点演员收藏量
+            Long siteActorFavorites = siteActorService.getSiteActorFavorites(sid, movieId);
+//            kpnActorVo.setFavorites();
+            //todo 判断是否已经收藏
+        }
+        return kpnMovieVo;
     }
 
     @Override
