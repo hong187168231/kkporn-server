@@ -2,7 +2,9 @@ package com.central.backend.mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.vo.SysUserInfoMoneyVo;
+import com.central.backend.vo.UserExtensionListInfoVo;
 import com.central.backend.vo.UserListInfoVo;
+import com.central.common.model.KpnMoneyLog;
 import com.central.common.model.SysUser;
 import com.central.db.mapper.SuperMapper;
 import com.central.backend.co.*;
@@ -36,4 +38,9 @@ public interface SysUserMapper extends SuperMapper<SysUser> {
 
 
     Integer findMonthNumberInfo(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("date")String date,@Param("merchantCode")String  merchantCode);
+
+
+    List<UserExtensionListInfoVo> findUserExtensionList(Page<UserExtensionListInfoVo> page, @Param("r") SysUserExtensionCo params);
+
+
 }

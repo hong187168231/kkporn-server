@@ -287,4 +287,37 @@
 			#{item}
 		</foreach>
 	</select>
+
+	<select id="findUserExtensionList" resultType="com.central.backend.vo.UserExtensionListInfoVo">
+		SELECT
+			u.username as userName,
+			u.parent_name as parentName,
+			u.create_time  as createTime
+		FROM
+			sys_user u
+		<where>
+			and u.parent_id >0
+			<if test="r.userName != null and r.userName != ''">
+				and u.username = #{r.userName}
+			</if>
+
+			<if test="r.parentName != null and r.parentName != ''">
+				and u.parent_name = #{r.parentName}
+			</if>
+
+			<if test="r.siteCode != null and r.siteCode != ''">
+				and u.site_code = #{r.siteCode}
+			</if>
+
+			<if test="r.startTime != null and r.startTime != ''">
+				AND  u.create_time <![CDATA[>=]]> #{r.startTime}
+			</if>
+
+			<if test="r.endTime != null and r.endTime != ''">
+				AND  u.create_time <![CDATA[<=]]> #{r.endTime}
+			</if>
+		</where>
+	</select>
+
+
 </mapper>

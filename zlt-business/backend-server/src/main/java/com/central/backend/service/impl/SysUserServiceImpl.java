@@ -11,6 +11,7 @@ import com.central.backend.service.ISysRoleUserService;
 import com.central.backend.service.ISysUserService;
 import com.central.backend.util.PasswordUtil;
 import com.central.backend.vo.SysUserInfoMoneyVo;
+import com.central.backend.vo.UserExtensionListInfoVo;
 import com.central.backend.vo.UserListInfoVo;
 import com.central.common.constant.CommonConstant;
 import com.central.common.lock.DistributedLock;
@@ -436,8 +437,8 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
         if (StringUtils.isNotBlank(params.getSiteCode())){
             wrapper.eq(SysUser::getSiteCode, params.getSiteCode());
         }
-        if (StringUtils.isNotBlank(params.getUsername())){
-            wrapper.eq(SysUser::getUsername, params.getUsername());
+        if (StringUtils.isNotBlank(params.getUserName())){
+            wrapper.eq(SysUser::getUsername, params.getUserName());
         }
         if (StringUtils.isNotBlank(params.getMobile())){
             wrapper.eq(SysUser::getMobile, params.getMobile());
@@ -507,6 +508,21 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
         return Result.failed("操作失败");
     }
 
+
+
+    /**
+     * 查询会员推广数据
+     * @param params
+     * @return SysUser
+     * @Author: Lulu
+     * @Date: 2023/2/8
+     */
+    @Override
+    public PageResult<UserExtensionListInfoVo> findUserExtensionList(SysUserExtensionCo params) {
+        Page<UserExtensionListInfoVo> page = new Page<>(params.getPage(), params.getLimit());
+        List<UserExtensionListInfoVo> list  =  baseMapper.findUserExtensionList(page, params);
+        return PageResult.<UserExtensionListInfoVo>builder().data(list).count(page.getTotal()).build();
+    }
 
 
 

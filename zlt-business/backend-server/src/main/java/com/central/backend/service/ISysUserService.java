@@ -1,6 +1,7 @@
 package com.central.backend.service;
 
 import com.central.backend.vo.SysUserInfoMoneyVo;
+import com.central.backend.vo.UserExtensionListInfoVo;
 import com.central.backend.vo.UserListInfoVo;
 import com.central.common.model.*;
 import com.central.common.service.ISuperService;
@@ -149,5 +150,8 @@ public interface ISysUserService extends ISuperService<SysUser> {
 	PageResult<SysUser> findUserList(SysUserCo params);
 
 	Result saveOrUpdateUserInfo( SysUser user);
+
+
+	PageResult<UserExtensionListInfoVo> findUserExtensionList(SysUserExtensionCo params) ;
 
 }

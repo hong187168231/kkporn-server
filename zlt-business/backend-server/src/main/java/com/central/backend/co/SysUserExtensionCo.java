@@ -7,19 +7,15 @@ import lombok.Data;
 
 @Data
 @ApiModel
-public class SysUserCo extends PageCo {
+public class SysUserExtensionCo extends PageCo {
 
 
     @ApiModelProperty(value = "站点编码",required = true)
     private String siteCode;
-
     @ApiModelProperty(value = "会员账号")
     private String userName;
-    @ApiModelProperty(value = "手机号")
-    private String mobile;
-
-    @ApiModelProperty("会员等级 0/false:普通会员,1/true:vip")
-    private Boolean vip;
+    @ApiModelProperty(value = "上级账号")
+    private String parentName;
 
     @ApiModelProperty(value = "开始时间")
     private String startTime;

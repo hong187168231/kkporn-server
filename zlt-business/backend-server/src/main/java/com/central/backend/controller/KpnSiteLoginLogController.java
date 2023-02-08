@@ -1,7 +1,6 @@
 package com.central.backend.controller;
 
 import com.central.backend.co.KpnSiteLoginLogCo;
-import com.central.backend.co.SysUserCo;
 import com.central.backend.service.IKpnSiteLoginLogService;
 import com.central.common.model.KpnSiteLoginLog;
 import com.central.common.model.PageResult;
