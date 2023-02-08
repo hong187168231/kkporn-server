@@ -27,4 +27,10 @@ public class KpnSiteChannelVo extends LanguageNameVo implements Serializable {
 
     @ApiModelProperty(value = "是否固定频道 0自定义,1内置固定")
     private Boolean isStable;
+
+    @ApiModelProperty(value = "是否推荐页")
+    private Boolean isRecommend;
+
+    @ApiModelProperty(value = "是否找片页")
+    private Boolean isSearch;
 }

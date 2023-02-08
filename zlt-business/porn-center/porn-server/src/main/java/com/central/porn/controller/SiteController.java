@@ -9,6 +9,7 @@ import com.central.common.model.*;
 import com.central.common.utils.I18nUtil;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.*;
+import com.central.porn.enums.KpnStableChannelEnum;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -125,6 +126,12 @@ public class SiteController {
                 KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
                 BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
                 kpnSiteChannelVo.setName(LanguageUtil.getLanguageName(kpnSiteChannelVo));
+                if (KpnStableChannelEnum.RECOMMEND.getSort().equals(kpnSiteChannelVo.getSort())) {
+                    kpnSiteChannelVo.setIsRecommend(true);
+                }
+                if (KpnStableChannelEnum.SEARCH.getSort().equals(kpnSiteChannelVo.getSort())) {
+                    kpnSiteChannelVo.setIsSearch(true);
+                }
                 return kpnSiteChannelVo;
             }).collect(Collectors.toList());
 

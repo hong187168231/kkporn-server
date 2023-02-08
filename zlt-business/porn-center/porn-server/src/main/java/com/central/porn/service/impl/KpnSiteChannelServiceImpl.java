@@ -41,7 +41,7 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
                     .orderByDesc(KpnSiteChannel::getCreateTime)
                     .list();
             if (CollectionUtil.isNotEmpty(siteChannels)) {
-                RedisRepository.set(channelRedisKey, siteChannels);
+                RedisRepository.setExpire(channelRedisKey, siteChannels, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
             }
         }
         return siteChannels;
