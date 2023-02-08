@@ -42,7 +42,7 @@ public class SiteController {
     private IKpnSiteTopicService siteTopicService;
 
     @Autowired
-    private IKpnSiteTopicMovieService siteTopicMovieService;
+    private IKpnLineService kpnLineService;
 
     @Autowired
     private IKpnSiteAdvertiseService siteAdvertiseService;
@@ -86,6 +86,24 @@ public class SiteController {
 //            kpnSiteVo.setTopics(topicVos);
 
             return Result.succeed(kpnSiteVo, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 获取站点线路
+     *
+     * @param sid 站点id
+     * @return
+     */
+    @GetMapping("/lines")
+    @ApiOperation(value = "获取站点线路")
+    public Result<Map<String, List<String>>> getLines(@RequestHeader(value = "sid", required = false) Long sid) {
+        try {
+            Map<String, List<String>> kpnLineVos = kpnLineService.getLines();
+            return Result.succeed(kpnLineVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
@@ -142,7 +160,8 @@ public class SiteController {
      */
     @GetMapping("/ads")
     @ApiOperation(value = "获取站点广告")
-    public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid) {
+    public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise
+    (@RequestHeader(value = "sid") Long sid) {
         try {
             List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid);
             List<KpnSiteAdvertiseVo> siteAdVos = siteAds.stream().map(ad -> {

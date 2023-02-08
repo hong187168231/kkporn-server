@@ -36,7 +36,6 @@ public class KpnSiteAdvertise extends SuperEntity {
     @ApiModelProperty(value = "广告名称柬")
     private String nameKh;
 
-
     @ApiModelProperty(value = "投放平台(H5,PC)")
     private String device;
 
