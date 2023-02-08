@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @ApiModel("站点广告")
-public class KpnSiteAdvertiseVo implements Serializable {
+public class KpnSiteAdvertiseVo extends LanguageNameVo implements Serializable {
 
     @ApiModelProperty(value = "广告名称")
     private String name;

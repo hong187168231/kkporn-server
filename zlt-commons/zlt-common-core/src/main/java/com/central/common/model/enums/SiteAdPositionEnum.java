@@ -3,7 +3,7 @@ package com.central.common.model.enums;
 /**
  * 广告位置
  */
-public enum SiteAdLocationEnum {
+public enum SiteAdPositionEnum {
     BANNER(1, "首页-轮播图"),
     PLATFORM(2, "首页-平台图"),
     TOPIC(3, "首页-专题广告"),
@@ -15,7 +15,7 @@ public enum SiteAdLocationEnum {
     private final Integer code;
     private final String remark;
 
-    SiteAdLocationEnum(Integer code, String remark) {
+    SiteAdPositionEnum(Integer code, String remark) {
         this.code = code;
         this.remark = remark;
     }

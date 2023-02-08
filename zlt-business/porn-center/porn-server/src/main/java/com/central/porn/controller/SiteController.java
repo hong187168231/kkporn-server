@@ -160,13 +160,13 @@ public class SiteController {
      */
     @GetMapping("/ads")
     @ApiOperation(value = "获取站点广告")
-    public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise
-    (@RequestHeader(value = "sid") Long sid) {
+    public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid) {
         try {
             List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid);
             List<KpnSiteAdvertiseVo> siteAdVos = siteAds.stream().map(ad -> {
                 KpnSiteAdvertiseVo adVo = new KpnSiteAdvertiseVo();
                 BeanUtil.copyProperties(ad, adVo);
+                adVo.setName(LanguageUtil.getLanguageName(adVo));
                 return adVo;
             }).collect(Collectors.toList());
 
