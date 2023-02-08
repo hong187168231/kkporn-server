@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @ApiModel
-public class KpnSiteLoginLogCo extends PageCo {
+public class KpnMoneyLogCo extends PageCo {
 
 
     @ApiModelProperty(value = "站点编码",required = true)
@@ -16,13 +16,13 @@ public class KpnSiteLoginLogCo extends PageCo {
     @ApiModelProperty(value = "会员账号")
     private String userName;
 
-    @ApiModelProperty(value = "ip")
-    private String loginIp;
+    @ApiModelProperty(value = "订单号")
+    private String orderNo;
 
-    @ApiModelProperty(value = "登录时间-开始")
+    @ApiModelProperty(value = "变动时间-开始")
     private String startTime;
 
-    @ApiModelProperty(value = "登录时间-结束")
+    @ApiModelProperty(value = "变动时间-结束")
     private String endTime;
 
 }

@@ -45,6 +45,7 @@ public class UserController {
      * @param sysUser
      * @return
      */
+    @ApiOperation("新增or更新")
     @PostMapping("/saveOrUpdateUserInfo")
     public Result saveOrUpdateUserInfo(@RequestBody SysUser user, @LoginUser SysUser sysUser) {
 
@@ -62,6 +63,7 @@ public class UserController {
      * 重置登录密码
      * @param id
      */
+    @ApiOperation("重置登录密码")
     @PutMapping(value = "/password/{id}")
     public Result resetPassword(@PathVariable Long id) {
         String password = userService.resetUpdatePassword(id);

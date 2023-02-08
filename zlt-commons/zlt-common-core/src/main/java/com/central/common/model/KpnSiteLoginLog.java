@@ -27,9 +27,9 @@ public class KpnSiteLoginLog extends SuperEntity{
     @ApiModelProperty(value = "用户id")
     private Long userId;
     @ApiModelProperty(value = "用户名")
-    private String username;
+    private String userName;
     @ApiModelProperty(value = "昵称")
-    private String nickname;
+    private String nickName;
 
     @ApiModelProperty(value = "登录时间")
     private Date loginTime;

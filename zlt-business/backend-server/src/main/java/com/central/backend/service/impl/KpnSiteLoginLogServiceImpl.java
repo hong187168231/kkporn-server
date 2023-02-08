@@ -28,8 +28,8 @@ public class KpnSiteLoginLogServiceImpl extends SuperServiceImpl<KpnSiteLoginLog
         if (StringUtils.isNotBlank(params.getSiteCode())){
             wrapper.eq(KpnSiteLoginLog::getSiteCode, params.getSiteCode());
         }
-        if (StringUtils.isNotBlank(params.getUsername())){
-            wrapper.eq(KpnSiteLoginLog::getUsername, params.getUsername());
+        if (StringUtils.isNotBlank(params.getUserName())){
+            wrapper.eq(KpnSiteLoginLog::getUserName, params.getUserName());
         }
         if (StringUtils.isNotBlank(params.getLoginIp())){
             wrapper.eq(KpnSiteLoginLog::getLoginIp, params.getLoginIp());
