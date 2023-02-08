@@ -37,9 +37,12 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
       if (StringUtils.isNotBlank(params.getSiteCode())){
          wrapper.eq(KpnSiteAdvertise::getSiteCode, params.getSiteCode());
       }
+
       if (StringUtils.isNotBlank(params.getName())){
-         wrapper.eq(KpnSiteAdvertise::getName, params.getName());
+         wrapper.like(KpnSiteAdvertise::getNameZh, params.getName())
+                 .or().like(KpnSiteAdvertise::getNameEn,params.getName()).or().like(KpnSiteAdvertise::getNameKh, params.getName());
       }
+
       if (params.getPosition()!=null){
          wrapper.eq(KpnSiteAdvertise::getPosition, params.getPosition());
       }

@@ -27,8 +27,15 @@ public class KpnSiteAdvertise extends SuperEntity {
     @ApiModelProperty(value = "站点名称")
     private String siteName;
 
-    @ApiModelProperty(value = "广告名称")
-    private String name;
+    @ApiModelProperty(value = "广告名称中文")
+    private String nameZh;
+
+    @ApiModelProperty(value = "广告名英文")
+    private String nameEn;
+
+    @ApiModelProperty(value = "广告名称柬")
+    private String nameKh;
+
 
     @ApiModelProperty(value = "投放平台(H5,PC)")
     private String device;
