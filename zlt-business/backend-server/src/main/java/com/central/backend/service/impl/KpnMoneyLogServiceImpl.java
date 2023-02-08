@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"kpnMoneyLog"})
 public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, KpnMoneyLog> implements IKpnMoneyLogService {
 
 

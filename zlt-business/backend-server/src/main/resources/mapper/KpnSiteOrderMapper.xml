@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.central.backend.mapper.KpnSiteOrderMapper">
+
+
+
+	<select id="findOrderTotal" resultType="java.math.BigDecimal">
+		SELECT
+		IFNULL(SUM(o.product_price),0)
+		FROM
+		kpn_site_order o
+		<where>
+			<if test="r.userName != null and r.userName != ''">
+				and o.user_name = #{r.userName}
+			</if>
+			<if test="r.orderNo != null and r.orderNo != ''">
+				and o.order_no = #{r.orderNo}
+			</if>
+			<if test="r.siteCode != null and r.siteCode != ''">
+				and o.site_code = #{r.siteCode}
+			</if>
+			<if test="r.startTime != null and r.startTime != ''">
+				AND  o.create_time <![CDATA[>=]]> #{r.startTime}
+			</if>
+
+			<if test="r.endTime != null and r.endTime != ''">
+				AND  o.create_time <![CDATA[<=]]> #{r.endTime}
+			</if>
+
+			<if test="r.status != null ">
+				AND  o.status = #{r.status}
+			</if>
+		</where>
+	</select>
+
+
+
+</mapper>

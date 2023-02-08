@@ -25,7 +25,6 @@ import java.util.Random;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"KpnSite"})
 public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite> implements IKpnSiteService {
     @Autowired
     private MinioTemplate minioTemplate;

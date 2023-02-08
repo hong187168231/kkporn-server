@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"KpnSitePromotion"})
 public class KpnSitePromotionServiceImpl extends SuperServiceImpl<KpnSitePromotionMapper, KpnSitePromotion> implements IKpnSitePromotionService {
 
     @Override

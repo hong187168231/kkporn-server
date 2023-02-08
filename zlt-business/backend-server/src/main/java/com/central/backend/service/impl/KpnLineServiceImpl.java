@@ -19,7 +19,6 @@ import java.util.Map;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"KpnLine"})
 public class KpnLineServiceImpl extends SuperServiceImpl<KpnLineMapper, KpnLine> implements IKpnLineService {
 
 

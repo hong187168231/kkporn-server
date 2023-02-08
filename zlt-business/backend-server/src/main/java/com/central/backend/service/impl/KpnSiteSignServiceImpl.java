@@ -16,7 +16,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"KpnSiteSign"})
 public class KpnSiteSignServiceImpl extends SuperServiceImpl<KpnSiteSignMapper, KpnSiteSign> implements IKpnSiteSignService {
 
     @Override

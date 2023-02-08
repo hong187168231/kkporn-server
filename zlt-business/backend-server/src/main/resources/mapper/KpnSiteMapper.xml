@@ -44,8 +44,8 @@
 
 	<select id="findSiteTotal" resultType="com.central.backend.vo.KpnSiteVo">
 		SELECT
-			COUNT(DISTINCT s.id) as siteTotal,
-			COUNT(DISTINCT u.id) as memberNumTotal
+			IFNULL(COUNT(DISTINCT s.id),0) as siteTotal,
+				   IFNULL(COUNT(DISTINCT u.id),0) as memberNumTotal
 		FROM
 			kpn_site s
 				LEFT JOIN sys_user u on u.site_id=s.id

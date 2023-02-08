@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"KpnSiteLoginLog"})
 public class KpnSiteLoginLogServiceImpl extends SuperServiceImpl<KpnSiteLoginLogMapper, KpnSiteLoginLog> implements IKpnSiteLoginLogService {
 
 

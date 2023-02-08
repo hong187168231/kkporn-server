@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"KpnSiteAdvertise"})
 public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdvertiseMapper, KpnSiteAdvertise> implements IKpnSiteAdvertiseService {
 
    @Autowired

@@ -22,7 +22,6 @@ import java.util.Date;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"kpnSiteAnnouncement"})
 public class KpnSiteAnnouncementServiceImpl extends SuperServiceImpl<KpnSiteAnnouncementMapper, KpnSiteAnnouncement> implements IKpnSiteAnnouncementService {
 
 

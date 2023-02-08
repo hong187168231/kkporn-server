@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"kpnSiteSuggestion"})
 public class KpnSiteSuggestionServiceImpl extends SuperServiceImpl<KpnSiteSuggestionMapper, KpnSiteSuggestion> implements IKpnSiteSuggestionService {
 
     @Override
