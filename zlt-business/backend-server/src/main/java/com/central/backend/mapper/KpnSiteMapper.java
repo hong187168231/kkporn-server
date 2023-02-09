@@ -2,6 +2,7 @@ package com.central.backend.mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.KpnSiteCo;
+import com.central.backend.vo.KpnSiteListVo;
 import com.central.backend.vo.KpnSiteVo;
 import com.central.common.model.KpnSite;
 import com.central.db.mapper.SuperMapper;
@@ -21,4 +22,7 @@ public interface KpnSiteMapper extends SuperMapper<KpnSite> {
 
 
     KpnSiteVo findSiteTotal();
+
+
+    List<KpnSiteListVo>  findSiteBoxList();
 }

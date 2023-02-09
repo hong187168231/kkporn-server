@@ -3,6 +3,7 @@ package com.central.backend.controller;
 import com.central.backend.co.KpnSiteCo;
 import com.central.backend.co.KpnSiteUpdateCo;
 import com.central.backend.service.IKpnSiteService;
+import com.central.backend.vo.KpnSiteListVo;
 import com.central.backend.vo.KpnSiteVo;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -45,6 +47,15 @@ public class KpnSiteController {
         return Result.succeed(siteList);
     }
 
+
+    @ApiOperation("查询站点下拉框数据")
+    @ResponseBody
+    @GetMapping("/findSiteBoxList")
+    public Result<List<KpnSiteListVo>> findSiteBoxList() {
+        List list = siteService.findSiteBoxList();
+        return Result.succeed(list);
+    }
+
     @ApiOperation(value = "站点总计")
     @GetMapping("/findSiteTotal")
     public Result<KpnSiteVo> findSiteTotal() {
@@ -56,7 +67,7 @@ public class KpnSiteController {
 
     @ApiOperation(value = "新增or更新站点")
     @PostMapping(value = "/saveOrUpdateSite",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Result saveOrUpdateSite(@Valid KpnSite kpnSite, @Valid @RequestParam("file") MultipartFile file, @LoginUser SysUser sysUser) {
+    public Result saveOrUpdateSite(@Valid KpnSite kpnSite, @Valid MultipartFile file, @LoginUser SysUser sysUser) {
   /*     if (kpnSite.getId() == null) {
            kpnSite.setUpdateBy(sysUser.getUsername());
            kpnSite.setCreateBy(sysUser.getUsername());
