@@ -50,6 +50,12 @@ public class KpnActorVo extends LanguageNameVo implements Serializable {
     @ApiModelProperty(value = "简介")
     private String remark;
 
-    @ApiModelProperty(value = "总收藏量(所有站点只和)")
+    @ApiModelProperty(value = "站点影片数")
+    private Long movieNum;
+
+    @ApiModelProperty(value = "站点收藏量")
     private Long favorites;
+
+    @ApiModelProperty("演员收藏状态 false未收藏,true已收藏")
+    private Boolean hasFavor = false;
 }

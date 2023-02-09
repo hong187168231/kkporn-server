@@ -1,18 +1,19 @@
 package com.central.porn.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
+import com.central.common.model.KpnActor;
 import com.central.common.model.KpnSiteActor;
 import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
+import com.central.porn.core.language.LanguageUtil;
+import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.mapper.KpnSiteActorMapper;
-import com.central.porn.service.IAsyncService;
-import com.central.porn.service.IKpnActorService;
-import com.central.porn.service.IKpnSiteActorService;
-import com.central.porn.service.IKpnSiteUserActorFavoritesService;
+import com.central.porn.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,29 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
 
     @Autowired
     private IKpnActorService actorService;
+
+    @Autowired
+    private IKpnSiteActorService siteActorService;
+
+    @Autowired
+    private IKpnSiteMovieService siteMovieService;
+
+    @Override
+    public KpnActorVo getKpnActorVo(Long sid, Long actorId) {
+        //获取影片演员信息
+        KpnActor kpnActor = actorService.getActorById(actorId);
+        KpnActorVo kpnActorVo = new KpnActorVo();
+        BeanUtil.copyProperties(kpnActor, kpnActorVo);
+        kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
+        //站点演员收藏量
+        Long siteActorFavorites = siteActorService.getSiteActorFavorites(sid, kpnActor.getId());
+        kpnActorVo.setFavorites(siteActorFavorites);
+        //站点演员影片数量
+        Long siteActorMovieNum = siteMovieService.getSiteActorMovieNum(sid, actorId);
+        kpnActorVo.setMovieNum(siteActorMovieNum);
+
+        return kpnActorVo;
+    }
 
     @Override
     public Long getSiteActorFavorites(Long sid, Long actorId) {

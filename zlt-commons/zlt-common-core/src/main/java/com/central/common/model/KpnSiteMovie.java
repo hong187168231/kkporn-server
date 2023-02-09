@@ -24,7 +24,10 @@ public class KpnSiteMovie extends SuperEntity {
     @ApiModelProperty(value = "站点名称")
     private String siteName;
 
-    @ApiModelProperty(value = "频道名称(中文)")
+    @ApiModelProperty(value = "演员id")
+    private Long actorId;
+
+    @ApiModelProperty(value = "影片id")
     private Long movieId;
 
     @ApiModelProperty(value = "影片站点播放量")
