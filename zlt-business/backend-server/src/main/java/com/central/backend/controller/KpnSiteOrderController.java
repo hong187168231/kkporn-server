@@ -43,7 +43,7 @@ public class KpnSiteOrderController {
 
     @ApiOperation(value = "审核")
     @GetMapping("/updateStatus")
-    public Result updateStatus(@Valid @ModelAttribute KpnSiteOrderUpdateCo params, @LoginUser SysUser sysUser) {
+    public Result updateStatus(@Valid @ModelAttribute KpnSiteOrderUpdateCo params) {
         // params.setUpdateBy(sysUser.getUsername());
         Result result = orderService.updateStatus(params);
         return result;

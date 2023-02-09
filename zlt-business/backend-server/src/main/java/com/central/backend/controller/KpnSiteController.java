@@ -67,7 +67,7 @@ public class KpnSiteController {
 
     @ApiOperation(value = "新增or更新站点")
     @PostMapping(value = "/saveOrUpdateSite",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Result saveOrUpdateSite(@Valid KpnSite kpnSite, @Valid MultipartFile file, @LoginUser SysUser sysUser) {
+    public Result saveOrUpdateSite(@Valid KpnSite kpnSite, @Valid MultipartFile file) {
   /*     if (kpnSite.getId() == null) {
            kpnSite.setUpdateBy(sysUser.getUsername());
            kpnSite.setCreateBy(sysUser.getUsername());
@@ -80,7 +80,7 @@ public class KpnSiteController {
 
     @ApiOperation(value = "修改站点状态")
     @GetMapping("/updateEnabledSite")
-    public Result updateEnabledSite(@Valid @ModelAttribute KpnSiteUpdateCo params, @LoginUser SysUser sysUser) {
+    public Result updateEnabledSite(@Valid @ModelAttribute KpnSiteUpdateCo params) {
         // params.setUpdateBy(sysUser.getUsername());
         Result result = siteService.updateEnabledSite(params);
         return result;

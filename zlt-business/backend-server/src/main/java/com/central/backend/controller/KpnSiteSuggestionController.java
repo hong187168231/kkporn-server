@@ -41,7 +41,7 @@ public class KpnSiteSuggestionController {
 
     @ApiOperation(value = "修改处理结果")
     @GetMapping("/updateSuggestionStatus")
-    public Result updateSuggestionStatus(@Valid @ModelAttribute KpnSiteSuggestionUpdateCo params, @LoginUser SysUser sysUser) {
+    public Result updateSuggestionStatus(@Valid @ModelAttribute KpnSiteSuggestionUpdateCo params) {
        // params.setUpdateBy(sysUser.getUsername());
         Result result = suggestionService.updateSuggestionStatus(params);
         return result;

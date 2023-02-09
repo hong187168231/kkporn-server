@@ -45,7 +45,7 @@ public class KpnLineController {
 
     @ApiOperation(value = "新增or更新线路")
     @PostMapping( "/saveOrUpdateAdvertise")
-    public Result saveOrUpdateLine(@RequestBody KpnLine line, @LoginUser SysUser sysUser)  {
+    public Result saveOrUpdateLine(@RequestBody KpnLine line)  {
    /*    if (line.getId() == null) {
            line.setUpdateBy(sysUser.getUsername());
            line.setCreateBy(sysUser.getUsername());
@@ -58,7 +58,7 @@ public class KpnLineController {
 
     @ApiOperation(value = "修改广告状态")
     @GetMapping("/updateEnabledAdvertise")
-    public Result updateEnabledLine(@Valid @ModelAttribute KpnLineUpdateCo params, @LoginUser SysUser sysUser) {
+    public Result updateEnabledLine(@Valid @ModelAttribute KpnLineUpdateCo params) {
         // params.setUpdateBy(sysUser.getUsername());
         Result result = lineService.updateEnabledLine(params);
         return result;
