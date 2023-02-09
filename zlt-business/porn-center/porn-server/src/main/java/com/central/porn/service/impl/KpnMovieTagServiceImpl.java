@@ -45,7 +45,7 @@ public class KpnMovieTagServiceImpl extends SuperServiceImpl<KpnMovieTagMapper, 
 
             if (CollectionUtil.isNotEmpty(tagIds)) {
                 RedisRepository.leftPushAll(movieTagRedisKey, tagIds);
-                RedisRepository.setExpire(movieTagRedisKey, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
+                RedisRepository.setExpire(movieTagRedisKey, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
             }
         }
 

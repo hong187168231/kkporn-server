@@ -95,8 +95,10 @@ public final class PornConstants {
         public static final String KPN_TAGID_KEY = "KPN:TAGID:{}";
         //缓存影片播放量 siteid,movieid
         public static final String KPN_SITE_MOVIE_VV_KEY = "KPN:SITEID:MOVIEID:VV:{}:{}";
-        //缓存影片播放量 siteid,movieid
+        //缓存影片收藏量 siteid,movieid
         public static final String KPN_SITE_MOVIE_FAVORITES_KEY = "KPN:SITEID:MOVIEID:Favorites:{}:{}";
+        //缓存站点演员收藏量 siteid,actorid
+        public static final String KPN_SITE_ACTOR_FAVORITES_KEY="KPN:SITEID:ACTORID:{}:{}";
         //缓存线路信息
         public static final String KPN_LINE = "KPN:LINE";
 

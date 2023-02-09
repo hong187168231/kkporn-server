@@ -107,7 +107,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                     .in(KpnMovie::getId, movieId)
                     .one();
             if (ObjectUtil.isNotEmpty(kpnMovie)) {
-                RedisRepository.setExpire(movieRedisKey, kpnMovie, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
+                RedisRepository.setExpire(movieRedisKey, kpnMovie, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
             }
         }
 
@@ -116,7 +116,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             BeanUtil.copyProperties(kpnMovie, kpnMovieVo);
             kpnMovieVo.setName(LanguageUtil.getLanguageName(kpnMovieVo));
 
-            //获取标签信息
+            //获取影片标签信息
             List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
             kpnMovieVo.setTagVos(kpnTagVos);
             siteMovieVos.add(kpnMovieVo);
@@ -126,14 +126,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             kpnMovieVo.setVv(siteMovie.getVv());
             kpnMovieVo.setFavorites(siteMovie.getFavorites());
 
-            //获取影片演员
+            //获取影片演员信息
             KpnActor kpnActor = actorService.getActorById(kpnMovie.getActorId());
             KpnActorVo kpnActorVo = new KpnActorVo();
             BeanUtil.copyProperties(kpnActor, kpnActorVo);
             kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
-            //todo 站点演员收藏量
-            Long siteActorFavorites = siteActorService.getSiteActorFavorites(sid, movieId);
-//            kpnActorVo.setFavorites();
+            //站点演员收藏量
+            Long siteActorFavorites = siteActorService.getSiteActorFavorites(sid, kpnActor.getId());
+            kpnActorVo.setFavorites(siteActorFavorites);
             //todo 判断是否已经收藏
         }
         return kpnMovieVo;
@@ -218,7 +218,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         Object siteMovieVvObj = RedisRepository.get(siteMovieVvKey);
 
         if (ObjectUtil.isEmpty(siteMovieVvObj)) {
-            String lockKey = StrUtil.format("Lock:movieId:vv:{}", movieId);
+            String lockKey = StrUtil.format("Lock:" + siteMovieVvKey, sid, movieId);
             boolean lockedSuccess = RedissLockUtil.tryLock(lockKey, PornConstants.Lock.WAIT_TIME, PornConstants.Lock.LEASE_TIME);
             if (!lockedSuccess) {
                 throw new RuntimeException("加锁失败");
@@ -231,7 +231,6 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                             .eq(KpnSiteMovie::getMovieId, movieId)
                             .one().getVv();
 
-                    //30天过期
                     RedisRepository.setExpire(siteMovieVvKey, vv, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
                 }
             } catch (Exception e) {
@@ -246,7 +245,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         Object siteMovieFavoritesObj = RedisRepository.get(siteMovieFavoritesKey);
 
         if (ObjectUtil.isEmpty(siteMovieFavoritesObj)) {
-            String lockKey = StrUtil.format("Lock:movieId:favorites:{}", movieId);
+            String lockKey = StrUtil.format("Lock:" + siteMovieFavoritesKey, sid, movieId);
             boolean lockedSuccess = RedissLockUtil.tryLock(lockKey, PornConstants.Lock.WAIT_TIME, PornConstants.Lock.LEASE_TIME);
             if (!lockedSuccess) {
                 throw new RuntimeException("加锁失败");
@@ -259,7 +258,6 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                             .eq(KpnSiteMovie::getMovieId, movieId)
                             .one().getFavorites();
 
-                    //1天过期
                     RedisRepository.setExpire(siteMovieFavoritesKey, favorites, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
                 }
             } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.central.porn.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSiteChannel;
 import com.central.common.model.Result;
@@ -9,9 +10,9 @@ import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.KpnMemberChannelVo;
 import com.central.porn.service.IKpnMovieService;
+import com.central.porn.service.IKpnSiteActorService;
 import com.central.porn.service.IKpnSiteChannelService;
 import com.central.porn.service.IKpnSiteMovieService;
-import com.central.porn.service.IKpnSiteUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,8 @@ import java.util.stream.Collectors;
 public class MemberController {
 
     @Autowired
-    private IKpnSiteUserService siteUserService;
+    private IKpnSiteActorService siteActorService;
+
 
     @Autowired
     private IKpnSiteChannelService siteChannelService;
@@ -126,13 +128,13 @@ public class MemberController {
     }
 
     /**
-     * 会员影片收藏量-增加
+     * 会员添加影片收藏
      *
      * @return 影片收藏量
      */
-    @PostMapping("/favorites/add")
-    @ApiOperation(value = "收藏影片")
-    public Result<Long> addFavorites(@ApiIgnore @LoginUser SysUser user, Long movieId) {
+    @PostMapping("/favorites/add/movie")
+    @ApiOperation(value = "会员添加影片收藏")
+    public Result<Long> addMovieFavorites(@ApiIgnore @LoginUser SysUser user, Long movieId) {
         try {
             Long siteMovieFavorites = siteMovieService.addSiteMovieFavorites(user.getSiteId(), user.getId(), movieId);
 
@@ -144,17 +146,61 @@ public class MemberController {
     }
 
     /**
-     * 会员影片收藏-移除
+     * 会员移除影片收藏
      *
      * @return 影片收藏量
      */
-    @PostMapping("/favorites/remove")
+    @PostMapping("/favorites/remove/movie")
     @ApiOperation(value = "取消影片收藏")
-    public Result<Long> removeFavorites(@ApiIgnore @LoginUser SysUser user, Long movieId) {
+    public Result<Long> removeMovieFavorites(@ApiIgnore @LoginUser SysUser user, Long movieId) {
         try {
             Long siteMovieFavorites = siteMovieService.removeSiteMovieFavorites(user.getSiteId(), user.getId(), movieId);
 
             return Result.succeed(siteMovieFavorites, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+
+    /**
+     * 会员添加演员收藏
+     *
+     * @return 站点演员收藏量
+     */
+    @PostMapping("/favorites/add/actor")
+    @ApiOperation(value = "会员添加影片收藏")
+    public Result<Long> addActorFavorites(@ApiIgnore @LoginUser SysUser user, Long actorId) {
+        try {
+            if (ObjectUtil.isEmpty(user)) {
+                return Result.failed("请先登录");
+            }
+
+            Long siteActorFavorites = siteActorService.addSiteActorFavorites(user.getSiteId(), user.getId(), actorId);
+
+            return Result.succeed(siteActorFavorites, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 会员移除演员收藏
+     *
+     * @return 演员收藏量
+     */
+    @PostMapping("/favorites/remove/actor")
+    @ApiOperation(value = "取消影片收藏")
+    public Result<Long> removeActorFavorites(@ApiIgnore @LoginUser SysUser user, Long actorId) {
+        try {
+            if (ObjectUtil.isEmpty(user)) {
+                return Result.failed("请先登录");
+            }
+            Long siteActorFavorites = siteActorService.removeSiteActorFavorites(user.getSiteId(), user.getId(), actorId);
+
+            return Result.succeed(siteActorFavorites, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

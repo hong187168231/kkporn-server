@@ -16,4 +16,7 @@ public class KpnMovieVo extends KpnSiteMovieBaseVo implements Serializable {
     @ApiModelProperty("演员信息")
     private KpnActorVo kpnActorVo;
 
+    @ApiModelProperty("收藏状态 false未收藏,true已收藏")
+    private Boolean hasFavor = false;
+
 }

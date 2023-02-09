@@ -4,11 +4,13 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnActor;
+import com.central.common.model.KpnMovie;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.mapper.KpnActorMapper;
 import com.central.porn.service.IKpnActorService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -28,5 +30,23 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
             }
         }
         return actor;
+    }
+
+    @Async
+    @Override
+    public void addActorFavorites(Long actorId) {
+        this.lambdaUpdate()
+                .eq(KpnActor::getId, actorId)
+                .setSql(" `favorites` = `favorites` + 1")
+                .update();
+    }
+
+    @Async
+    @Override
+    public void removeActorFavorites(Long actorId) {
+        this.lambdaUpdate()
+                .eq(KpnActor::getId, actorId)
+                .setSql(" `favorites` = `favorites` - 1")
+                .update();
     }
 }

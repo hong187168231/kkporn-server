@@ -1,24 +1,23 @@
 package com.central.porn.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.central.common.annotation.LoginUser;
+import com.central.common.model.KpnSiteUserMovieFavorites;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.porn.entity.vo.KpnMovieVo;
-import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.service.IKpnSiteMovieService;
+import com.central.porn.service.IKpnSiteUserMovieFavoritesService;
 import com.central.porn.service.IKpnSiteUserMovieHistoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * 影片相关
@@ -31,6 +30,9 @@ public class MovieController {
 
     @Autowired
     private IKpnSiteUserMovieHistoryService userMovieHistoryService;
+
+    @Autowired
+    private IKpnSiteUserMovieFavoritesService userMovieFavoritesService;
 
     @Autowired
     private IKpnSiteMovieService siteMovieService;
@@ -63,18 +65,28 @@ public class MovieController {
      *
      * @return
      */
-    @PostMapping("/detail")
-    @ApiOperation(value = "获取影片详情")
+    @PostMapping("/detail/info")
+    @ApiOperation(value = "播放页-获取影片详情")
     public Result<KpnMovieVo> detail(@RequestHeader("sid") Long sid, @ApiIgnore @LoginUser SysUser sysUser, Long movieId) {
         try {
             //站点播放次数
             Long siteMovieVv = siteMovieService.addSiteMovieVv(sid, movieId);
-            //放入浏览历史
-            if (ObjectUtil.isNotEmpty(sysUser)) {
-                userMovieHistoryService.addUserMovieHistory(sysUser.getId(), movieId);
-            }
+
             //获取影片详情
             KpnMovieVo kpnMovieVo = siteMovieService.getSiteMovieDetail(sid, movieId);
+            kpnMovieVo.setVv(siteMovieVv);
+
+            //已经登录会员
+            if (ObjectUtil.isNotEmpty(sysUser)) {
+                Long userId = sysUser.getId();
+                //更新浏览历史
+                userMovieHistoryService.addUserMovieHistory(userId, movieId);
+                //收藏状态
+                KpnSiteUserMovieFavorites userMovieFavorites = userMovieFavoritesService.getUserMovieFavorites(userId, movieId);
+                if (ObjectUtil.isNotEmpty(userMovieFavorites)) {
+                    kpnMovieVo.setHasFavor(true);
+                }
+            }
 
             return Result.succeed(kpnMovieVo, "succeed");
         } catch (Exception e) {
