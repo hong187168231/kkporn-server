@@ -106,6 +106,10 @@ public final class PornConstants {
         public static final String BACKEND_WHITELIST_KEY = "Whitelist";
         // 系统维护key
         public static final String SYS_PLATFORM_CONFIG = "SYS_PLATFORM_CONFIG";
+        //访问量
+        public static final String KPN_PV_KEY = "KPN:PV:{}";
+        //独立访客数
+        public static final String KPN_UV_KEY = "KPN:UV:{}";
     }
 
     //sql

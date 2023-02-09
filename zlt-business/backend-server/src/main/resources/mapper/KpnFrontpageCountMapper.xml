@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.central.backend.mapper.KpnFrontpageCountMapper">
+    <select id="findSummaryData" resultType="com.central.backend.model.vo.KpnFrontpageCountVO">
+        select sum(ifnull(pv_count, 0)) as pv_count,
+                sum(ifnull(uv_count, 0)) as uv_count,
+                sum(ifnull(online_users, 0)) as online_users,
+                sum(ifnull(recharge_number, 0)) as recharge_number,
+               sum(ifnull(recharge_amount, 0)) as recharge_amount,
+               sum(ifnull(add_users, 0)) as add_users
+               from kpn_frontpage_count t
+        <where>
+             1=1
+            <if test="status!=null and  status != '' and status = '2'"><!-- 昨天 -->
+                and to_days(now())-to_days(t.count_date) =1
+            </if>
+            <if test="status!=null and  status != '' and status = '3'"><!-- 本月 -->
+                and date_format(curdate(),'%y%m') = date_format(t.count_date,'%y%m')
+            </if>
+        </where>
+    </select>
+</mapper>
