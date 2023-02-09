@@ -6,6 +6,7 @@ import com.central.backend.co.KpnSiteUpdateCo;
 import com.central.backend.mapper.KpnSiteMapper;
 import com.central.backend.service.IKpnSiteService;
 import com.central.backend.util.PictureUtil;
+import com.central.backend.vo.KpnSiteListVo;
 import com.central.backend.vo.KpnSiteVo;
 import com.central.common.model.*;
 import com.central.common.service.impl.SuperServiceImpl;
@@ -97,6 +98,11 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
             }
         }
         return val;
+    }
+
+    @Override
+    public List<KpnSiteListVo> findSiteBoxList() {
+        return baseMapper.findSiteBoxList();
     }
 
 }

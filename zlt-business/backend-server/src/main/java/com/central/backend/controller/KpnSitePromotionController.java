@@ -44,7 +44,7 @@ public class KpnSitePromotionController {
 
     @ApiOperation(value = "保存配置")
     @PostMapping("/saveOrUpdatePromotion")
-    public Result saveOrUpdatePromotion(@RequestBody KpnSitePromotion info, @LoginUser SysUser sysUser) {
+    public Result saveOrUpdatePromotion(@RequestBody KpnSitePromotion info) {
    /*     if (info.getId() == null) {
             info.setUpdateBy(sysUser.getUsername());
             info.setCreateBy(sysUser.getUsername());

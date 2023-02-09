@@ -52,4 +52,14 @@
 
 	</select>
 
+
+	<select id="findSiteBoxList" resultType="com.central.backend.vo.KpnSiteListVo">
+		SELECT
+			s.id as siteId,
+			s.`code` as siteCode,
+			s.`name` as siteName
+		FROM
+			kpn_site s
+	</select>
+
 </mapper>

@@ -13,4 +13,18 @@ public interface IKpnActorService extends ISuperService<KpnActor> {
      * @return
      */
     KpnActor getActorById(Long actorId);
+
+    /**
+     * 增加总关注量
+     *
+     * @param actorId 演员id
+     */
+    void addActorFavorites(Long actorId);
+
+    /**
+     * 减去总关注量
+     *
+     * @param actorId 演员id
+     */
+    void removeActorFavorites(Long actorId);
 }

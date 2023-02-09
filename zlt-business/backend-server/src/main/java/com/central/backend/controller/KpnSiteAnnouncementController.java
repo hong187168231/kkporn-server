@@ -48,7 +48,7 @@ public class KpnSiteAnnouncementController {
      */
     @ApiOperation(value = "新增or更新公告")
     @PostMapping("/saveOrUpdate")
-    public Result saveOrUpdate(@RequestBody KpnSiteAnnouncement announcement, @LoginUser SysUser sysUser)  {
+    public Result saveOrUpdate(@RequestBody KpnSiteAnnouncement announcement)  {
     /*    if (announcement.getId() == null) {
             announcement.setUpdateBy(sysUser.getUsername());
             announcement.setCreateBy(sysUser.getUsername());
@@ -79,7 +79,7 @@ public class KpnSiteAnnouncementController {
 
     @ApiOperation(value = "修改公告状态")
     @GetMapping("/updateEnabled")
-    public Result updateEnabled(@Valid @ModelAttribute KpnSiteAnnouncementUpdateCo params, @LoginUser SysUser sysUser) {
+    public Result updateEnabled(@Valid @ModelAttribute KpnSiteAnnouncementUpdateCo params) {
        // params.setUpdateBy(sysUser.getUsername());
         Result result = announcementService.updateEnabled(params);
         return result;
