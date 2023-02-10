@@ -78,7 +78,7 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
          advertise.setUrl(objectInfo.getObjectPath());
       }
       boolean b = super.saveOrUpdate(advertise);
-      return b ? Result.failed("操作成功") : Result.failed("操作失败") ;
+      return b ? Result.succeed("操作成功") : Result.failed("操作失败") ;
    }
 
    @Override
