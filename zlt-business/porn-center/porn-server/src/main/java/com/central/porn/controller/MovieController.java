@@ -175,9 +175,9 @@ public class MovieController {
      */
     @GetMapping("/search/options")
     @ApiOperation(value = "找片-搜索选项")
-    public Result<Map<String, List<String>>> getSearchOptions() {
+    public Result<Map<String, Map<Integer, String>>> getSearchOptions() {
         try {
-            Map<String, List<String>> searchOptionMap = new TreeMap<>();
+            Map<String, Map<Integer, String>> searchOptionMap = new TreeMap<>();
             searchOptionMap.put(PornConstants.Str.COUNTRY, KpnMovieSearchTypeCountryEnum.getOptions());
             searchOptionMap.put(PornConstants.Str.SUBTITLE, KpnMovieSearchTypeSubtitleEnum.getOptions());
             searchOptionMap.put(PornConstants.Str.SHOOTING, KpnMovieSearchTypeShootingEnum.getOptions());
