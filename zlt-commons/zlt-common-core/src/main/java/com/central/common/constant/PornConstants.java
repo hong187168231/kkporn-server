@@ -46,6 +46,10 @@ public final class PornConstants {
         public static final String SID = "sid";
         public static final String Host = "Host";
         public static final String REFERER = "Referer";
+        public static final String COUNTRY = "country";
+        public static final String SHOOTING = "shooting";
+        public static final String SUBTITLE = "subtitle";
+        public static final String PAY = "pay";
         public static final String IPHONE = "iPhone";
         public static final String ANDROID = "Android";
         public static final String WINDOWS = "Windows";
@@ -126,7 +130,6 @@ public final class PornConstants {
     public static final class Lock {
         public static final Integer WAIT_TIME = 120;//等待 120s
         public static final Integer LEASE_TIME = 30;//自动释放 30s
-        public static final String REDISSON_LOCK_CANCEL_BET = "REDISSON_LOCK_CANCEL:{}";
     }
 
     //多语言key

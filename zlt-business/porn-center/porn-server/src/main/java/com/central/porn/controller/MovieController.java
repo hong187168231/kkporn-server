@@ -3,6 +3,7 @@ package com.central.porn.controller;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
+import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.model.KpnSiteUserMovieFavorites;
 import com.central.common.model.Result;
@@ -10,8 +11,7 @@ import com.central.common.model.SysUser;
 import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
-import com.central.porn.enums.KpnMovieSortOrderEnum;
-import com.central.porn.enums.KpnMovieSortTypeEnum;
+import com.central.porn.enums.*;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 影片相关
@@ -159,6 +162,28 @@ public class MovieController {
             }
             List<KpnSiteMovieBaseVo> siteMovieBaseVoList = siteMovieService.getSiteMovieByActor(sid, actorId, sortType, sortOrder, currPage, pageSize);
             return Result.succeed(siteMovieBaseVoList, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 找片-搜索选项
+     *
+     * @return
+     */
+    @GetMapping("/search/options")
+    @ApiOperation(value = "找片-搜索选项")
+    public Result<Map<String, List<String>>> getSearchOptions() {
+        try {
+            Map<String, List<String>> searchOptionMap = new TreeMap<>();
+            searchOptionMap.put(PornConstants.Str.COUNTRY, KpnMovieSearchTypeCountryEnum.getOptions());
+            searchOptionMap.put(PornConstants.Str.SUBTITLE, KpnMovieSearchTypeSubtitleEnum.getOptions());
+            searchOptionMap.put(PornConstants.Str.SHOOTING, KpnMovieSearchTypeShootingEnum.getOptions());
+            searchOptionMap.put(PornConstants.Str.PAY, KpnMovieSearchTypePayEnum.getOptions());
+
+            return Result.succeed(searchOptionMap, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
