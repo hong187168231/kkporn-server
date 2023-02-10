@@ -1,10 +1,13 @@
 package com.central.backend.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.central.backend.model.vo.KpnFrontpageCountVO;
 import com.central.backend.service.IKpnFrontpageCountService;
+import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnFrontpageCount;
+import com.central.common.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
@@ -38,9 +41,23 @@ public class KpnFrontpageCountController {
             @ApiImplicitParam(name = "status", value = "1：今日 2：昨日 3：本月 4：总计", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result list(@RequestParam Map<String, Object> params) {
-        KpnFrontpageCountVO kpnFrontpageCountVO = kpnFrontpageCountService.findSummaryData(params);
+    public Result list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        KpnFrontpageCountVO kpnFrontpageCountVO = kpnFrontpageCountService.findSummaryData(params,user);
         return Result.succeed(kpnFrontpageCountVO, "查询成功");
+    }
+    /**
+     * 数据走势
+     */
+    @ApiOperation(value = "数据走势")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "startTime", value = "如果是日 1 到 31 如果是月 1到12", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "endTime", value = "如果是日 1 到 31 如果是月 1到12", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "status", value = "1：日 2：月", required = true, dataType = "Integer")
+    })
+    @GetMapping
+    public Result dataTrend(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        List<KpnFrontpageCount> kpnFrontpageCountList = kpnFrontpageCountService.dataTrend(params,user);
+        return Result.succeed(kpnFrontpageCountList, "查询成功");
     }
 //
 //    /**

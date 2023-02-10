@@ -36,6 +36,30 @@
 		</where>
 	</select>
 
+	<select id="totalNumber" resultType="com.central.backend.model.vo.KpnMoneyLogVO">
+		SELECT
+		count(1) AS total_number,
+		sum(ifnull(money, 0)) as money
+		FROM
+		kpn_money_log m
+		LEFT JOIN sys_user u ON u.id = m.user_id
+		<where>
+			1=1
+			<if test="p.siteId != null and  p.siteId != '' and  p.siteId != '0'">
+				and u.site_id = #{p.siteId}
+			</if>
+			<if test="p.transferStatus != null and  p.transferStatus != ''">
+				and m.transfer_status = #{p.transferStatus}
+			</if>
+			<if test="p.orderType != null and  p.orderType != ''">
+				and m.order_type = #{p.orderType}
+			</if>
+			<if test="p.status!=null and  p.status != '' and p.status = '1'"><!-- 今天 -->
+				and to_days(now())-to_days(m.create_time) =0
+			</if>
+		</where>
+	</select>
+
 
 
 </mapper>

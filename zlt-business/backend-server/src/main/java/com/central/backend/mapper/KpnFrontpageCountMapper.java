@@ -24,4 +24,6 @@ public interface KpnFrontpageCountMapper extends SuperMapper<KpnFrontpageCount> 
      * @return
      */
     KpnFrontpageCountVO findSummaryData(@Param("p") Map<String, Object> params);
+
+    List<KpnFrontpageCount> dataTrend(@Param("p") Map<String, Object> params);
 }

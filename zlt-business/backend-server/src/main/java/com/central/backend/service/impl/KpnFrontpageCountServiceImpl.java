@@ -4,16 +4,20 @@ import cn.hutool.core.util.StrUtil;
 import com.central.backend.mapper.KpnFrontpageCountMapper;
 import com.central.backend.model.vo.KpnFrontpageCountVO;
 import com.central.backend.service.IKpnFrontpageCountService;
+import com.central.backend.service.IKpnMoneyLogService;
+import com.central.backend.service.ISysUserService;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnFrontpageCount;
+import com.central.common.model.SysUser;
+import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.redis.template.RedisRepository;
-import io.swagger.annotations.ApiModelProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.central.common.model.PageResult;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.service.impl.SuperServiceImpl;
-
+import com.central.backend.model.vo.KpnMoneyLogVO;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
@@ -29,36 +33,59 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageCountMapper, KpnFrontpageCount> implements IKpnFrontpageCountService {
+    @Autowired
+    private ISysUserService userService;
+    @Autowired
+    private IKpnMoneyLogService moneyLogService;
     /**
      * 列表
      * @param params
      * @return
      */
     @Override
-    public KpnFrontpageCountVO findSummaryData(Map<String, Object> params){
+    public KpnFrontpageCountVO findSummaryData(Map<String, Object> params,SysUser user){
         //1：今日 2：昨日 3：本月 4：总计
         Integer status = MapUtils.getInteger(params, "status");
         KpnFrontpageCountVO kpnFrontpageCountVO = null;
         Long pv = 0L;//访问量
         Long uv = 0L;//独立访客数
-        Long onlineUsers = 0L;//在线人数
-        Long rechargeNumber = 0L;//充值单数
-        BigDecimal rechargeAmount = BigDecimal.ZERO;//充值金额
-        Long addUsers = 0L;//每日新增会员人数
+        //实时在线人数
+        Map<String, Object> userparams = new HashMap<>();
+        userparams.put("isDel",false);
+        userparams.put("isLogin",true);
+        userparams.put("type", UserTypeEnum.APP.name());
+        if(null!=user&&null!=user.getSiteId()&&0!=user.getSiteId()) {
+            userparams.put("siteId",user.getSiteId());
+        }
+        Integer onlineUsers = userService.findUserNum(userparams);
+        Map<String, Object> moneyparams = new HashMap<>();
+        moneyparams.put("orderType","1");
+        moneyparams.put("status","1");
+        KpnMoneyLogVO moneyLogVO = moneyLogService.totalNumber(moneyparams,user);
+        Long rechargeNumber = null!=moneyLogVO.getTotalNumber()?moneyLogVO.getTotalNumber():0L;//充值单数
+        BigDecimal rechargeAmount = null!=moneyLogVO.getMoney()?moneyLogVO.getMoney():BigDecimal.ZERO;//充值金额
+        userparams.remove("isLogin");
+        userparams.put("startTime",new Date());
+        Integer addUsers = userService.findUserNum(userparams);//每日新增会员人数
         if(2!=status){//查询缓存
             String redisPVKey = StrUtil.format(PornConstants.RedisKey.KPN_PV_KEY);
-            pv = (Long)RedisRepository.get(redisPVKey);//访问量
             String redisUVKey = StrUtil.format(PornConstants.RedisKey.KPN_UV_KEY);
-            uv = (Long)RedisRepository.get(redisUVKey);//独立访客数
+            if(null!=user&&null!=user.getSiteId()&&0!=user.getSiteId()) {
+                pv = (Long) RedisRepository.get(redisPVKey + user.getSiteId());//访问量
+                uv = (Long) RedisRepository.get(redisUVKey + user.getSiteId());//独立访客数
+            }else {
+                pv = (Long) RedisRepository.get(redisPVKey + "*");//访问量
+                uv = (Long) RedisRepository.get(redisUVKey + "*");//独立访客数
+            }
         }
         if(1==status){
             kpnFrontpageCountVO = new KpnFrontpageCountVO();
             kpnFrontpageCountVO.setPvCount(pv);
             kpnFrontpageCountVO.setUvCount(uv);
-            kpnFrontpageCountVO.setOnlineUsers(onlineUsers);
+            kpnFrontpageCountVO.setOnlineUsers(Long.valueOf(onlineUsers));
             kpnFrontpageCountVO.setRechargeNumber(rechargeNumber);
             kpnFrontpageCountVO.setRechargeAmount(rechargeAmount);
-            kpnFrontpageCountVO.setAddUsers(addUsers);
+            kpnFrontpageCountVO.setAddUsers(Long.valueOf(addUsers));
             return kpnFrontpageCountVO;
         }else{
             kpnFrontpageCountVO  =  baseMapper.findSummaryData(params);
@@ -68,7 +95,7 @@ public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageC
                 //加上今日缓存数据
                 kpnFrontpageCountVO.setPvCount(pv+kpnFrontpageCountVO.getPvCount());
                 kpnFrontpageCountVO.setUvCount(uv+kpnFrontpageCountVO.getUvCount());
-                kpnFrontpageCountVO.setOnlineUsers(onlineUsers);
+                kpnFrontpageCountVO.setOnlineUsers(Long.valueOf(onlineUsers));
                 kpnFrontpageCountVO.setRechargeNumber(rechargeNumber+kpnFrontpageCountVO.getRechargeNumber());
                 kpnFrontpageCountVO.setRechargeAmount(rechargeAmount.add(kpnFrontpageCountVO.getRechargeAmount()));
                 kpnFrontpageCountVO.setAddUsers(addUsers+kpnFrontpageCountVO.getAddUsers());
@@ -76,5 +103,15 @@ public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageC
         }
 
         return kpnFrontpageCountVO;
+    }
+
+    @Override
+    public List<KpnFrontpageCount> dataTrend(Map<String, Object> params,SysUser user){
+        if(user.getSiteId()!=null && user.getSiteId()!=0){
+            params.put("siteId",user.getSiteId());
+        }
+        List<KpnFrontpageCount> kpnFrontpageCountList =  baseMapper.dataTrend(params);
+
+        return kpnFrontpageCountList;
     }
 }

@@ -20,4 +20,37 @@
             </if>
         </where>
     </select>
+
+    <select id="dataTrend" resultType="com.central.common.model.KpnFrontpageCount">
+        select sum(ifnull(pv_count, 0)) as pv_count,
+        sum(ifnull(uv_count, 0)) as uv_count,
+        sum(ifnull(online_users, 0)) as online_users,
+        sum(ifnull(recharge_number, 0)) as recharge_number,
+        sum(ifnull(recharge_amount, 0)) as recharge_amount,
+        sum(ifnull(add_users, 0)) as add_users
+        from kpn_frontpage_count t
+        <where>
+            1=1
+            <if test="p.siteId != null and  p.siteId != '' and  p.siteId != '0'">
+                and t.site_id = #{p.siteId}
+            </if>
+            <if test="p.status!=null and  p.status != '' and  p.status == '1'">
+                <if test="p.startTime!=null and  p.startTime != ''">
+                    and date_format(t.count_date,'%Y%m%d') <![CDATA[ >= ]]>DATE_FORMAT(#{startTime},'%Y%m%d')
+                </if>
+                <if test="p.endTime!=null and  p.endTime != ''">
+                    and date_format(t.count_date,'%Y%m%d') <![CDATA[ <= ]]>DATE_FORMAT(#{p.endTime},'%Y%m%d')
+                </if>
+            </if>
+            <if test="p.status!=null and  p.status != '' and  p.status == '2'">
+                <if test="p.startTime!=null and  p.startTime != ''">
+                    and date_format(t.count_date,'%Y%m') <![CDATA[ >= ]]>DATE_FORMAT(#{startTime},'%Y%m')
+                </if>
+                <if test="p.endTime!=null and  p.endTime != ''">
+                    and date_format(t.count_date,'%Y%m') <![CDATA[ <= ]]>DATE_FORMAT(#{p.endTime},'%Y%m')
+                </if>
+            </if>
+        order by t.count_date asc
+        </where>
+    </select>
 </mapper>
