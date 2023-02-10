@@ -16,6 +16,9 @@ public class KpnMovieVo extends KpnSiteMovieBaseVo implements Serializable {
     @ApiModelProperty("演员id")
     private Long actorId;
 
+    @ApiModelProperty("付费类型 0/false:免费,1/true:付费")
+    private Boolean payType;
+
     @ApiModelProperty("影片收藏状态 false未收藏,true已收藏")
     private Boolean hasFavor = false;
 
