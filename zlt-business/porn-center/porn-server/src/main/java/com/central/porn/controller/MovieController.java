@@ -1,6 +1,7 @@
 package com.central.porn.controller;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.model.KpnSiteUserMovieFavorites;
@@ -8,16 +9,18 @@ import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.entity.vo.KpnMovieVo;
+import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
+import com.central.porn.enums.KpnMovieSortOrderEnum;
+import com.central.porn.enums.KpnMovieSortTypeEnum;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 /**
  * 影片相关
@@ -43,28 +46,29 @@ public class MovieController {
     @Autowired
     private IKpnSiteActorService siteActorService;
 
+
 //    @Autowired
 //    private TaskExecutor taskExecutor;
 
-//    /**
-//     * 获取影片列表
-//     *
-//     * @param sid      站点id
-//     * @param movieIds 影片id集合
-//     * @return
-//     */
-//    @PostMapping("/ids")
-//    @ApiOperation(value = "按id获取影片列表基本信息")
-//    public Result<List<KpnSiteMovieBaseVo>> getMovieByIds(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
-//        try {
-//            List<KpnSiteMovieBaseVo> siteMovieVos = siteMovieService.getSiteMovieByIds(sid, movieIds);
-//
-//            return Result.succeed(siteMovieVos, "succeed");
-//        } catch (Exception e) {
-//            log.error(e.getMessage(), e);
-//            return Result.failed("failed");
-//        }
-//    }
+    /**
+     * 获取影片列表
+     *
+     * @param sid      站点id
+     * @param movieIds 影片id集合
+     * @return
+     */
+    @PostMapping("/ids")
+    @ApiOperation(value = "按id获取影片列表基本信息")
+    public Result<List<KpnSiteMovieBaseVo>> getMovieByIds(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
+        try {
+            List<KpnSiteMovieBaseVo> siteMovieVos = siteMovieService.getSiteMovieByIds(sid, movieIds);
+
+            return Result.succeed(siteMovieVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
 
     /**
      * 进入播放页,获取影片详细信息
@@ -126,25 +130,39 @@ public class MovieController {
         }
     }
 
-//    /**
-//     * 获取演员影片列表信息
-//     *
-//     * @param sid      站点id
-//     * @param actorId  演员id
-//     * @param currPage 当前页数
-//     * @param pageSize 每页条数
-//     * @return 获取演员详情
-//     */
-//    @GetMapping("/actor/movies")
-//    @ApiOperation(value = "获取演员影片列表信息")
-//    public Result<List<KpnSiteMovieBaseVo>> getActorMovies(@RequestHeader(value = "sid") Long sid, Long actorId, Integer currPage, Integer pageSize) {
-//        try {
-//            KpnActorVo kpnActorVo = siteActorService.getKpnActorVo(sid, actorId);
-//            return Result.succeed(kpnActorVo, "succeed");
-//        } catch (Exception e) {
-//            log.error(e.getMessage(), e);
-//            return Result.failed("failed");
-//        }
-//    }
+    /**
+     * 获取演员影片列表信息
+     *
+     * @param sid      站点id
+     * @param actorId  演员id
+     * @param currPage 当前页数
+     * @param pageSize 每页条数
+     * @return 获取演员详情
+     */
+    @GetMapping("/actor/movies")
+    @ApiOperation(value = "获取演员影片列表信息")
+    public Result<List<KpnSiteMovieBaseVo>> getActorMovies(@RequestHeader(value = "sid") Long sid,
+                                                           Long actorId,
+                                                           String sortType,
+                                                           Integer sortOrder,
+                                                           Integer currPage,
+                                                           Integer pageSize) {
+        try {
+            //排序字段
+            if (StrUtil.isBlank(sortType) || !KpnMovieSortTypeEnum.isLegalType(sortType)) {
+                sortType = KpnMovieSortTypeEnum.HOT.getType();
+            }
+
+            //排序序号
+            if (ObjectUtil.isNull(sortOrder) || !KpnMovieSortOrderEnum.isLegalCode(sortOrder)) {
+                sortOrder = KpnMovieSortOrderEnum.DESC.getCode();
+            }
+            List<KpnSiteMovieBaseVo> siteMovieBaseVoList = siteMovieService.getSiteMovieByActor(sid, actorId, sortType, sortOrder, currPage, pageSize);
+            return Result.succeed(siteMovieBaseVoList, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
 
 }

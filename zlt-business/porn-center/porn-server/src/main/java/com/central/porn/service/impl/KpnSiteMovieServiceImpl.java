@@ -3,6 +3,8 @@ package com.central.porn.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnMovie;
 import com.central.common.model.KpnSiteMovie;
@@ -14,6 +16,8 @@ import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
+import com.central.porn.enums.KpnMovieSortOrderEnum;
+import com.central.porn.enums.KpnMovieSortTypeEnum;
 import com.central.porn.mapper.KpnSiteMovieMapper;
 import com.central.porn.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -213,6 +218,30 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         }
 
         return siteActorMovieNum.longValue();
+    }
+
+    @Override
+    public List<KpnSiteMovieBaseVo> getSiteMovieByActor(Long sid, Long actorId, final String sortType, Integer sortOrder, Integer currPage, Integer pageSize) {
+        LambdaQueryChainWrapper<KpnSiteMovie> lambdaQueryChainWrapper = this.lambdaQuery();
+        lambdaQueryChainWrapper.select(KpnSiteMovie::getMovieId);
+        lambdaQueryChainWrapper.eq(KpnSiteMovie::getSiteId, sid);
+        lambdaQueryChainWrapper.eq(KpnSiteMovie::getActorId, actorId);
+
+        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.HOT.getType())) {
+            lambdaQueryChainWrapper.orderBy(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
+//            lambdaQueryChainWrapper.orderByDesc(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
+        }
+        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
+            lambdaQueryChainWrapper.orderBy(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getCreateTime);
+        }
+        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.TIME.getType())) {
+            lambdaQueryChainWrapper.orderBy(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getDuration);
+        }
+
+        Page<KpnSiteMovie> kpnSiteMoviePage = lambdaQueryChainWrapper.page(new Page<>(currPage, pageSize));
+        List<Long> movieIds = kpnSiteMoviePage.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
+
+        return getSiteMovieByIds(sid, movieIds);
     }
 
     private void cacheSiteMovieVv(String siteMovieVvKey, Long sid, Long movieId) {
