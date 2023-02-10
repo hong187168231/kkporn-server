@@ -54,7 +54,7 @@ public class KpnFrontpageCountController {
             @ApiImplicitParam(name = "endTime", value = "如果是日 1 到 31 如果是月 1到12", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "status", value = "1：日 2：月", required = true, dataType = "Integer")
     })
-    @GetMapping
+    @GetMapping("/dataTrend")
     public Result dataTrend(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
         List<KpnFrontpageCount> kpnFrontpageCountList = kpnFrontpageCountService.dataTrend(params,user);
         return Result.succeed(kpnFrontpageCountList, "查询成功");
