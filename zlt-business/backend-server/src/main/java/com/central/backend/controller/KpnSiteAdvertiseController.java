@@ -69,4 +69,12 @@ public class KpnSiteAdvertiseController {
         return result;
     }
 
+    @ApiOperation("删除广告")
+    @DeleteMapping(value = "/deleteAdvertiseId/{id}")
+    public Result deleteAdvertiseId(@PathVariable Long id) {
+        boolean b = advertiseService.deleteAdvertiseId(id);
+        return b ? Result.succeed("删除成功") : Result.failed("删除失败");
+    }
+
+
 }

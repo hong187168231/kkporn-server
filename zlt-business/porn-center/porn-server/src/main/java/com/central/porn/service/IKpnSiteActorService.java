@@ -2,9 +2,20 @@ package com.central.porn.service;
 
 import com.central.common.model.KpnSiteActor;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.vo.KpnActorVo;
 
 
 public interface IKpnSiteActorService extends ISuperService<KpnSiteActor> {
+
+    /**
+     * 获取演员信息信息
+     *
+     * @param sid
+     * @param actorId
+     * @return
+     */
+    KpnActorVo getKpnActorVo(Long sid, Long actorId);
+
     /**
      * 获取站点演员收藏量
      *

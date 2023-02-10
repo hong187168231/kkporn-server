@@ -13,10 +13,10 @@ public class KpnMovieVo extends KpnSiteMovieBaseVo implements Serializable {
     @ApiModelProperty("影片url")
     private String url;
 
-    @ApiModelProperty("演员信息")
-    private KpnActorVo kpnActorVo;
+    @ApiModelProperty("演员id")
+    private Long actorId;
 
-    @ApiModelProperty("收藏状态 false未收藏,true已收藏")
+    @ApiModelProperty("影片收藏状态 false未收藏,true已收藏")
     private Boolean hasFavor = false;
 
 }

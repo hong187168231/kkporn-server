@@ -61,4 +61,12 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * @param movieId 影片id
      */
     Long removeSiteMovieFavorites(Long sid, Long userId, Long movieId);
+
+    /**
+     *
+     * @param sid
+     * @param actorId
+     * @return
+     */
+    Long getSiteActorMovieNum(Long sid, Long actorId);
 }

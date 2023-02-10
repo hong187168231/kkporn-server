@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
-import com.central.common.model.KpnActor;
 import com.central.common.model.KpnMovie;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.model.KpnSiteUserMovieFavorites;
@@ -12,7 +11,6 @@ import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.core.language.LanguageUtil;
-import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
@@ -125,16 +123,6 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             KpnSiteMovie siteMovie = siteMovieService.getSiteMovie(sid, kpnMovie.getId());
             kpnMovieVo.setVv(siteMovie.getVv());
             kpnMovieVo.setFavorites(siteMovie.getFavorites());
-
-            //获取影片演员信息
-            KpnActor kpnActor = actorService.getActorById(kpnMovie.getActorId());
-            KpnActorVo kpnActorVo = new KpnActorVo();
-            BeanUtil.copyProperties(kpnActor, kpnActorVo);
-            kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
-            //站点演员收藏量
-            Long siteActorFavorites = siteActorService.getSiteActorFavorites(sid, kpnActor.getId());
-            kpnActorVo.setFavorites(siteActorFavorites);
-            //todo 判断是否已经收藏
         }
         return kpnMovieVo;
     }
@@ -212,6 +200,19 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         siteUserMovieFavoritesService.remove(userId, movieId);
 
         return RedisRepository.decr(siteMovieFavoritesKey);
+    }
+
+    @Override
+    public Long getSiteActorMovieNum(Long sid, Long actorId) {
+        String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ACTOR_MOVIENUM_KEY, sid, actorId);
+        Integer siteActorMovieNum = (Integer) RedisRepository.get(redisKey);
+        if (ObjectUtil.isEmpty(siteActorMovieNum)) {
+            siteActorMovieNum = this.lambdaQuery().eq(KpnSiteMovie::getSiteId, sid).eq(KpnSiteMovie::getActorId, actorId).count();
+
+            RedisRepository.setExpire(redisKey, siteActorMovieNum, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+        }
+
+        return siteActorMovieNum.longValue();
     }
 
     private void cacheSiteMovieVv(String siteMovieVvKey, Long sid, Long movieId) {

@@ -2,6 +2,7 @@ package com.central.porn.service;
 
 import com.central.common.model.KpnActor;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.vo.KpnActorVo;
 
 
 public interface IKpnActorService extends ISuperService<KpnActor> {
@@ -27,4 +28,5 @@ public interface IKpnActorService extends ISuperService<KpnActor> {
      * @param actorId 演员id
      */
     void removeActorFavorites(Long actorId);
+
 }

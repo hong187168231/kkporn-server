@@ -57,7 +57,7 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
             kpnSite.setLogoUrl(objectInfo.getObjectPath());
         }
         boolean b = super.saveOrUpdate(kpnSite);
-        return b ? Result.failed("操作成功") : Result.failed("操作失败") ;
+        return b ? Result.succeed("操作成功") : Result.failed("操作失败") ;
     }
 
     @Override

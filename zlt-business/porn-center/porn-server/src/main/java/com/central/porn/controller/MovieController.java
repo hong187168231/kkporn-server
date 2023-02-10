@@ -2,18 +2,18 @@ package com.central.porn.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.central.common.annotation.LoginUser;
+import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.model.KpnSiteUserMovieFavorites;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
+import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.entity.vo.KpnMovieVo;
-import com.central.porn.service.IKpnSiteMovieService;
-import com.central.porn.service.IKpnSiteUserMovieFavoritesService;
-import com.central.porn.service.IKpnSiteUserMovieHistoryService;
+import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +35,13 @@ public class MovieController {
     private IKpnSiteUserMovieFavoritesService userMovieFavoritesService;
 
     @Autowired
+    private IKpnSiteUserActorFavoritesService userActorFavoritesService;
+
+    @Autowired
     private IKpnSiteMovieService siteMovieService;
+
+    @Autowired
+    private IKpnSiteActorService siteActorService;
 
 //    @Autowired
 //    private TaskExecutor taskExecutor;
@@ -65,9 +71,9 @@ public class MovieController {
      *
      * @return
      */
-    @PostMapping("/detail/info")
+    @GetMapping("/detail/info")
     @ApiOperation(value = "播放页-获取影片详情")
-    public Result<KpnMovieVo> detail(@RequestHeader("sid") Long sid, @ApiIgnore @LoginUser SysUser sysUser, Long movieId) {
+    public Result<KpnMovieVo> detailInfo(@RequestHeader("sid") Long sid, @ApiIgnore @LoginUser SysUser sysUser, Long movieId) {
         try {
             //站点播放次数
             Long siteMovieVv = siteMovieService.addSiteMovieVv(sid, movieId);
@@ -81,7 +87,7 @@ public class MovieController {
                 Long userId = sysUser.getId();
                 //更新浏览历史
                 userMovieHistoryService.addUserMovieHistory(userId, movieId);
-                //收藏状态
+                //影片收藏状态
                 KpnSiteUserMovieFavorites userMovieFavorites = userMovieFavoritesService.getUserMovieFavorites(userId, movieId);
                 if (ObjectUtil.isNotEmpty(userMovieFavorites)) {
                     kpnMovieVo.setHasFavor(true);
@@ -95,26 +101,50 @@ public class MovieController {
         }
     }
 
+    /**
+     * 获取演员详细信息
+     *
+     * @return 获取演员详情
+     */
+    @GetMapping("/detail/actor")
+    @ApiOperation(value = "获取影片演员详情")
+    public Result<KpnActorVo> movieActorInfo(@RequestHeader(value = "sid") Long sid, @ApiIgnore @LoginUser SysUser sysUser, Long actorId) {
+        try {
+            KpnActorVo kpnActorVo = siteActorService.getKpnActorVo(sid, actorId);
+            //已经登录会员
+            if (ObjectUtil.isNotEmpty(sysUser)) {
+                //演员收藏状态
+                KpnSiteUserActorFavorites userActorFavorites = userActorFavoritesService.getUserActorFavorites(sysUser.getId(), kpnActorVo.getId());
+                if (ObjectUtil.isNotEmpty(userActorFavorites)) {
+                    kpnActorVo.setHasFavor(true);
+                }
+            }
+            return Result.succeed(kpnActorVo, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
 //    /**
-//     * 统计影片点播量
+//     * 获取演员影片列表信息
 //     *
-//     * @return
+//     * @param sid      站点id
+//     * @param actorId  演员id
+//     * @param currPage 当前页数
+//     * @param pageSize 每页条数
+//     * @return 获取演员详情
 //     */
-//    @PostMapping("/add/vv")
-//    @ApiOperation(value = "影片开始播放时调用(注意暂停后,再点播不掉该接口)")
-//    public Result<Long> addVv(@RequestHeader("sid") Long sid, @ApiIgnore @LoginUser SysUser sysUser, Long movieId) {
+//    @GetMapping("/actor/movies")
+//    @ApiOperation(value = "获取演员影片列表信息")
+//    public Result<List<KpnSiteMovieBaseVo>> getActorMovies(@RequestHeader(value = "sid") Long sid, Long actorId, Integer currPage, Integer pageSize) {
 //        try {
-//            Long siteMovieVv = siteMovieService.addSiteMovieVv(sid, movieId);
-//
-//            //放入浏览历史
-//            if (ObjectUtil.isNotEmpty(sysUser)) {
-//                userMovieHistoryService.addUserMovieHistory(sysUser.getId(), movieId);
-//            }
-//
-//            return Result.succeed(siteMovieVv, "succeed");
+//            KpnActorVo kpnActorVo = siteActorService.getKpnActorVo(sid, actorId);
+//            return Result.succeed(kpnActorVo, "succeed");
 //        } catch (Exception e) {
 //            log.error(e.getMessage(), e);
 //            return Result.failed("failed");
 //        }
 //    }
+
 }
