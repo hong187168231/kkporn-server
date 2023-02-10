@@ -63,10 +63,26 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
     Long removeSiteMovieFavorites(Long sid, Long userId, Long movieId);
 
     /**
+     * 获取站点演员数量
      *
-     * @param sid
-     * @param actorId
+     * @param sid     站点id
+     * @param actorId 演员id
      * @return
      */
     Long getSiteActorMovieNum(Long sid, Long actorId);
+
+
+    /**
+     * 分页查询站点演员影片
+     *
+     * @param sid       站点id
+     * @param actorId   演员id
+     * @param sortType  排序类型 HOT,LATEST,TIME
+     * @param sortOrder 排序顺序 0正序,1倒序
+     * @param actorId   演员id
+     * @param currPage  当前页数
+     * @param pageSize  每页条数
+     * @return
+     */
+    List<KpnSiteMovieBaseVo> getSiteMovieByActor(Long sid, Long actorId, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
 }
