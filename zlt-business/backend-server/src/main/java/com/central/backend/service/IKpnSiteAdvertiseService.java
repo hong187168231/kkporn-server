@@ -6,6 +6,7 @@ import com.central.common.model.KpnSiteAdvertise;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 import com.central.common.service.ISuperService;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -20,5 +21,8 @@ public interface IKpnSiteAdvertiseService extends ISuperService<KpnSiteAdvertise
     Result saveOrUpdateAdvertise(KpnSiteAdvertise advertise, MultipartFile file);
 
     Result updateEnabledAdvertise(KpnSiteAdvertiseUpdateCo params);
+
+
+    Boolean deleteAdvertiseId( Long id);
 
 }

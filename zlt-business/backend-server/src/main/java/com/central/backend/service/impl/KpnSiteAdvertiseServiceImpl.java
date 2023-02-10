@@ -94,6 +94,10 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
       return i>0 ? Result.succeed(advertise, "更新成功"): Result.failed("更新失败");
    }
 
+   @Override
+   public Boolean deleteAdvertiseId(Long id) {
+      return baseMapper.deleteById(id) > 0;
+   }
 
 
 }
