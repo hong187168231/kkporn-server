@@ -52,16 +52,20 @@ public interface IKpnSiteActorService extends ISuperService<KpnSiteActor> {
      *
      * @param sid       站点id
      * @param sortOrder 排序顺序 ASC DESC
+     * @param currPage  当前第几页
+     * @param pageSize  每页条数
      * @return 演员列表
      */
-    List<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder);
+    List<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder, Integer currPage, Integer pageSize);
 
     /**
      * 获取演员列表-创建时间
      *
-     * @param sid           站点id
+     * @param sid       站点id
      * @param sortOrder 排序顺序 ASC DESC
+     * @param currPage  当前第几页
+     * @param pageSize  每页条数
      * @return 演员列表
      */
-    List<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder);
+    List<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder, Integer currPage, Integer pageSize);
 }

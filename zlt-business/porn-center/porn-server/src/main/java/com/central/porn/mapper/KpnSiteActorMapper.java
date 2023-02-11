@@ -13,18 +13,22 @@ public interface KpnSiteActorMapper extends BaseMapper<KpnSiteActor> {
     /**
      * 获取演员列表-按收藏量
      *
-     * @param sid       站点id
-     * @param sortOrder 排序顺序
+     * @param sid        站点id
+     * @param sortOrder  排序顺序
+     * @param startIndex 起始index
+     * @param pageSize   每页条数
      * @return
      */
-    List<Long> getActorListByFavorites(@Param("sid") Long sid, @Param("sortOrder") String sortOrder);
+    List<Long> getActorListByFavorites(@Param("sid") Long sid, @Param("sortOrder") String sortOrder, @Param("startIndex") Integer startIndex, @Param("pageSize") Integer pageSize);
 
     /**
      * 获取演员列表-按创建时间
      *
      * @param sid       站点id
      * @param sortOrder 排序顺序
+     * @param startIndex  当前页
+     * @param pageSize  每页条数
      * @return
      */
-    List<Long> getActorListByCreateTime(@Param("sid") Long sid, @Param("sortOrder") String sortOrder);
+    List<Long> getActorListByCreateTime(@Param("sid") Long sid, @Param("sortOrder") String sortOrder, @Param("startIndex") Integer startIndex, @Param("pageSize") Integer pageSize);
 }

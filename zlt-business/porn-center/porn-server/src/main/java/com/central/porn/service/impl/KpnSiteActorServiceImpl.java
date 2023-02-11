@@ -1,6 +1,7 @@
 package com.central.porn.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
@@ -118,8 +119,12 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
     }
 
     @Override
-    public List<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder) {
-        List<Long> actorIds = baseMapper.getActorListByFavorites(sid, sortOrder);
+    public List<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder, Integer currPage, Integer pageSize) {
+        Integer startIndex = (currPage - 1) * pageSize;
+        List<Long> actorIds = baseMapper.getActorListByFavorites(sid, sortOrder, startIndex, pageSize);
+        if (CollectionUtil.isEmpty(actorIds)) {
+            return new ArrayList<>();
+        }
         List<KpnActor> kpnActors = actorService.getActorByIds(actorIds);
 
         return kpnActors.stream().map(kpnActor -> {
@@ -131,8 +136,13 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
     }
 
     @Override
-    public List<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder) {
-        List<Long> actorIds = baseMapper.getActorListByCreateTime(sid, sortOrder);
+    public List<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder, Integer currPage, Integer pageSize) {
+        Integer startIndex = (currPage - 1) * pageSize;
+        List<Long> actorIds = baseMapper.getActorListByCreateTime(sid, sortOrder, startIndex, pageSize);
+        if (CollectionUtil.isEmpty(actorIds)) {
+            return new ArrayList<>();
+        }
+
         List<KpnActor> kpnActors = actorService.getActorByIds(actorIds);
 
         return kpnActors.stream().map(kpnActor -> {

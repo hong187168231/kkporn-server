@@ -195,11 +195,32 @@ public class SiteController {
     }
 
     /**
+     * 热门演员表-收藏量取前10
+     */
+    @GetMapping("/actor/top10")
+    @ApiOperation(value = "热门演员表Top10")
+    public Result<List<KpnActorVo>> getActorList(@RequestHeader("sid") Long sid) {
+        try {
+            List<KpnActorVo> actorListByFavorites = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.DESC.name(), 1, 10);
+            return Result.succeed(actorListByFavorites);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
      * 演员列表查询
+     *
+     * @param sid           站点id
+     * @param sortType      排序列
+     * @param sortOrderCode 排序顺序
+     * @param currPage      当前页数
+     * @param pageSize      每页条数
      */
     @GetMapping("/actor/list")
     @ApiOperation(value = "演员列表")
-    public Result<List<KpnActorVo>> getActorList(@RequestHeader("sid") Long sid, String sortType, Integer sortOrderCode) {
+    public Result<List<KpnActorVo>> getActorList(@RequestHeader("sid") Long sid, String sortType, Integer sortOrderCode, Integer currPage, Integer pageSize) {
         try {
             //排序字段
             if (StrUtil.isBlank(sortType) || !KpnActorSortTypeEnum.isLegalType(sortType)) {
@@ -213,12 +234,12 @@ public class SiteController {
 
             List<KpnActorVo> actorVos = new ArrayList<>();
             //按收藏量查询
-            if(sortType.equalsIgnoreCase(KpnActorSortTypeEnum.HOT.getType())){
-                actorVos = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.getByCode(sortOrderCode).name());
+            if (sortType.equalsIgnoreCase(KpnActorSortTypeEnum.HOT.getType())) {
+                actorVos = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.getByCode(sortOrderCode).name(), currPage, pageSize);
             }
             //按创建时间
-            else if(sortType.equalsIgnoreCase(KpnActorSortTypeEnum.LATEST.getType())){
-                actorVos = siteActorService.getActorListByCreateTime(sid, KpnSortOrderEnum.getByCode(sortOrderCode).name());
+            else if (sortType.equalsIgnoreCase(KpnActorSortTypeEnum.LATEST.getType())) {
+                actorVos = siteActorService.getActorListByCreateTime(sid, KpnSortOrderEnum.getByCode(sortOrderCode).name(), currPage, pageSize);
             }
 
             return Result.succeed(actorVos, "succeed");
@@ -227,7 +248,6 @@ public class SiteController {
             return Result.failed("failed");
         }
     }
-
 
 
     /**

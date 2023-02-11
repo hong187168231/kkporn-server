@@ -8,13 +8,14 @@
         from (select distinct actor_id from kpn_site_movie where site_id = #{sid}) a
                  left join kpn_site_actor b on b.actor_id = a.actor_id
         order by b.favorites ${sortOrder}
-        limit 100
+        limit #{startIndex}, #{pageSize}
     </select>
+
     <select id="getActorListByCreateTime" resultType="java.lang.Long">
         select distinct actor_id
         from kpn_site_movie
         where site_id = #{sid}
         order by actor_create_time ${sortOrder}
-        limit 100
+        limit #{startIndex}, #{pageSize}
     </select>
 </mapper>
