@@ -11,7 +11,7 @@
         <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == 0">
             (SELECT mt.tag_id,count(mt.movie_id),sum(sm.vv) as vv FROM kpn_movie_tag mt LEFT JOIN  kpn_site_movie sm ON mt.movie_id= sm.movie_id LEFT JOIN kpn_movie m ON sm.movie_id= m.id WHERE sm.status='1' and sm.site_id = #{p.siteId}  GROUP BY mt.tag_category_id,mt.tag_id) s
         </if>
-        ON a.id=s.tag_id
+        ON t.id=s.tag_id
         <where>
             1=1
             <if test="p.id != null and  p.id != '' and  p.id != 0">
