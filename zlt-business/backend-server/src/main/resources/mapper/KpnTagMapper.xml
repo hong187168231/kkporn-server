@@ -5,7 +5,7 @@
     <select id="findList" resultType="com.central.backend.model.vo.KpnTagVO">
         select * from kpn_tag t
         LEFT JOIN
-        <if test="p.headquarters == null || p.headquarters == '' || p.headquarters == '1'">
+        <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == '1'">
             (SELECT mt.tag_id,count(mt.movie_id),sum(m.vv) as vv FROM kpn_movie_tag mt LEFT JOIN kpn_movie m ON mt.movie_id= m.id WHERE m.status='1' GROUP BY mt.tag_category_id,mt.tag_id) s
         </if>
         <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == '0'">
