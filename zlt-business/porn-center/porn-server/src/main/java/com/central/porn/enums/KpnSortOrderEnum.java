@@ -1,6 +1,9 @@
 package com.central.porn.enums;
 
-public enum KpnMovieSortOrderEnum {
+/**
+ * 通用排序规则
+ */
+public enum KpnSortOrderEnum {
     ASC(0, "正序"),
     DESC(1, "倒序"),
     ;
@@ -10,13 +13,22 @@ public enum KpnMovieSortOrderEnum {
     //描述
     private String remark;
 
-    KpnMovieSortOrderEnum(Integer code, String remark) {
+    KpnSortOrderEnum(Integer code, String remark) {
         this.code = code;
         this.remark = remark;
     }
 
+    public static KpnSortOrderEnum getByCode(Integer code) {
+        for (KpnSortOrderEnum orderEnum : values()) {
+            if (orderEnum.getCode().equals(code)) {
+                return orderEnum;
+            }
+        }
+        return ASC;
+    }
+
     public static boolean isLegalCode(Integer code) {
-        for (KpnMovieSortOrderEnum orderEnum : values()) {
+        for (KpnSortOrderEnum orderEnum : values()) {
             if (orderEnum.getCode().equals(code)) {
                 return true;
             }

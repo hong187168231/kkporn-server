@@ -16,7 +16,7 @@ import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
-import com.central.porn.enums.KpnMovieSortOrderEnum;
+import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.enums.KpnMovieSortTypeEnum;
 import com.central.porn.mapper.KpnSiteMovieMapper;
 import com.central.porn.service.*;
@@ -228,14 +228,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         lambdaQueryChainWrapper.eq(KpnSiteMovie::getActorId, actorId);
 
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.HOT.getType())) {
-            lambdaQueryChainWrapper.orderBy(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
+            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
 //            lambdaQueryChainWrapper.orderByDesc(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
         }
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
-            lambdaQueryChainWrapper.orderBy(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getCreateTime);
+            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getCreateTime);
         }
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.TIME.getType())) {
-            lambdaQueryChainWrapper.orderBy(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getDuration);
+            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getDuration);
         }
 
         Page<KpnSiteMovie> kpnSiteMoviePage = lambdaQueryChainWrapper.page(new Page<>(currPage, pageSize));

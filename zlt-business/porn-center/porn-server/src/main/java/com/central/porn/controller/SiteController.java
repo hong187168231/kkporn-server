@@ -9,6 +9,8 @@ import com.central.common.model.*;
 import com.central.common.utils.I18nUtil;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.*;
+import com.central.porn.enums.KpnActorSortTypeEnum;
+import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.enums.KpnStableChannelEnum;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,6 +50,9 @@ public class SiteController {
 
     @Autowired
     private IKpnSiteAdvertiseService siteAdvertiseService;
+
+    @Autowired
+    private IKpnSiteActorService siteActorService;
 
     /**
      * 获取站点信息
@@ -188,7 +194,39 @@ public class SiteController {
         }
     }
 
+    /**
+     * 演员列表查询
+     */
+    @GetMapping("/actor/list")
+    @ApiOperation(value = "演员列表")
+    public Result<List<KpnActorVo>> getActorList(@RequestHeader("sid") Long sid, String sortType, Integer sortOrderCode) {
+        try {
+            //排序字段
+            if (StrUtil.isBlank(sortType) || !KpnActorSortTypeEnum.isLegalType(sortType)) {
+                sortType = KpnActorSortTypeEnum.HOT.getType();
+            }
 
+            //排序顺序
+            if (ObjectUtil.isNull(sortOrderCode) || !KpnSortOrderEnum.isLegalCode(sortOrderCode)) {
+                sortOrderCode = KpnSortOrderEnum.DESC.getCode();
+            }
+
+            List<KpnActorVo> actorVos = new ArrayList<>();
+            //按收藏量查询
+            if(sortType.equalsIgnoreCase(KpnActorSortTypeEnum.HOT.getType())){
+                actorVos = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.getByCode(sortOrderCode).name());
+            }
+            //按创建时间
+            else if(sortType.equalsIgnoreCase(KpnActorSortTypeEnum.LATEST.getType())){
+                actorVos = siteActorService.getActorListByCreateTime(sid, KpnSortOrderEnum.getByCode(sortOrderCode).name());
+            }
+
+            return Result.succeed(actorVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
 
 
 

@@ -4,6 +4,8 @@ import com.central.common.model.KpnSiteActor;
 import com.central.common.service.ISuperService;
 import com.central.porn.entity.vo.KpnActorVo;
 
+import java.util.List;
+
 
 public interface IKpnSiteActorService extends ISuperService<KpnSiteActor> {
 
@@ -28,7 +30,7 @@ public interface IKpnSiteActorService extends ISuperService<KpnSiteActor> {
     /**
      * 收藏演员
      *
-     * @param sid  站点id
+     * @param sid     站点id
      * @param userId  会员id
      * @param actorId 演员id
      * @return 最新收藏量
@@ -38,10 +40,28 @@ public interface IKpnSiteActorService extends ISuperService<KpnSiteActor> {
     /**
      * 取消演员收藏
      *
-     * @param sid  站点id
+     * @param sid     站点id
      * @param userId  会员id
      * @param actorId 演员id
      * @return 最新收藏量
      */
     Long removeSiteActorFavorites(Long sid, Long userId, Long actorId);
+
+    /**
+     * 获取演员列表-收藏量
+     *
+     * @param sid       站点id
+     * @param sortOrder 排序顺序 ASC DESC
+     * @return 演员列表
+     */
+    List<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder);
+
+    /**
+     * 获取演员列表-创建时间
+     *
+     * @param sid           站点id
+     * @param sortOrder 排序顺序 ASC DESC
+     * @return 演员列表
+     */
+    List<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder);
 }

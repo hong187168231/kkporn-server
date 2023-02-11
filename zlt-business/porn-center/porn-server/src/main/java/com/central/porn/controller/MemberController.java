@@ -170,7 +170,7 @@ public class MemberController {
      * @return 站点演员收藏量
      */
     @PostMapping("/favorites/add/actor")
-    @ApiOperation(value = "会员添加影片收藏")
+    @ApiOperation(value = "会员添加演员收藏")
     public Result<Long> addActorFavorites(@ApiIgnore @LoginUser SysUser user, Long actorId) {
         try {
             if (ObjectUtil.isEmpty(user)) {
@@ -192,7 +192,7 @@ public class MemberController {
      * @return 演员收藏量
      */
     @PostMapping("/favorites/remove/actor")
-    @ApiOperation(value = "取消影片收藏")
+    @ApiOperation(value = "取消演员收藏")
     public Result<Long> removeActorFavorites(@ApiIgnore @LoginUser SysUser user, Long actorId) {
         try {
             if (ObjectUtil.isEmpty(user)) {

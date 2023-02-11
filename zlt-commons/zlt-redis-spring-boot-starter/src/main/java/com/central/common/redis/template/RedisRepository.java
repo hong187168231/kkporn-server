@@ -203,6 +203,16 @@ public class RedisRepository {
     }
 
     /**
+     * 根据批量key获取对象
+     *
+     * @param keys the key
+     * @return the string
+     */
+    public static List<Object> mget(final List<String> keys) {
+        return redisTemplate.opsForValue().multiGet(keys);
+    }
+
+    /**
      * 根据key获取对象
      *
      * @param key             the key

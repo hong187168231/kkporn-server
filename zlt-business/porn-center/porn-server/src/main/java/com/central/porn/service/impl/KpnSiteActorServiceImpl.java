@@ -12,11 +12,17 @@ import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.KpnActorVo;
+import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.mapper.KpnSiteActorMapper;
 import com.central.porn.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,8 +37,8 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
     @Autowired
     private IKpnActorService actorService;
 
-    @Autowired
-    private IKpnSiteActorService siteActorService;
+//    @Autowired
+//    private IKpnSiteActorService siteActorService;
 
     @Autowired
     private IKpnSiteMovieService siteMovieService;
@@ -40,12 +46,12 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
     @Override
     public KpnActorVo getKpnActorVo(Long sid, Long actorId) {
         //获取影片演员信息
-        KpnActor kpnActor = actorService.getActorById(actorId);
+        KpnActor kpnActor = actorService.getActorByIds(Collections.singletonList(actorId)).get(0);
         KpnActorVo kpnActorVo = new KpnActorVo();
         BeanUtil.copyProperties(kpnActor, kpnActorVo);
         kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
         //站点演员收藏量
-        Long siteActorFavorites = siteActorService.getSiteActorFavorites(sid, kpnActor.getId());
+        Long siteActorFavorites = getSiteActorFavorites(sid, kpnActor.getId());
         kpnActorVo.setFavorites(siteActorFavorites);
         //站点演员影片数量
         Long siteActorMovieNum = siteMovieService.getSiteActorMovieNum(sid, actorId);
@@ -109,6 +115,32 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
         userActorFavoritesService.remove(userId, actorId);
 
         return RedisRepository.decr(siteActorFavoritesKey);
+    }
+
+    @Override
+    public List<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder) {
+        List<Long> actorIds = baseMapper.getActorListByFavorites(sid, sortOrder);
+        List<KpnActor> kpnActors = actorService.getActorByIds(actorIds);
+
+        return kpnActors.stream().map(kpnActor -> {
+            KpnActorVo kpnActorVo = new KpnActorVo();
+            BeanUtil.copyProperties(kpnActor, kpnActorVo);
+            kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
+            return kpnActorVo;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder) {
+        List<Long> actorIds = baseMapper.getActorListByCreateTime(sid, sortOrder);
+        List<KpnActor> kpnActors = actorService.getActorByIds(actorIds);
+
+        return kpnActors.stream().map(kpnActor -> {
+            KpnActorVo kpnActorVo = new KpnActorVo();
+            BeanUtil.copyProperties(kpnActor, kpnActorVo);
+            kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
+            return kpnActorVo;
+        }).collect(Collectors.toList());
     }
 
     private void cacheSiteActorFavorites(String siteActorFavoritesKey, Long sid, Long actorId) {

@@ -157,8 +157,8 @@ public class MovieController {
             }
 
             //排序序号
-            if (ObjectUtil.isNull(sortOrder) || !KpnMovieSortOrderEnum.isLegalCode(sortOrder)) {
-                sortOrder = KpnMovieSortOrderEnum.DESC.getCode();
+            if (ObjectUtil.isNull(sortOrder) || !KpnSortOrderEnum.isLegalCode(sortOrder)) {
+                sortOrder = KpnSortOrderEnum.DESC.getCode();
             }
             List<KpnSiteMovieBaseVo> siteMovieBaseVoList = siteMovieService.getSiteMovieByActor(sid, actorId, sortType, sortOrder, currPage, pageSize);
             return Result.succeed(siteMovieBaseVoList, "succeed");
