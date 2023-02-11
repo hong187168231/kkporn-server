@@ -22,4 +22,8 @@ public interface ServiceNameConstants {
      * 消息推送服务
      */
     String PUSH_SERVICE = "push-center";
+    /**
+     * 管理后端服务
+     */
+    String BACKEND_SERVICE = "backend-center";
 }

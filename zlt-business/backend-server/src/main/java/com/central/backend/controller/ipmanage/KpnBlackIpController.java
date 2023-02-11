@@ -1,6 +1,8 @@
 package com.central.backend.controller.ipmanage;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.central.backend.service.ipmanage.IKpnBlackIpService;
 import com.central.common.model.ipmanage.KpnBlackIp;
@@ -53,11 +55,33 @@ public class KpnBlackIpController {
     }
 
     /**
+     * IP黑名单检查
+     * @param ip
+     * @return
+     */
+    @ApiOperation(value = "IP黑名单检查")
+    @GetMapping("/ipcheck")
+    public Boolean ipcheck(@PathVariable String ip) {
+        return kpnBlackIpService.ipcheck(ip);
+    }
+
+    /**
      * 新增or更新
      */
     @ApiOperation(value = "保存")
     @PostMapping
     public Result save(@RequestBody KpnBlackIp kpnBlackIp) {
+        String ip = kpnBlackIp.getIpSection();
+        if(null==ip || "".equals(ip)){
+            Result.failed("黑名单IP段不能为空");
+        }
+        //1.创建匹配模式
+        Pattern pattern = Pattern.compile("(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)(\\\\.(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)){3}-(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)(\\\\.(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)){3}");//匹配一个或多个数字字符
+        //2.选择匹配对象
+        Matcher matcher = pattern.matcher(ip);
+        if(!matcher.matches()){
+            Result.failed("黑名单IP段格式错误");
+        }
         kpnBlackIpService.saveOrUpdate(kpnBlackIp);
         return Result.succeed("保存成功");
     }

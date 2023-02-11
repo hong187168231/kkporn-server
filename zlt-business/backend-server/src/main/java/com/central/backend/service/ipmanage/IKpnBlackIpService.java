@@ -19,5 +19,12 @@ public interface IKpnBlackIpService extends ISuperService<KpnBlackIp> {
      * @return
      */
     PageResult<KpnBlackIp> findList(Map<String, Object> params);
+
+    /**
+     * IP黑名单检查
+     * @param ip
+     * @return
+     */
+    public Boolean ipcheck(String ip);
 }
 

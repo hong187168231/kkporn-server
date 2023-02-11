@@ -1,5 +1,6 @@
 package com.central.backend.service.ipmanage.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.central.backend.mapper.ipmanage.KpnBlackIpMapper;
 import com.central.backend.service.ipmanage.IKpnBlackIpService;
 import com.central.common.model.ipmanage.KpnBlackIp;
@@ -34,4 +35,38 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
         List<KpnBlackIp> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnBlackIp>builder().data(list).count(page.getTotal()).build();
     }
+
+    @Override
+    public Boolean ipcheck(String ip){
+        Boolean b = false;
+        LambdaQueryWrapper<KpnBlackIp> wrapper = new LambdaQueryWrapper<>();
+        List<KpnBlackIp> list  =  baseMapper.selectList(wrapper);
+        if(null!=list&&list.size()>0){
+            for(KpnBlackIp kpnBlackIp:list){
+                String[] ipBytes = kpnBlackIp.getIpSection().split("-");
+                //判断给定ip地址是否在指定范围内:
+                long start = IP2Long( ipBytes[0] );
+                long end = IP2Long( ipBytes[1] );
+                long ipAddress = IP2Long( ip );
+                Boolean inRange = (ipAddress >= start && ipAddress <= end);
+                if (inRange){
+                    //IP 地址在范围内！
+                    return true;
+                }
+            }
+        }
+        return b;
+    }
+    public long IP2Long(String ip)
+    {
+        String[] ipBytes;
+        double num = 0;
+        ipBytes = ip.split(".");
+        for (int i = ipBytes.length - 1; i >= 0; i--)
+        {
+            num += ((Integer.parseInt(ipBytes[i]) % 256) * Math.pow(256, (3 - i)));
+        }
+        return (long)num;
+    }
+
 }

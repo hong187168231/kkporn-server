@@ -19,5 +19,6 @@ public interface ISysWhiteIpService extends ISuperService<SysWhiteIp> {
      * @return
      */
     PageResult<SysWhiteIp> findList(Map<String, Object> params);
+    Boolean ipcheck(String ip);
 }
 
