@@ -5,16 +5,16 @@
     <select id="findList" resultType="com.central.backend.model.vo.KpnTagCategoryVO">
         select * from kpn_tag_category t
         LEFT JOIN
-        <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == '1'">
+        <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == 1">
             (SELECT mt.tag_category_id,count(mt.movie_id) FROM kpn_movie_tag mt LEFT JOIN kpn_movie m ON mt.movie_id= m.id WHERE m.status='1' GROUP BY mt.tag_category_id) s
         </if>
-        <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == '0'">
+        <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == 0">
             (SELECT mt.tag_category_id,count(mt.movie_id) FROM kpn_movie_tag mt LEFT JOIN  kpn_site_movie sm ON mt.movie_id= sm.movie_id LEFT JOIN kpn_movie m ON sm.movie_id= m.id WHERE sm.status='1' and sm.site_id = #{p.siteId}  GROUP BY mt.tag_category_id) s
         </if>
         ON a.id=s.tag_category_id
         <where>
             1=1
-            <if test="p.id != null and  p.id != '' and  p.id != '0'">
+            <if test="p.id != null and  p.id != '' and  p.id != 0">
                 and t.id = #{p.id}
             </if>
             <if test="p.name != null and  p.name != ''">

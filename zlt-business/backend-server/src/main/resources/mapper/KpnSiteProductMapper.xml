@@ -6,7 +6,7 @@
         select * from kpn_site_product t
         <where>
             1=1
-            <if test="siteId != null and  siteId != '' and  siteId != '0'">
+            <if test="siteId != null and  siteId != '' and  siteId != 0">
                 and t.site_id = #{siteId}
             </if>
         </where>

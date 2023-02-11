@@ -5,16 +5,16 @@
     <select id="findList" resultType="com.central.backend.model.vo.KpnActorVO">
         select * from kpn_actor a
         LEFT JOIN
-            <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == '1'">
+            <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == 1">
                 (SELECT m.actor_id,sum(m.vv) as vv,sum(m.favorites) as favorites,count(m.id) as total FROM kpn_movie m WHERE m.status='1' GROUP BY m.actor_id) s
             </if>
-            <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == '0'">
+            <if test="p.headquarters != null and  p.headquarters != '' and  p.headquarters == 0">
                     (SELECT m.actor_id,sum(sm.vv) as vv,sum(sm.favorites) as favorites,count(sm.id) as total FROM kpn_site_movie sm LEFT JOIN kpn_movie m ON sm.movie_id= m.id WHERE sm.status='1' and sm.site_id = #{p.siteId} GROUP BY m.actor_id) s
             </if>
             ON a.id=s.actor_id
         <where>
             1=1
-            <if test="p.id != null and  id != '' and  p.id != '0'">
+            <if test="p.id != null and  id != '' and  p.id != 0">
                 and a.id = #{p.id}
             </if>
             <if test="p.nameZh != null and  p.nameZh != ''">
