@@ -64,10 +64,4 @@ public class KpnSiteAdvertise extends SuperEntity {
 
     @ApiModelProperty(value = "备注")
     private String remark;
-
-    @ApiModelProperty(value = "修改者")
-    private String updateBy;
-
-    @ApiModelProperty(value = "创建者")
-    private String createBy;
 }

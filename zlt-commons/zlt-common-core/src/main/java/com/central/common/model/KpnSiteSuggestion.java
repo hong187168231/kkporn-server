@@ -40,12 +40,6 @@ public class KpnSiteSuggestion extends SuperEntity {
 	@ApiModelProperty(value = "状态 0待处理,1已处理")
 	private Integer status;
 
-	@ApiModelProperty(value = "修改者")
-	private String updateBy;
-
-	@ApiModelProperty(value = "创建者")
-	private String createBy;
-
 
 
 }

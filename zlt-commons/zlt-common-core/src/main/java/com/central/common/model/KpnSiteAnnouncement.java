@@ -47,10 +47,4 @@ public class KpnSiteAnnouncement extends SuperEntity {
 	private Long sort;
 
 
-	@ApiModelProperty(value = "修改者")
-	private String updateBy;
-
-	@ApiModelProperty(value = "创建者")
-	private String createBy;
-
 }

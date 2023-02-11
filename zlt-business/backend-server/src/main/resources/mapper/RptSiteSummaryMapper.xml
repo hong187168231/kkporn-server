@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.central.backend.mapper.RptSiteSummaryMapper">
+
+
+
+
+	<select id="findSummaryTotal" resultType="com.central.backend.vo.RptSiteSummaryVo">
+		SELECT
+		IFNULL(SUM( s.pv ),0),
+		IFNULL(SUM( s.uv ),0),
+		IFNULL(SUM( s.new_user_num ),0),
+		IFNULL(SUM( s.new_vip_num ),0),
+		IFNULL(SUM( s.recharge ) ,0)
+		FROM
+			rpt_site_summary s
+
+		<where>
+			<if test="r.siteCode != null and r.siteCode != ''">
+				and s.site_code = #{r.siteCode}
+			</if>
+
+			<if test="r.startTime != null and r.startTime != ''">
+				AND  date_format( s.create_time,  '%Y-%m-%d' ) <![CDATA[>=]]> #{r.startTime}
+			</if>
+			<if test="r.endTime != null and r.endTime != ''">
+				AND  date_format( s.create_time,  '%Y-%m-%d' ) <![CDATA[<=]]> #{r.endTime}
+			</if>
+		</where>
+
+	</select>
+
+
+</mapper>
