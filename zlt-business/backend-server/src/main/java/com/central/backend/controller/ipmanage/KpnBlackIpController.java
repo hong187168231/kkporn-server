@@ -40,8 +40,8 @@ public class KpnBlackIpController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public PageResult list(@RequestParam Map<String, Object> params) {
-        return kpnBlackIpService.findList(params);
+    public Result<PageResult> list(@RequestParam Map<String, Object> params) {
+        return Result.succeed(kpnBlackIpService.findList(params));
     }
 
     /**

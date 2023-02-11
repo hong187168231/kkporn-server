@@ -39,8 +39,8 @@ public class KpnSiteBankCardController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public PageResult list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
-        return kpnSiteBankCardService.findList(params,user);
+    public Result<PageResult> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        return Result.succeed(kpnSiteBankCardService.findList(params,user));
     }
 
     /**
