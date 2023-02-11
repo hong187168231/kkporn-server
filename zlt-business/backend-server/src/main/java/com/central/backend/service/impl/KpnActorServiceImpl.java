@@ -32,7 +32,7 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
      */
     @Override
     public PageResult<KpnActorVO> findList(Map<String, Object> params, SysUser user){
-        if(user.getSiteId()==null || user.getSiteId()==0){//
+        if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
             params.put("headquarters","1");
         }else {
             params.put("headquarters","0");

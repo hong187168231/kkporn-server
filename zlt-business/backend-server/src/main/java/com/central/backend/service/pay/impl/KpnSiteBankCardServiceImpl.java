@@ -30,7 +30,7 @@ public class KpnSiteBankCardServiceImpl extends SuperServiceImpl<KpnSiteBankCard
      */
     @Override
     public PageResult<KpnSiteBankCard> findList(Map<String, Object> params, SysUser user){
-        if(user.getSiteId()==null || user.getSiteId()==0){//
+        if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
             params.put("siteId","");
         }else {
             params.put("siteId",user.getSiteId());

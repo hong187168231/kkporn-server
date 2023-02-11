@@ -107,7 +107,7 @@ public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageC
 
     @Override
     public List<KpnFrontpageCount> dataTrend(Map<String, Object> params,SysUser user){
-        if(user.getSiteId()!=null && user.getSiteId()!=0){
+        if(null!=user && user.getSiteId()!=null && user.getSiteId()!=0){
             params.put("siteId",user.getSiteId());
         }
         List<KpnFrontpageCount> kpnFrontpageCountList =  baseMapper.dataTrend(params);

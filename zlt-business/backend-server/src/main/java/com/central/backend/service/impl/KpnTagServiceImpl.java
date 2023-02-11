@@ -33,7 +33,7 @@ public class KpnTagServiceImpl extends SuperServiceImpl<KpnTagMapper, KpnTag> im
      */
     @Override
     public PageResult<KpnTagVO> findList(Map<String, Object> params, SysUser user){
-        if(user.getSiteId()==null || user.getSiteId()==0){//
+        if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
             params.put("headquarters","1");
         }else {
             params.put("headquarters","0");
