@@ -12,10 +12,10 @@
                from kpn_frontpage_count t
         <where>
              1=1
-            <if test="status!=null and  status != '' and status = '2'"><!-- 昨天 -->
+            <if test="p.status!=null and  status != '' and p.status = '2'"><!-- 昨天 -->
                 and to_days(now())-to_days(t.count_date) =1
             </if>
-            <if test="status!=null and  status != '' and status = '3'"><!-- 本月 -->
+            <if test="p.status!=null and  p.status != '' and p.status = '3'"><!-- 本月 -->
                 and date_format(curdate(),'%y%m') = date_format(t.count_date,'%y%m')
             </if>
         </where>

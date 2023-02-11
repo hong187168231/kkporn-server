@@ -6,8 +6,8 @@
         select * from kpn_site_bank_card t
         <where>
             1=1
-            <if test="siteId != null and  siteId != '' and  siteId != '0'">
-                and t.site_id = #{siteId}
+            <if test="p.siteId != null and  p.siteId != '' and  p.siteId != '0'">
+                and t.site_id = #{p.siteId}
             </if>
         </where>
     </select>
