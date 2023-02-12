@@ -51,13 +51,7 @@ public class RptSiteMovieDateServiceImpl extends SuperServiceImpl<RptSiteMovieDa
             String startDate = DateUtil.formatDate(DateUtil.offsetDay(new Date(), -30));
             log.info("startDate:{}, endDate:{}", startDate, endDate);
 
-            List<RptSiteMovieDate> rptSiteMovieDates = this.lambdaQuery()
-                    .eq(RptSiteMovieDate::getSiteId, sid)
-                    .lt(RptSiteMovieDate::getDate, endDate)
-                    .ge(RptSiteMovieDate::getDate, startDate)
-                    .eq(RptSiteMovieDate::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus())
-                    .list();
-
+            List<RptSiteMovieDate> rptSiteMovieDates = this.baseMapper.searchSiteMovieMonth(sid, startDate, endDate);
             List<Long> movieIds = rptSiteMovieDates.stream().map(RptSiteMovieDate::getMovieId).collect(Collectors.toList());
             siteMonthMovies = siteMovieService.getSiteMovieByIds(sid, movieIds);
             if (siteMonthMovies.size() < 10) {

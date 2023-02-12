@@ -10,4 +10,15 @@
         UPDATE
             vv = vv+1
     </insert>
+
+    <select id="searchSiteMovieMonth" resultType="com.central.common.model.RptSiteMovieDate">
+        select site_id,movie_id,sum(vv) vv
+        from rpt_site_movie_date
+        where site_id = #{sid}
+        and status = 1
+        and `date` &gt;= #{startDate}
+        and `date` &lt; #{endDate}
+        group by site_id, movie_id
+        order by sum(vv)
+    </select>
 </mapper>
