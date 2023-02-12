@@ -6,9 +6,11 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.constant.PornConstants;
+import com.central.common.model.KpnActor;
 import com.central.common.model.KpnMovie;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.model.KpnSiteUserMovieFavorites;
+import com.central.common.model.enums.SiteMovieStatusEnum;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -57,7 +60,6 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     @Override
     public List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds) {
         List<KpnSiteMovieBaseVo> siteMovieVos = new ArrayList<>();
-
         //从缓存中查询影片信息
         for (Long movieId : movieIds) {
             String movieRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_MOVIEID_KEY, movieId);
@@ -71,7 +73,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                         .in(KpnMovie::getId, movieId)
                         .one();
                 if (ObjectUtil.isNotEmpty(kpnMovie)) {
-                    RedisRepository.setExpire(movieRedisKey, kpnMovie, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
+                    RedisRepository.setExpire(movieRedisKey, kpnMovie, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
                 }
             }
 
@@ -91,6 +93,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                 kpnSiteMovieBaseVo.setFavorites(siteMovie.getFavorites());
             }
         }
+
         return siteMovieVos;
     }
 
@@ -229,7 +232,30 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.HOT.getType())) {
             lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
-//            lambdaQueryChainWrapper.orderByDesc(true, KpnMovieSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
+        }
+        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
+            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getCreateTime);
+        }
+        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.TIME.getType())) {
+            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getDuration);
+        }
+
+        Page<KpnSiteMovie> kpnSiteMoviePage = lambdaQueryChainWrapper.page(new Page<>(currPage, pageSize));
+        List<Long> movieIds = kpnSiteMoviePage.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
+
+        return getSiteMovieByIds(sid, movieIds);
+    }
+
+    @Override
+    public List<KpnSiteMovieBaseVo> searchSiteMovie(Long sid, String sortType, Integer sortOrder, Integer currPage, Integer pageSize) {
+        LambdaQueryChainWrapper<KpnSiteMovie> lambdaQueryChainWrapper = this.lambdaQuery();
+        lambdaQueryChainWrapper.select(KpnSiteMovie::getMovieId);
+        lambdaQueryChainWrapper.eq(KpnSiteMovie::getSiteId, sid);
+        lambdaQueryChainWrapper.eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus());
+        lambdaQueryChainWrapper.eq(KpnSiteMovie::getPayType, true);
+
+        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.HOT.getType())) {
+            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
         }
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
             lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getCreateTime);

@@ -53,25 +53,25 @@ public class MovieController {
 //    @Autowired
 //    private TaskExecutor taskExecutor;
 
-    /**
-     * 获取影片列表
-     *
-     * @param sid      站点id
-     * @param movieIds 影片id集合
-     * @return
-     */
-    @PostMapping("/ids")
-    @ApiOperation(value = "按id获取影片列表基本信息")
-    public Result<List<KpnSiteMovieBaseVo>> getMovieByIds(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
-        try {
-            List<KpnSiteMovieBaseVo> siteMovieVos = siteMovieService.getSiteMovieByIds(sid, movieIds);
-
-            return Result.succeed(siteMovieVos, "succeed");
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return Result.failed("failed");
-        }
-    }
+//    /**
+//     * 获取影片列表
+//     *
+//     * @param sid      站点id
+//     * @param movieIds 影片id集合
+//     * @return
+//     */
+//    @PostMapping("/ids")
+//    @ApiOperation(value = "按id获取影片列表基本信息")
+//    public Result<List<KpnSiteMovieBaseVo>> getMovieByIds(@RequestHeader("sid") Long sid, @RequestBody List<Long> movieIds) {
+//        try {
+//            List<KpnSiteMovieBaseVo> siteMovieVos = siteMovieService.getSiteMovieByIds(sid, movieIds);
+//
+//            return Result.succeed(siteMovieVos, "succeed");
+//        } catch (Exception e) {
+//            log.error(e.getMessage(), e);
+//            return Result.failed("failed");
+//        }
+//    }
 
     /**
      * 进入播放页,获取影片详细信息

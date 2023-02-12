@@ -85,4 +85,16 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * @return
      */
     List<KpnSiteMovieBaseVo> getSiteMovieByActor(Long sid, Long actorId, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
+
+    /**
+     * 搜索站点影片
+     *
+     * @param sid       站点id
+     * @param sortType  排序字段
+     * @param sortOrder 排序顺序
+     * @param currPage  当前页
+     * @param pageSize  每页条数
+     * @return
+     */
+    List<KpnSiteMovieBaseVo> searchSiteMovie(Long sid, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
 }

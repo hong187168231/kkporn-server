@@ -37,6 +37,9 @@ public class KpnSiteMovie extends SuperEntity {
     @ApiModelProperty(value = "时长")
     private String duration;
 
+    @ApiModelProperty("付费类型 0/false:免费,1/true:付费")
+    private Boolean payType;
+
     @ApiModelProperty(value = "影片站点播放量")
     private Long vv;
 

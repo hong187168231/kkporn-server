@@ -10,6 +10,7 @@ import com.central.common.utils.I18nUtil;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.*;
 import com.central.porn.enums.KpnActorSortTypeEnum;
+import com.central.porn.enums.KpnMovieSortTypeEnum;
 import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.enums.KpnStableChannelEnum;
 import com.central.porn.service.*;
@@ -53,6 +54,9 @@ public class SiteController {
 
     @Autowired
     private IKpnSiteActorService siteActorService;
+
+    @Autowired
+    private IKpnSiteMovieService siteMovieService;
 
     /**
      * 获取站点信息
@@ -202,7 +206,22 @@ public class SiteController {
     public Result<List<KpnActorVo>> getActorList(@RequestHeader("sid") Long sid) {
         try {
             List<KpnActorVo> actorListByFavorites = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.DESC.name(), 1, 10);
-            return Result.succeed(actorListByFavorites);
+            return Result.succeed(actorListByFavorites, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 热门VIP影片推荐
+     */
+    @GetMapping("/vip/top5")
+    @ApiOperation(value = "热门VIP影片推荐")
+    public Result<List<KpnSiteMovieBaseVo>> getVipTop5(@RequestHeader("sid") Long sid) {
+        try {
+            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovie(sid, KpnMovieSortTypeEnum.HOT.getType(), KpnSortOrderEnum.DESC.getCode(), 1, 5);
+            return Result.succeed(kpnSiteMovieBaseVos);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
