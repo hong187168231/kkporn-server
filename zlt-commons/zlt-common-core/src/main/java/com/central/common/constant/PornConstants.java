@@ -107,6 +107,8 @@ public final class PornConstants {
         public static final String KPN_SITE_ACTOR_MOVIENUM_KEY="KPN:SITEID:ACTORID:MOVIENUM:{}:{}";
         //缓存线路信息
         public static final String KPN_LINE = "KPN:LINE";
+        //缓存站点月播放量排行 list siteid
+        public static final String KPN_SITE_MONTH_MOVIE_KEY = "KPN:SITEID:MONTH:MOVIES:{}";
 
         //缓存会员频道信息 userid
         public static final String SITE_USER_CHANNEL_KEY = "SITE:USER:CHANNEL:{}";

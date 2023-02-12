@@ -1,19 +1,19 @@
 package com.central.porn.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.central.common.model.KpnSiteActor;
 import com.central.common.model.KpnSiteMovie;
-import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.porn.service.IAsyncService;
 import com.central.porn.service.IKpnSiteActorService;
 import com.central.porn.service.IKpnSiteMovieService;
-import com.central.porn.service.IKpnSiteUserActorFavoritesService;
+import com.central.porn.service.IRptSiteMovieDateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -27,6 +27,9 @@ public class AsyncServiceImpl implements IAsyncService {
     @Lazy
     private IKpnSiteActorService siteActorService;
 
+    @Autowired
+    private IRptSiteMovieDateService rptSiteMovieDateService;
+
     @Async
     @Override
     public void addSiteMovieVv(Long sid, Long movieId) {
@@ -35,6 +38,15 @@ public class AsyncServiceImpl implements IAsyncService {
                 .eq(KpnSiteMovie::getMovieId, movieId)
                 .setSql(" `vv` = `vv` + 1")
                 .update();
+
+        rptSiteMovieDateService.saveRptSiteMovieDateVv(sid, movieId, DateUtil.formatDate(new Date()));
+
+//        rptSiteMovieDateService.lambdaUpdate()
+//                .eq(RptSiteMovieDate::getSiteId, sid)
+//                .eq(RptSiteMovieDate::getMovieId, movieId)
+//                .eq(RptSiteMovieDate::getDate, DateUtil.formatDate(new Date()))
+//                .setSql(" `vv` = `vv` + 1")
+//                .update();
     }
 
     @Async

@@ -1,20 +1,19 @@
 package com.central.porn.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.constant.PornConstants;
-import com.central.common.model.KpnActor;
-import com.central.common.model.KpnMovie;
-import com.central.common.model.KpnSiteMovie;
-import com.central.common.model.KpnSiteUserMovieFavorites;
+import com.central.common.model.*;
 import com.central.common.model.enums.SiteMovieStatusEnum;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.core.language.LanguageUtil;
+import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
@@ -26,9 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -47,6 +44,9 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
     @Autowired
     private IKpnSiteMovieService siteMovieService;
+
+    @Autowired
+    private IRptSiteMovieDateService rptSiteMovieDateService;
 
     @Autowired
     private IKpnSiteUserMovieFavoritesService siteUserMovieFavoritesService;
@@ -247,12 +247,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public List<KpnSiteMovieBaseVo> searchSiteMovie(Long sid, String sortType, Integer sortOrder, Integer currPage, Integer pageSize) {
+    public List<KpnSiteMovieBaseVo> searchSiteMovie(Long sid, MovieSearchParamCo searchParam, String sortType, Integer sortOrder, Integer currPage, Integer pageSize) {
         LambdaQueryChainWrapper<KpnSiteMovie> lambdaQueryChainWrapper = this.lambdaQuery();
         lambdaQueryChainWrapper.select(KpnSiteMovie::getMovieId);
         lambdaQueryChainWrapper.eq(KpnSiteMovie::getSiteId, sid);
         lambdaQueryChainWrapper.eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus());
-        lambdaQueryChainWrapper.eq(KpnSiteMovie::getPayType, true);
+        if (ObjectUtil.isNotEmpty(searchParam.getPayType())) {
+            lambdaQueryChainWrapper.eq(KpnSiteMovie::getPayType, searchParam.getPayType());
+        }
 
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.HOT.getType())) {
             lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
@@ -268,6 +270,11 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         List<Long> movieIds = kpnSiteMoviePage.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
 
         return getSiteMovieByIds(sid, movieIds);
+    }
+
+    @Override
+    public List<KpnSiteMovieBaseVo> searchSiteMovieMonth(Long sid) {
+        return rptSiteMovieDateService.searchSiteMovieMonth(sid);
     }
 
     private void cacheSiteMovieVv(String siteMovieVvKey, Long sid, Long movieId) {

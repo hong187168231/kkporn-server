@@ -5,9 +5,13 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
-import com.central.common.model.*;
+import com.central.common.model.KpnSite;
+import com.central.common.model.KpnSiteAdvertise;
+import com.central.common.model.KpnSiteChannel;
+import com.central.common.model.Result;
 import com.central.common.utils.I18nUtil;
 import com.central.porn.core.language.LanguageUtil;
+import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.*;
 import com.central.porn.enums.KpnActorSortTypeEnum;
 import com.central.porn.enums.KpnMovieSortTypeEnum;
@@ -220,7 +224,23 @@ public class SiteController {
     @ApiOperation(value = "热门VIP影片推荐")
     public Result<List<KpnSiteMovieBaseVo>> getVipTop5(@RequestHeader("sid") Long sid) {
         try {
-            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovie(sid, KpnMovieSortTypeEnum.HOT.getType(), KpnSortOrderEnum.DESC.getCode(), 1, 5);
+            MovieSearchParamCo movieSearchParam = MovieSearchParamCo.builder().payType(true).build();
+            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovie(sid, movieSearchParam, KpnMovieSortTypeEnum.HOT.getType(), KpnSortOrderEnum.DESC.getCode(), 1, 5);
+            return Result.succeed(kpnSiteMovieBaseVos);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 月播放排行榜
+     */
+    @GetMapping("/movie/month")
+    @ApiOperation(value = "热门VIP影片推荐")
+    public Result<List<KpnSiteMovieBaseVo>> getMovieMonth(@RequestHeader("sid") Long sid) {
+        try {
+            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovieMonth(sid);
             return Result.succeed(kpnSiteMovieBaseVos);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

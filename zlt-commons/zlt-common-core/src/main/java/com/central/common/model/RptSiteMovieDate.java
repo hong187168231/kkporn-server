@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.util.Date;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -14,33 +14,18 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@TableName("kpn_site_movie")
-@ApiModel("站点影片")
-public class KpnSiteMovie extends SuperEntity {
+@TableName("rpt_site_movie_date")
+@ApiModel("站点影片日报表")
+public class RptSiteMovieDate implements Serializable {
 
     @ApiModelProperty(value = "站点id")
     private Long siteId;
 
-    @ApiModelProperty(value = "站点编码")
-    private String siteCode;
-
-    @ApiModelProperty(value = "站点名称")
-    private String siteName;
-
-    @ApiModelProperty(value = "演员id")
-    private Long actorId;
-
-    @ApiModelProperty(value = "演员创建时间")
-    private Date actorCreateTime;
-
     @ApiModelProperty(value = "影片id")
     private Long movieId;
 
-    @ApiModelProperty(value = "时长")
-    private String duration;
-
-    @ApiModelProperty("付费类型 0/false:免费,1/true:付费")
-    private Boolean payType;
+    @ApiModelProperty(value = "统计日期 yyyy-MM-dd")
+    private String date;
 
     @ApiModelProperty(value = "影片站点播放量")
     private Long vv;

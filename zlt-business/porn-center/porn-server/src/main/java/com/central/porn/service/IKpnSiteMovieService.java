@@ -2,10 +2,12 @@ package com.central.porn.service;
 
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
@@ -89,12 +91,21 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
     /**
      * 搜索站点影片
      *
-     * @param sid       站点id
-     * @param sortType  排序字段
-     * @param sortOrder 排序顺序
-     * @param currPage  当前页
-     * @param pageSize  每页条数
+     * @param sid         站点id
+     * @param searchParam 查询参数
+     * @param sortType    排序字段
+     * @param sortOrder   排序顺序
+     * @param currPage    当前页
+     * @param pageSize    每页条数
      * @return
      */
-    List<KpnSiteMovieBaseVo> searchSiteMovie(Long sid, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
+    List<KpnSiteMovieBaseVo> searchSiteMovie(Long sid, MovieSearchParamCo searchParam, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
+
+    /**
+     * 月排行榜
+     *
+     * @param sid 站点id
+     * @return
+     */
+    List<KpnSiteMovieBaseVo> searchSiteMovieMonth(Long sid);
 }

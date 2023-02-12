@@ -19,4 +19,5 @@ public interface IKpnSiteService extends ISuperService<KpnSite> {
      * @return
      */
     KpnSite getInfoById(Long id);
+
 }
