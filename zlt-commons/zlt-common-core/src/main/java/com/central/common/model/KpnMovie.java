@@ -33,8 +33,8 @@ public class KpnMovie extends SuperEntity {
     private String shootingType;
     @ApiModelProperty("字幕类型 no:无字幕,zh:中文,en:英文,zhen:中英,other:其他")
     private String subtitleType;
-    @ApiModelProperty("付费类型 0/false:免费,1/true:付费")
-    private Boolean payType;
+//    @ApiModelProperty("付费类型 0/false:免费,1/true:付费")
+//    private Boolean payType;
     @ApiModelProperty("影片时长(HH:mm:ss 如00:10:02)")
     private String duration;
     @ApiModelProperty("番号")
