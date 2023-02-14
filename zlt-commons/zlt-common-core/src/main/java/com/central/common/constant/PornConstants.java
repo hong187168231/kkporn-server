@@ -1,5 +1,9 @@
 package com.central.common.constant;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 常量类
  */
@@ -27,6 +31,10 @@ public final class PornConstants {
 
     //数字常量
     public static final class Numeric {
+        //开
+        public static final int OPEN = 1;
+        //关
+        public static final int CLOSE = 0;
         // 30分钟的秒数
         public static final long MINUTE_30_IN_SECONDS = 30 * 60;
         // 订单号长度
@@ -72,6 +80,14 @@ public final class PornConstants {
     }
 
     //redis
+    public static final class LocalCache {
+        //{kye=movieid,value=[namezh,nameen,namekh]}
+        public static final Map<Long, String[]> LOCAL_MAP_MOVIE_NAME = new HashMap<>();
+        //{key=站点id,value=[movieId01,movieId02,....,movieIdn]}
+        public static final Map<Long, List<Long>> LOCAL_MAP_SITE_MOVIE_IDS = new HashMap<>();
+    }
+
+    //redis
     public static final class RedisKey {
         //缓存时间 30天
         public static final Long EXPIRE_TIME_30_DAYS = 30 * 24 * 60 * 60L;
@@ -102,16 +118,23 @@ public final class PornConstants {
         //缓存影片收藏量 siteid,movieid
         public static final String KPN_SITE_MOVIE_FAVORITES_KEY = "KPN:SITEID:MOVIEID:FAVORITES:{}:{}";
         //缓存站点演员收藏量 siteid,actorid
-        public static final String KPN_SITE_ACTOR_FAVORITES_KEY="KPN:SITEID:ACTORID:FAVORITES:{}:{}";
+        public static final String KPN_SITE_ACTOR_FAVORITES_KEY = "KPN:SITEID:ACTORID:FAVORITES:{}:{}";
         //缓存站点演员影片量 siteid,actorid
-        public static final String KPN_SITE_ACTOR_MOVIENUM_KEY="KPN:SITEID:ACTORID:MOVIENUM:{}:{}";
+        public static final String KPN_SITE_ACTOR_MOVIENUM_KEY = "KPN:SITEID:ACTORID:MOVIENUM:{}:{}";
         //缓存线路信息
         public static final String KPN_LINE = "KPN:LINE";
         //缓存站点月播放量排行 list siteid
         public static final String KPN_SITE_MONTH_MOVIE_KEY = "KPN:SITEID:MONTH:MOVIES:{}";
+        //缓存站点搜索关键词关联的影片id list siteid keyword
+//        public static final String KPN_SITE_KEYWORDS_MOVIE_KEY = "KPN:SITEID:KEYWORDS:MOVIEIDS:{}:{}";
 
         //缓存会员频道信息 userid
         public static final String SITE_USER_CHANNEL_KEY = "SITE:USER:CHANNEL:{}";
+
+        //站点影片信息变动标识 默认0,删除-1,增加1
+        public static final String SITE_MOVIE_CHANGE_FLAG = "SITE:MOVIE:CHANGE:FLAG:{}";
+
+
         //缓存后台管理员ip
         public static final String BACKEND_WHITELIST_KEY = "Whitelist";
         // 系统维护key

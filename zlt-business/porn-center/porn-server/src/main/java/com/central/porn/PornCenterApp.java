@@ -8,6 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 配置服
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.ComponentScans;
 @Slf4j
 @EnableDiscoveryClient
 @EnableFeignInterceptor
+@EnableScheduling
 @EnableFeignClients(basePackages = "com.central")
 @SpringBootApplication
 @ComponentScans(value = {

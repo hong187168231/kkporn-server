@@ -1,6 +1,5 @@
 package com.central.common.model;
 
-import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,6 +34,15 @@ public class KpnSiteMovie extends SuperEntity {
 
     @ApiModelProperty(value = "影片id")
     private Long movieId;
+
+    @ApiModelProperty(value = "影片名称-中文")
+    private String nameZh;
+
+    @ApiModelProperty(value = "影片名称-英文")
+    private String nameEn;
+
+    @ApiModelProperty(value = "影片名称-柬文")
+    private String nameKh;
 
     @ApiModelProperty(value = "时长")
     private String duration;

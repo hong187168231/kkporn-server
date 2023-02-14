@@ -29,7 +29,7 @@ public class KpnMovie extends SuperEntity {
     private String country;
     @ApiModelProperty("影片类型 0/false无码 1/true有码")
     private Boolean type;
-    @ApiModelProperty("拍摄性质 special:专业拍摄,sneak:偷拍,selfie:自拍,business:业务拍摄,other:其他")
+    @ApiModelProperty("拍摄性质 special:专业拍摄,sneak:偷拍,selfie:自拍,other:其他")
     private String shootingType;
     @ApiModelProperty("字幕类型 no:无字幕,zh:中文,en:英文,zhen:中英,other:其他")
     private String subtitleType;

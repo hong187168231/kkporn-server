@@ -7,7 +7,6 @@ import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
@@ -108,4 +107,12 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * @return
      */
     List<KpnSiteMovieBaseVo> searchSiteMovieMonth(Long sid);
+
+    /**
+     * 关键字查询影片
+     * @param sid 站点id
+     * @param keywords 关键词
+     * @return
+     */
+    List<KpnSiteMovieBaseVo> searchSiteMovieKeywords(Long sid, String keywords);
 }

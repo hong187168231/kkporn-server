@@ -43,4 +43,8 @@ public class KpnSiteMovieBaseVo extends LanguageNameVo implements Serializable {
 
     @ApiModelProperty("影片标签")
     private List<KpnTagVo> tagVos;
+
+    public int compareByVv(KpnSiteMovieBaseVo kpnSiteMovieBaseVo) {
+        return (int) (this.vv - kpnSiteMovieBaseVo.vv);
+    }
 }

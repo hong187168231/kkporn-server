@@ -226,7 +226,7 @@ public class SiteController {
         try {
             MovieSearchParamCo movieSearchParam = MovieSearchParamCo.builder().payType(true).build();
             List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovie(sid, movieSearchParam, KpnMovieSortTypeEnum.HOT.getType(), KpnSortOrderEnum.DESC.getCode(), 1, 5);
-            return Result.succeed(kpnSiteMovieBaseVos);
+            return Result.succeed(kpnSiteMovieBaseVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
@@ -241,7 +241,29 @@ public class SiteController {
     public Result<List<KpnSiteMovieBaseVo>> getMovieMonth(@RequestHeader("sid") Long sid) {
         try {
             List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovieMonth(sid);
-            return Result.succeed(kpnSiteMovieBaseVos);
+            return Result.succeed(kpnSiteMovieBaseVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 关键词搜索影片
+     */
+    @GetMapping("/search/keywords")
+    @ApiOperation(value = "关键词搜索影片")
+    public Result<List<KpnSiteMovieBaseVo>> searchMovieByKeywords(@RequestHeader("sid") Long sid, String keywords) {
+        try {
+            if (StrUtil.isBlank(keywords)) {
+                return Result.failed("关键词不能为空");
+            }
+            if (StrUtil.length(keywords) <= 1) {
+                return Result.failed("关键词太短");
+            }
+
+            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovieKeywords(sid, keywords);
+            return Result.succeed(kpnSiteMovieBaseVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

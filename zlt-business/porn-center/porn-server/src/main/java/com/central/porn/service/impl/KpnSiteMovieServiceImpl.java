@@ -1,13 +1,14 @@
 package com.central.porn.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.constant.PornConstants;
-import com.central.common.model.*;
+import com.central.common.model.KpnMovie;
+import com.central.common.model.KpnSiteMovie;
+import com.central.common.model.KpnSiteUserMovieFavorites;
 import com.central.common.model.enums.SiteMovieStatusEnum;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
@@ -17,15 +18,17 @@ import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
-import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.enums.KpnMovieSortTypeEnum;
+import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.mapper.KpnSiteMovieMapper;
 import com.central.porn.service.*;
+import com.central.porn.utils.PornUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -275,6 +278,15 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     @Override
     public List<KpnSiteMovieBaseVo> searchSiteMovieMonth(Long sid) {
         return rptSiteMovieDateService.searchSiteMovieMonth(sid);
+    }
+
+    @Override
+    public List<KpnSiteMovieBaseVo> searchSiteMovieKeywords(Long sid, String keywords) {
+        List<Long> movieIds = PornUtil.searchByKeywords(sid, keywords);
+
+        List<KpnSiteMovieBaseVo> siteMovieBaseVos = getSiteMovieByIds(sid, movieIds);
+        siteMovieBaseVos.sort(KpnSiteMovieBaseVo::compareByVv);
+        return siteMovieBaseVos;
     }
 
     private void cacheSiteMovieVv(String siteMovieVvKey, Long sid, Long movieId) {
