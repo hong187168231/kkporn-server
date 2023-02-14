@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class CacheMovieNamesJob implements CommandLineRunner {
 
     @Autowired
-    private IKpnSiteService kpnSiteService;
+    private IKpnSiteService siteService;
 
     @Autowired
     private IKpnSiteMovieService siteMovieService;
@@ -38,7 +38,7 @@ public class CacheMovieNamesJob implements CommandLineRunner {
             cacheData();
         }
 
-        List<KpnSite> kpnSites = kpnSiteService.lambdaQuery().eq(KpnSite::getStatus, true).list();
+        List<KpnSite> kpnSites = siteService.getList();
         for (KpnSite kpnSite : kpnSites) {
             Long sid = kpnSite.getId();
 
@@ -55,10 +55,10 @@ public class CacheMovieNamesJob implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        List<KpnSite> kpnSites = kpnSiteService.lambdaQuery().eq(KpnSite::getStatus, true).list();
+        List<KpnSite> kpnSites = siteService.getList();
         for (KpnSite kpnSite : kpnSites) {
             String redisFlagKey = StrUtil.format(PornConstants.RedisKey.SITE_MOVIE_CHANGE_FLAG, kpnSite.getId());
-            RedisRepository.set(redisFlagKey, 1);
+            RedisRepository.set(redisFlagKey, PornConstants.Numeric.OPEN);
         }
     }
 

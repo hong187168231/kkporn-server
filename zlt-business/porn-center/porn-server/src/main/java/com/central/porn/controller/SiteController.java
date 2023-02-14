@@ -62,6 +62,15 @@ public class SiteController {
     @Autowired
     private IKpnSiteMovieService siteMovieService;
 
+    @Autowired
+    private IRptSiteMovieDateService rptSiteMovieDateService;
+
+    @Autowired
+    private IRptSiteSearchTotalService rptSiteSearchTotalService;
+
+    @Autowired
+    private IRptSiteSearchDateService rptSiteSearchDateService;
+
     /**
      * 获取站点信息
      *
@@ -233,6 +242,7 @@ public class SiteController {
         }
     }
 
+
     /**
      * 月播放排行榜
      */
@@ -240,8 +250,39 @@ public class SiteController {
     @ApiOperation(value = "热门VIP影片推荐")
     public Result<List<KpnSiteMovieBaseVo>> getMovieMonth(@RequestHeader("sid") Long sid) {
         try {
-            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovieMonth(sid);
+            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = rptSiteMovieDateService.searchSiteMovieMonth(sid);
             return Result.succeed(kpnSiteMovieBaseVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+
+    /**
+     * 站点月搜索排行榜TOP10
+     */
+    @GetMapping("/search/month")
+    @ApiOperation(value = "站点月搜索排行榜TOP10")
+    public Result<List<KpnSiteSearchVo>> getSearchMonth(@RequestHeader("sid") Long sid) {
+        try {
+            List<KpnSiteSearchVo> kpnSiteSearchMonthVos = rptSiteSearchDateService.getSiteSearchMonth(sid);
+            return Result.succeed(kpnSiteSearchMonthVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 站点总搜索排行榜TOP10
+     */
+    @GetMapping("/search/total")
+    @ApiOperation(value = "站点总搜索排行榜TOP10")
+    public Result<List<KpnSiteSearchVo>> getSearchTotal(@RequestHeader("sid") Long sid) {
+        try {
+            List<KpnSiteSearchVo> kpnSiteSearchMonthVos = rptSiteSearchTotalService.getSiteSearchTotal(sid);
+            return Result.succeed(kpnSiteSearchMonthVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
@@ -260,6 +301,9 @@ public class SiteController {
             }
             if (StrUtil.length(keywords) <= 1) {
                 return Result.failed("关键词太短");
+            }
+            if (StrUtil.length(keywords) > 100) {
+                return Result.failed("关键词太长");
             }
 
             List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovieKeywords(sid, keywords);

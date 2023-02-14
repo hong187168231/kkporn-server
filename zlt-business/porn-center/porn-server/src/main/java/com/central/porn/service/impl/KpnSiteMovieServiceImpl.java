@@ -1,6 +1,7 @@
 package com.central.porn.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
@@ -55,10 +56,10 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     private IKpnSiteUserMovieFavoritesService siteUserMovieFavoritesService;
 
     @Autowired
-    private IKpnActorService actorService;
+    private IRptSiteSearchDateService siteSearchDateService;
 
     @Autowired
-    private IKpnSiteActorService siteActorService;
+    private IRptSiteSearchTotalService siteSearchTotalService;
 
     @Override
     public List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds) {
@@ -276,16 +277,17 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public List<KpnSiteMovieBaseVo> searchSiteMovieMonth(Long sid) {
-        return rptSiteMovieDateService.searchSiteMovieMonth(sid);
-    }
-
-    @Override
     public List<KpnSiteMovieBaseVo> searchSiteMovieKeywords(Long sid, String keywords) {
         List<Long> movieIds = PornUtil.searchByKeywords(sid, keywords);
 
         List<KpnSiteMovieBaseVo> siteMovieBaseVos = getSiteMovieByIds(sid, movieIds);
         siteMovieBaseVos.sort(KpnSiteMovieBaseVo::compareByVv);
+
+        if (CollectionUtil.isNotEmpty(movieIds)) {
+            siteSearchDateService.saveRptSiteSearchDateNumber(sid, keywords);
+            siteSearchTotalService.saveRptSiteSearchTotalNumber(sid,keywords);
+
+        }
         return siteMovieBaseVos;
     }
 

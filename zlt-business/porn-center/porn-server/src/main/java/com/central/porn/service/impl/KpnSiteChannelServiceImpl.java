@@ -54,7 +54,7 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         if (CollectionUtil.isEmpty(memberChannels)) {
             memberChannels = this.baseMapper.getMemberChannels(uid);
             if (CollectionUtil.isNotEmpty(memberChannels)) {
-                RedisRepository.set(userChannelRedisKey, memberChannels);
+                RedisRepository.setExpire(userChannelRedisKey, memberChannels, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
             }
         }
         return memberChannels;

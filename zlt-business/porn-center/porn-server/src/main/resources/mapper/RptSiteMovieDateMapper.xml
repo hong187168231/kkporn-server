@@ -17,7 +17,7 @@
         where site_id = #{sid}
         and status = 1
         and `date` &gt;= #{startDate}
-        and `date` &lt; #{endDate}
+        and `date` &lt;= #{endDate}
         group by site_id, movie_id
         order by sum(vv) desc
     </select>
