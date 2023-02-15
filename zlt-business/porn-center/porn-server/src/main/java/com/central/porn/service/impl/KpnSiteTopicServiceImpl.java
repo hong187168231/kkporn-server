@@ -64,7 +64,7 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
             topicVo.setName(LanguageUtil.getLanguageName(topicVo));
             //查询关联最新的5部影片
             List<Long> movieIds = topicMovieService.getMovieIds(sid, topicVo.getId(), 1, 5);
-            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.getSiteMovieByIds(sid, movieIds);
+            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.getSiteMovieByIds(sid, movieIds, false);
             topicVo.setMovieBaseVos(kpnSiteMovieBaseVos);
             return topicVo;
         }).collect(Collectors.toList());

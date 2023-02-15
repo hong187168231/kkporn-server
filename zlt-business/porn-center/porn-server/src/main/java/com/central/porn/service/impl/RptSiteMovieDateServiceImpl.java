@@ -53,7 +53,7 @@ public class RptSiteMovieDateServiceImpl extends SuperServiceImpl<RptSiteMovieDa
 
             List<RptSiteMovieDate> rptSiteMovieDates = this.baseMapper.searchSiteMovieMonth(sid, startDate, endDate);
             List<Long> movieIds = rptSiteMovieDates.stream().map(RptSiteMovieDate::getMovieId).collect(Collectors.toList());
-            siteMonthMovies = siteMovieService.getSiteMovieByIds(sid, movieIds);
+            siteMonthMovies = siteMovieService.getSiteMovieByIds(sid, movieIds,false);
             if (siteMonthMovies.size() < 10) {
                 MovieSearchParamCo movieSearchParam = MovieSearchParamCo.builder().build();
                 List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovie(sid, movieSearchParam, KpnMovieSortTypeEnum.HOT.getType(), KpnSortOrderEnum.DESC.getCode(), 1, 10 - siteMonthMovies.size());

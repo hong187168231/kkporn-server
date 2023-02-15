@@ -32,6 +32,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -69,7 +70,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     private TaskExecutor taskExecutor;
 
     @Override
-    public List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds) {
+    public List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds, Boolean isDetail) {
         if (CollectionUtil.isEmpty(movieIds)) {
             return new ArrayList<>();
         }
@@ -84,7 +85,6 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                     .eq(KpnMovie::getStatus, true)
                     .in(KpnMovie::getId, movieIds)
                     .list();
-
 
             for (KpnMovie kpnMovie : kpnMovies) {
                 if (ObjectUtil.isNotEmpty(kpnMovie)) {
@@ -115,14 +115,18 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         long start = System.currentTimeMillis();
         List<KpnSiteMovieBaseVo> result = new ArrayList<>();
         for (KpnMovieVo kpnMovieVo : cachedKpnMovieVos) {
-            KpnSiteMovieBaseVo siteMovieBaseVo = new KpnSiteMovieBaseVo();
-            BeanUtil.copyProperties(kpnMovieVo, siteMovieBaseVo);
-            siteMovieBaseVo.setName(LanguageUtil.getLanguageName(siteMovieBaseVo));
+            if (!isDetail) {
+                KpnSiteMovieBaseVo siteMovieBaseVo = new KpnSiteMovieBaseVo();
+                BeanUtil.copyProperties(kpnMovieVo, siteMovieBaseVo);
+                siteMovieBaseVo.setName(LanguageUtil.getLanguageName(siteMovieBaseVo));
 
-            for (KpnTagVo tagVo : kpnMovieVo.getTagVos()) {
-                tagVo.setName(LanguageUtil.getLanguageName(tagVo));
+                for (KpnTagVo tagVo : kpnMovieVo.getTagVos()) {
+                    tagVo.setName(LanguageUtil.getLanguageName(tagVo));
+                }
+                result.add(siteMovieBaseVo);
+            } else {
+                result.add(kpnMovieVo);
             }
-            result.add(siteMovieBaseVo);
         }
         System.out.println("耗时22:" + (System.currentTimeMillis() - start));
         return result;
@@ -133,35 +137,18 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         List<KpnSiteMovieBaseVo> siteMovieVos = new ArrayList<>();
 
         //从缓存中查询影片信息
-        String movieRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_MOVIEID_KEY, movieId);
-        KpnMovie kpnMovie = (KpnMovie) RedisRepository.get(movieRedisKey);
+        String movieRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_MOVIEID_VO_KEY, movieId);
+        KpnMovieVo kpnMovieVo = (KpnMovieVo) RedisRepository.get(movieRedisKey);
 
         //缓存影片信息
-        if (ObjectUtil.isEmpty(kpnMovie)) {
-            kpnMovie = movieService.lambdaQuery()
-                    .eq(KpnMovie::getHandleStatus, true)
-                    .eq(KpnMovie::getStatus, true)
-                    .in(KpnMovie::getId, movieId)
-                    .one();
-            if (ObjectUtil.isNotEmpty(kpnMovie)) {
-                RedisRepository.setExpire(movieRedisKey, kpnMovie, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
-            }
+        if (ObjectUtil.isEmpty(kpnMovieVo)) {
+            kpnMovieVo = (KpnMovieVo)this.getSiteMovieByIds(sid, Collections.singletonList(movieId), true).get(0);
         }
 
-        KpnMovieVo kpnMovieVo = new KpnMovieVo();
-        if (ObjectUtil.isNotEmpty(kpnMovie)) {
-            BeanUtil.copyProperties(kpnMovie, kpnMovieVo);
-            kpnMovieVo.setName(LanguageUtil.getLanguageName(kpnMovieVo));
-
-            //获取影片标签信息
-            List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
-            kpnMovieVo.setTagVos(kpnTagVos);
-            siteMovieVos.add(kpnMovieVo);
-
-            //获取播放量
-            KpnSiteMovie siteMovie = siteMovieService.getSiteMovie(sid, kpnMovie.getId());
-            kpnMovieVo.setVv(siteMovie.getVv());
-            kpnMovieVo.setFavorites(siteMovie.getFavorites());
+        //处理多语言
+        kpnMovieVo.setName(LanguageUtil.getLanguageName(kpnMovieVo));
+        for (KpnTagVo tagVo : kpnMovieVo.getTagVos()) {
+            tagVo.setName(LanguageUtil.getLanguageName(tagVo));
         }
         return kpnMovieVo;
     }
@@ -278,7 +265,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         Page<KpnSiteMovie> kpnSiteMoviePage = lambdaQueryChainWrapper.page(new Page<>(currPage, pageSize));
         List<Long> movieIds = kpnSiteMoviePage.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
 
-        return getSiteMovieByIds(sid, movieIds);
+        return getSiteMovieByIds(sid, movieIds, false);
     }
 
     @Override
@@ -304,14 +291,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         Page<KpnSiteMovie> kpnSiteMoviePage = lambdaQueryChainWrapper.page(new Page<>(currPage, pageSize));
         List<Long> movieIds = kpnSiteMoviePage.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
 
-        return getSiteMovieByIds(sid, movieIds);
+        return getSiteMovieByIds(sid, movieIds, false);
     }
 
     @Override
     public List<KpnSiteMovieBaseVo> searchSiteMovieKeywords(Long sid, String keywords) {
         List<Long> movieIds = PornUtil.searchByKeywords(sid, keywords);
 
-        List<KpnSiteMovieBaseVo> siteMovieBaseVos = getSiteMovieByIds(sid, movieIds);
+        List<KpnSiteMovieBaseVo> siteMovieBaseVos = getSiteMovieByIds(sid, movieIds, false);
         siteMovieBaseVos.sort(KpnSiteMovieBaseVo::compareByVv);
 
         if (CollectionUtil.isNotEmpty(movieIds)) {
@@ -338,7 +325,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
         start = System.currentTimeMillis();
         List<Long> movieIds = list.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
-        List<KpnSiteMovieBaseVo> KpnSiteMovieBaseVos = this.getSiteMovieByIds(sid, movieIds);
+        List<KpnSiteMovieBaseVo> KpnSiteMovieBaseVos = this.getSiteMovieByIds(sid, movieIds, false);
         System.out.println("耗时2:" + (System.currentTimeMillis() - start));
 
         Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);

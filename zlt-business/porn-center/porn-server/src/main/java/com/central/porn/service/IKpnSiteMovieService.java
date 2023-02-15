@@ -1,7 +1,6 @@
 package com.central.porn.service;
 
 import com.central.common.model.KpnSiteMovie;
-import com.central.common.model.PageResult;
 import com.central.common.service.ISuperService;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MovieSearchParamCo;
@@ -18,9 +17,10 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      *
      * @param sid      站点id
      * @param movieIds 影片id集合
+     * @param isDetail 是否详情
      * @return
      */
-    List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds);
+    List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds, Boolean isDetail);
 
     /**
      * 获取影片详情
