@@ -97,7 +97,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                     List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
                     kpnMovieVo.setTagVos(kpnTagVos);
 
-                    //获取播放量
+                    //获取播放量/收藏量
                     KpnSiteMovie siteMovie = siteMovieService.getSiteMovie(sid, kpnMovie.getId());
                     kpnMovieVo.setVv(siteMovie.getVv());
                     kpnMovieVo.setFavorites(siteMovie.getFavorites());

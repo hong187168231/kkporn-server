@@ -134,6 +134,15 @@ public final class PornConstants {
         //缓存站点搜索关键词总排行
         public static final String KPN_SITE_SEARCH_TOTAL_KEY = "KPN:SITE:SEARCH:TOTAL:{}";
 
+        //缓存站点标签影片id排序 播放量排序 高->低  TAGID
+        public static final String KPN_SITE_TAG_MOVIEID_VV = "KPN:SITE:TAG:MOVIEID:VV:{}";
+
+        //缓存站点标签影片id排序 时长排序 长->短
+        public static final String KPN_SITE_TAG_MOVIEID_DURATION = "KPN:SITE:TAG:MOVIEID:DURATION:{}";
+
+        //缓存站点标签影片id排序 创建时间 新->旧
+        public static final String KPN_SITE_TAG_MOVIEID_CREATETIME = "KPN:SITE:TAG:MOVIEID:CREATETIME:{}";
+
         //缓存会员频道信息 userid
         public static final String SITE_USER_CHANNEL_KEY = "SITE:USER:CHANNEL:{}";
 
@@ -155,6 +164,9 @@ public final class PornConstants {
     public static final class Sql {
         public static final String LOCK_FOR_UPDATE = " FOR UPDATE";
         public static final String LOCK_IN_SHARE_MODE = " LOCK IN SHARE MODE";
+        public static final String COLUMN_VV = "vv";
+        public static final String COLUMN_DURATION = "duration";
+        public static final String COLUMN_CREATE_TIME = "create_time";
     }
 
     //lock

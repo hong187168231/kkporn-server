@@ -21,6 +21,7 @@ import com.central.porn.enums.KpnStableChannelEnum;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -259,7 +260,6 @@ public class SiteController {
         }
     }
 
-
     /**
      * 站点周搜索排行榜TOP10
      */
@@ -320,7 +320,12 @@ public class SiteController {
      */
     @GetMapping("/search/depot")
     @ApiOperation(value = "搜索影片库")
-    public Result<PornPageResult<KpnSiteMovieBaseVo>> searchDepot(@RequestHeader("sid") Long sid, Integer currPage, Integer pageSize) {
+
+    public Result<PornPageResult<KpnSiteMovieBaseVo>> searchDepot(@RequestHeader("sid") Long sid,
+                                                                  @ApiParam("0:标签,1:专题,2:频道,3:热门VIP推荐") Integer from,
+                                                                  @ApiParam("标签/专题/频道 主键") Long fromId,
+                                                                  @ApiParam("当前页") Integer currPage,
+                                                                  @ApiParam("每页条数") Integer pageSize) {
         try {
             PornPageResult<KpnSiteMovieBaseVo> kpnSiteMoviePageResult = siteMovieService.searchDepot(sid, currPage, pageSize);
             return Result.succeed(kpnSiteMoviePageResult, "succeed");

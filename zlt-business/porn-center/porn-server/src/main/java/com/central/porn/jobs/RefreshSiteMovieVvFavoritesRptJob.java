@@ -17,11 +17,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 刷新视频播放量
+ * 刷新视频播放量/收藏量
  */
 @Slf4j
 @Component
-public class RefreshSiteMovieVvRptJob implements SimpleJob {
+public class RefreshSiteMovieVvFavoritesRptJob implements SimpleJob {
 
     @Autowired
     private IKpnSiteMovieService siteMovieService;

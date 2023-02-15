@@ -37,6 +37,16 @@ public class KpnMovieTagServiceImpl extends SuperServiceImpl<KpnMovieTagMapper, 
         result.addAll(tagService.getByTagIds(tagIds));
         return result;
     }
+
+    @Override
+    public List<Long> getTagIdsBySiteId(Long sid) {
+        return this.baseMapper.getTagIdsBySiteId(sid);
+    }
+
+    @Override
+    public List<Long> getTageMovieIdsSortedByColumn(Long sid, Long tagId, String column) {
+        return this.baseMapper.getTageMovieIdsSortedByColumn(sid, tagId, column);
+    }
 }
 
 
