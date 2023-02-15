@@ -121,4 +121,11 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      */
     PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer currPage, Integer pageSize);
 
+    /**
+     * 获取站点影片id
+     *
+     * @param sid 站点id
+     * @return
+     */
+    List<Long> getSiteMovieIds(Long sid);
 }

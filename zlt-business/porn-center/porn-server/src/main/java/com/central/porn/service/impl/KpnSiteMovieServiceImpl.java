@@ -338,6 +338,13 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                 .build();
     }
 
+    @Override
+    public List<Long> getSiteMovieIds(Long sid) {
+        return this.lambdaQuery().eq(KpnSiteMovie::getSiteId, sid).eq(KpnSiteMovie::getStatus, true)
+                .list()
+                .stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
+    }
+
     private void cacheSiteMovieVv(String siteMovieVvKey, Long sid, Long movieId) {
         Object siteMovieVvObj = RedisRepository.get(siteMovieVvKey);
 
