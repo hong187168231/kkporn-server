@@ -31,12 +31,12 @@ public class RptSiteSearchDateServiceImpl extends SuperServiceImpl<RptSiteSearch
     }
 
     @Override
-    public List<KpnSiteSearchVo> getSiteSearchMonth(Long sid) {
-        String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_SEARCH_MONTH_KEY, sid);
+    public List<KpnSiteSearchVo> getSiteSearchWeek(Long sid) {
+        String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_SEARCH_WEEK_KEY, sid);
         List<KpnSiteSearchVo> siteSearchMonthVos = (ArrayList<KpnSiteSearchVo>) RedisRepository.get(redisKey);
         if (CollectionUtil.isEmpty(siteSearchMonthVos)) {
             String endDate = DateUtil.formatDate(new Date());
-            String startDate = DateUtil.formatDate(DateUtil.offsetDay(new Date(), -30));
+            String startDate = DateUtil.formatDate(DateUtil.offsetDay(new Date(), -7));
             log.info("startDate:{}, endDate:{}", startDate, endDate);
 
             List<KpnSiteSearchVo> kpnSiteSearchMonthVos = this.baseMapper.getSiteSearchMonth(sid, startDate, endDate);

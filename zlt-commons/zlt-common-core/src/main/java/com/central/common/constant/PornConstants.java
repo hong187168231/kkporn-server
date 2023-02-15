@@ -129,8 +129,8 @@ public final class PornConstants {
         public static final String KPN_LINE = "KPN:LINE";
         //缓存站点月播放量排行 list siteid
         public static final String KPN_SITE_MONTH_MOVIE_KEY = "KPN:SITEID:MONTH:MOVIES:{}";
-        //缓存站点搜索关键词月排行
-        public static final String KPN_SITE_SEARCH_MONTH_KEY = "KPN:SITE:SEARCH:MONTH:{}";
+        //缓存站点搜索关键词周排行
+        public static final String KPN_SITE_SEARCH_WEEK_KEY = "KPN:SITE:SEARCH:WEEK:{}";
         //缓存站点搜索关键词总排行
         public static final String KPN_SITE_SEARCH_TOTAL_KEY = "KPN:SITE:SEARCH:TOTAL:{}";
 

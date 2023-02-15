@@ -18,10 +18,10 @@ public interface IRptSiteSearchDateService extends ISuperService<RptSiteSearchDa
     void saveRptSiteSearchDateNumber(Long sid, String keywords);
 
     /**
-     * 站点月搜索排行榜-TOP10
+     * 站点周搜索排行榜-TOP10
      *
      * @param sid 站点id
      * @return
      */
-    List<KpnSiteSearchVo> getSiteSearchMonth(Long sid);
+    List<KpnSiteSearchVo> getSiteSearchWeek(Long sid);
 }

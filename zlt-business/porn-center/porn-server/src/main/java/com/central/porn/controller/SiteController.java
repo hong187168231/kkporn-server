@@ -261,13 +261,13 @@ public class SiteController {
 
 
     /**
-     * 站点月搜索排行榜TOP10
+     * 站点周搜索排行榜TOP10
      */
-    @GetMapping("/search/month")
-    @ApiOperation(value = "站点月搜索排行榜TOP10")
-    public Result<List<KpnSiteSearchVo>> getSearchMonth(@RequestHeader("sid") Long sid) {
+    @GetMapping("/search/week")
+    @ApiOperation(value = "站点周搜索排行榜TOP10")
+    public Result<List<KpnSiteSearchVo>> getSearchWeek(@RequestHeader("sid") Long sid) {
         try {
-            List<KpnSiteSearchVo> kpnSiteSearchMonthVos = rptSiteSearchDateService.getSiteSearchMonth(sid);
+            List<KpnSiteSearchVo> kpnSiteSearchMonthVos = rptSiteSearchDateService.getSiteSearchWeek(sid);
             return Result.succeed(kpnSiteSearchMonthVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
