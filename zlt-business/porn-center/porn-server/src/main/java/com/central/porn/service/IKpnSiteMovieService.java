@@ -1,13 +1,14 @@
 package com.central.porn.service;
 
 import com.central.common.model.KpnSiteMovie;
+import com.central.common.model.PageResult;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
@@ -104,9 +105,20 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
 
     /**
      * 关键字查询影片
-     * @param sid 站点id
+     *
+     * @param sid      站点id
      * @param keywords 关键词
      * @return
      */
     List<KpnSiteMovieBaseVo> searchSiteMovieKeywords(Long sid, String keywords);
+
+    /**
+     * 查询影片库
+     *
+     * @param sid      站点id
+     * @param currPage 当前页
+     * @param pageSize 每页条数
+     */
+    PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer currPage, Integer pageSize);
+
 }

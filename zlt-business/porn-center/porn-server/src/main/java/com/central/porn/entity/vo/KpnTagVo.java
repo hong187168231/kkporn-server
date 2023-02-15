@@ -2,13 +2,19 @@ package com.central.porn.entity.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel("影片标签信息")
-public class KpnTagVo extends LanguageNameVo implements Serializable {
+public class KpnTagVo  extends LanguageNameMulti implements Serializable {
 
     @ApiModelProperty("标签主键")
     private Long id;

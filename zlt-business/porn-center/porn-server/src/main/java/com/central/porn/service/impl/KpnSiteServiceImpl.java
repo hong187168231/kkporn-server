@@ -25,7 +25,7 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
         List<KpnSite> kpnSites = (ArrayList) RedisRepository.get(redisKey);
         if (CollectionUtil.isEmpty(kpnSites)) {
             kpnSites = this.lambdaQuery().eq(KpnSite::getStatus, true).list();
-            if (CollectionUtil.isEmpty(kpnSites)) {
+            if (CollectionUtil.isNotEmpty(kpnSites)) {
                 RedisRepository.setExpire(redisKey, kpnSites, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
             }
         }

@@ -1,6 +1,5 @@
 package com.central.porn.entity.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,10 +9,19 @@ import java.util.Date;
 
 @Data
 @ApiModel("站点广告")
-public class KpnSiteAdvertiseVo extends LanguageNameVo implements Serializable {
+public class KpnSiteAdvertiseVo extends LanguageNameMulti implements Serializable {
 
     @ApiModelProperty(value = "广告名称")
     private String name;
+
+//    @ApiModelProperty("广告中文名称")
+//    private String nameZh;
+//
+//    @ApiModelProperty("广告英文名称")
+//    private String nameEn;
+//
+//    @ApiModelProperty("广告柬文名称")
+//    private String nameKh;
 
     @ApiModelProperty(value = "投放平台(H5,PC)")
     private String device;

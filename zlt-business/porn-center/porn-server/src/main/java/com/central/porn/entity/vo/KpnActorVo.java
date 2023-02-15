@@ -9,13 +9,22 @@ import java.math.BigDecimal;
 
 @Data
 @ApiModel("演员信息")
-public class KpnActorVo extends LanguageNameVo implements Serializable {
+public class KpnActorVo extends LanguageNameMulti implements Serializable {
 
     @ApiModelProperty("演员id")
     private Long id;
 
     @ApiModelProperty("演员名称(多语言)")
     private String name;
+//
+//    @ApiModelProperty("演员中文名称")
+//    private String nameZh;
+//
+//    @ApiModelProperty("演员英文名称")
+//    private String nameEn;
+
+//    @ApiModelProperty("演员柬文名称")
+//    private String nameKh;
 
     @ApiModelProperty(value = "性别 0女 1男")
     private Integer sex;

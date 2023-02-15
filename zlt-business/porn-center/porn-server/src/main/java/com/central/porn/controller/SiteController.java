@@ -11,6 +11,7 @@ import com.central.common.model.KpnSiteChannel;
 import com.central.common.model.Result;
 import com.central.common.utils.I18nUtil;
 import com.central.porn.core.language.LanguageUtil;
+import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.*;
 import com.central.porn.enums.KpnActorSortTypeEnum;
@@ -308,6 +309,21 @@ public class SiteController {
 
             List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovieKeywords(sid, keywords);
             return Result.succeed(kpnSiteMovieBaseVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 搜索影片库
+     */
+    @GetMapping("/search/depot")
+    @ApiOperation(value = "搜索影片库")
+    public Result<PornPageResult<KpnSiteMovieBaseVo>> searchDepot(@RequestHeader("sid") Long sid, Integer currPage, Integer pageSize) {
+        try {
+            PornPageResult<KpnSiteMovieBaseVo> kpnSiteMoviePageResult = siteMovieService.searchDepot(sid, currPage, pageSize);
+            return Result.succeed(kpnSiteMoviePageResult, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

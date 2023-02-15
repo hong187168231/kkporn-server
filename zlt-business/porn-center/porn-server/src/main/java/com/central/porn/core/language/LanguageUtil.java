@@ -1,7 +1,7 @@
 package com.central.porn.core.language;
 
 
-import com.central.porn.entity.vo.LanguageNameVo;
+import com.central.porn.entity.vo.LanguageNameMulti;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,21 +27,22 @@ public class LanguageUtil {
 //        return getLanguageMap(LanguageEnum.getByValue(language)).get(messageKey);
 //    }
 
-    public static String getLanguageName(LanguageNameVo languageNameVo) {
+    public static String getLanguageName(LanguageNameMulti languageNameVo) {
         final String language = LanguageThreadLocal.getLanguage();
-        if (language.equalsIgnoreCase(LanguageEnum.ZH.name().toLowerCase())){
-           return languageNameVo.getNameZh();
+        String name = languageNameVo.getNameEn();
+        if (language.equalsIgnoreCase(LanguageEnum.ZH.name().toLowerCase())) {
+            name = languageNameVo.getNameZh();
         }
 
-        if (language.equalsIgnoreCase(LanguageEnum.EN.name().toLowerCase())){
-            return languageNameVo.getNameEn();
+        else if (language.equalsIgnoreCase(LanguageEnum.EN.name().toLowerCase())) {
+            name = languageNameVo.getNameEn();
         }
 
-        if (language.equalsIgnoreCase(LanguageEnum.KH.name().toLowerCase())){
-            return languageNameVo.getNameKh();
+        else if (language.equalsIgnoreCase(LanguageEnum.KH.name().toLowerCase())) {
+            name = languageNameVo.getNameKh();
         }
-
-        return languageNameVo.getNameEn();
+        languageNameVo.setNull();
+        return name;
     }
 
 //    private static Map<String, String> getLanguageMap(LanguageEnum language) {

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.constant.PornConstants;
@@ -15,6 +16,7 @@ import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.core.language.LanguageUtil;
+import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
@@ -26,10 +28,12 @@ import com.central.porn.service.*;
 import com.central.porn.utils.PornUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -61,44 +65,67 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     @Autowired
     private IRptSiteSearchTotalService siteSearchTotalService;
 
+    @Autowired
+    private TaskExecutor taskExecutor;
+
     @Override
     public List<KpnSiteMovieBaseVo> getSiteMovieByIds(Long sid, List<Long> movieIds) {
-        List<KpnSiteMovieBaseVo> siteMovieVos = new ArrayList<>();
-        //从缓存中查询影片信息
-        for (Long movieId : movieIds) {
-            String movieRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_MOVIEID_KEY, movieId);
-            KpnMovie kpnMovie = (KpnMovie) RedisRepository.get(movieRedisKey);
+        if (CollectionUtil.isEmpty(movieIds)) {
+            return new ArrayList<>();
+        }
+        List<String> redisKeyVoList = movieIds.stream().map(movieId -> StrUtil.format(PornConstants.RedisKey.KPN_MOVIEID_VO_KEY, movieId)).collect(Collectors.toList());
+        List<KpnMovieVo> cachedKpnMovieVos = (ArrayList) RedisRepository.mget(redisKeyVoList);
+        boolean hasNullVoElem = cachedKpnMovieVos.stream().anyMatch(Objects::isNull);
+        if (hasNullVoElem) {
+            cachedKpnMovieVos = new ArrayList<>();
 
-            //缓存影片信息
-            if (ObjectUtil.isEmpty(kpnMovie)) {
-                kpnMovie = movieService.lambdaQuery()
-                        .eq(KpnMovie::getHandleStatus, true)
-                        .eq(KpnMovie::getStatus, true)
-                        .in(KpnMovie::getId, movieId)
-                        .one();
+            List<KpnMovie> kpnMovies = movieService.lambdaQuery()
+                    .eq(KpnMovie::getHandleStatus, true)
+                    .eq(KpnMovie::getStatus, true)
+                    .in(KpnMovie::getId, movieIds)
+                    .list();
+
+
+            for (KpnMovie kpnMovie : kpnMovies) {
                 if (ObjectUtil.isNotEmpty(kpnMovie)) {
-                    RedisRepository.setExpire(movieRedisKey, kpnMovie, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+                    KpnMovieVo kpnMovieVo = new KpnMovieVo();
+                    BeanUtil.copyProperties(kpnMovie, kpnMovieVo);
+                    Boolean payType = this.lambdaQuery().select(KpnSiteMovie::getPayType).eq(KpnSiteMovie::getSiteId, sid).eq(KpnSiteMovie::getMovieId, kpnMovie.getId()).one().getPayType();
+                    kpnMovieVo.setPayType(payType);
+
+                    //获取标签信息
+                    List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
+                    kpnMovieVo.setTagVos(kpnTagVos);
+
+                    //获取播放量
+                    KpnSiteMovie siteMovie = siteMovieService.getSiteMovie(sid, kpnMovie.getId());
+                    kpnMovieVo.setVv(siteMovie.getVv());
+                    kpnMovieVo.setFavorites(siteMovie.getFavorites());
+
+                    cachedKpnMovieVos.add(kpnMovieVo);
                 }
             }
 
-            if (ObjectUtil.isNotEmpty(kpnMovie)) {
-                KpnSiteMovieBaseVo kpnSiteMovieBaseVo = new KpnSiteMovieBaseVo();
-                BeanUtil.copyProperties(kpnMovie, kpnSiteMovieBaseVo);
-                kpnSiteMovieBaseVo.setName(LanguageUtil.getLanguageName(kpnSiteMovieBaseVo));
-
-                //获取标签信息
-                List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
-                kpnSiteMovieBaseVo.setTagVos(kpnTagVos);
-                siteMovieVos.add(kpnSiteMovieBaseVo);
-
-                //获取播放量
-                KpnSiteMovie siteMovie = siteMovieService.getSiteMovie(sid, kpnMovie.getId());
-                kpnSiteMovieBaseVo.setVv(siteMovie.getVv());
-                kpnSiteMovieBaseVo.setFavorites(siteMovie.getFavorites());
+            if (CollectionUtil.isNotEmpty(cachedKpnMovieVos)) {
+                for (KpnMovieVo kpnMovieVo : cachedKpnMovieVos) {
+                    RedisRepository.setExpire(StrUtil.format(PornConstants.RedisKey.KPN_MOVIEID_VO_KEY, kpnMovieVo.getId()), kpnMovieVo, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+                }
             }
         }
+        long start = System.currentTimeMillis();
+        List<KpnSiteMovieBaseVo> result = new ArrayList<>();
+        for (KpnMovieVo kpnMovieVo : cachedKpnMovieVos) {
+            KpnSiteMovieBaseVo siteMovieBaseVo = new KpnSiteMovieBaseVo();
+            BeanUtil.copyProperties(kpnMovieVo, siteMovieBaseVo);
+            siteMovieBaseVo.setName(LanguageUtil.getLanguageName(siteMovieBaseVo));
 
-        return siteMovieVos;
+            for (KpnTagVo tagVo : kpnMovieVo.getTagVos()) {
+                tagVo.setName(LanguageUtil.getLanguageName(tagVo));
+            }
+            result.add(siteMovieBaseVo);
+        }
+        System.out.println("耗时22:" + (System.currentTimeMillis() - start));
+        return result;
     }
 
     @Override
@@ -145,12 +172,16 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         String siteMovieVvKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_VV_KEY, sid, movieId);
         cacheSiteMovieVv(siteMovieVvKey, sid, movieId);
         long vv = RedisRepository.incr(siteMovieVvKey);
-        RedisRepository.decr(siteMovieVvKey);
 
         String siteMovieFavoritesKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_FAVORITES_KEY, sid, movieId);
         cacheSiteMovieFavorites(siteMovieFavoritesKey, sid, movieId);
         long favorites = RedisRepository.incr(siteMovieFavoritesKey);
-        RedisRepository.decr(siteMovieFavoritesKey);
+
+
+        taskExecutor.execute(() -> {
+            RedisRepository.decr(siteMovieVvKey);
+            RedisRepository.decr(siteMovieFavoritesKey);
+        });
 
         return KpnSiteMovie.builder().siteId(sid).movieId(movieId).vv(vv - 1).favorites(favorites - 1).build();
     }
@@ -285,10 +316,39 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
         if (CollectionUtil.isNotEmpty(movieIds)) {
             siteSearchDateService.saveRptSiteSearchDateNumber(sid, keywords);
-            siteSearchTotalService.saveRptSiteSearchTotalNumber(sid,keywords);
+            siteSearchTotalService.saveRptSiteSearchTotalNumber(sid, keywords);
 
         }
         return siteMovieBaseVos;
+    }
+
+    @Override
+    public PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer currPage, Integer pageSize) {
+        int startIndex = (currPage - 1) * pageSize;
+        Page<KpnSiteMovie> page = new Page<>(currPage, pageSize);
+
+        LambdaQueryWrapper<KpnSiteMovie> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(KpnSiteMovie::getSiteId, sid);
+        wrapper.orderByDesc(KpnSiteMovie::getVv);
+
+        long start = System.currentTimeMillis();
+        Page<KpnSiteMovie> list = baseMapper.selectPage(page, wrapper);
+        System.out.println("耗时1:" + (System.currentTimeMillis() - start));
+        long total = page.getTotal();
+
+        start = System.currentTimeMillis();
+        List<Long> movieIds = list.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
+        List<KpnSiteMovieBaseVo> KpnSiteMovieBaseVos = this.getSiteMovieByIds(sid, movieIds);
+        System.out.println("耗时2:" + (System.currentTimeMillis() - start));
+
+        Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);
+        return PornPageResult.<KpnSiteMovieBaseVo>builder()
+                .data(KpnSiteMovieBaseVos)
+                .currPage(currPage)
+                .pageSize(pageSize)
+                .count(total)
+                .totalPage(totalPage)
+                .build();
     }
 
     private void cacheSiteMovieVv(String siteMovieVvKey, Long sid, Long movieId) {

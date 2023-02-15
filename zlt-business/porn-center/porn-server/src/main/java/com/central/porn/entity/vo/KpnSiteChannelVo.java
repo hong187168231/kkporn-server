@@ -8,11 +8,12 @@ import java.io.Serializable;
 
 @Data
 @ApiModel("站点频道")
-public class KpnSiteChannelVo extends LanguageNameVo implements Serializable {
+public class KpnSiteChannelVo  extends LanguageNameMulti implements Serializable {
     @ApiModelProperty(value = "主键")
     private Long id;
     @ApiModelProperty(value = "频道名称(多语言)")
     private String name;
+
 //    @ApiModelProperty(value = "频道名称(中文)")
 //    private String nameZh;
 //
