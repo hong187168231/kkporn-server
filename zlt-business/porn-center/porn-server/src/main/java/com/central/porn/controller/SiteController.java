@@ -322,12 +322,22 @@ public class SiteController {
     @ApiOperation(value = "搜索影片库")
 
     public Result<PornPageResult<KpnSiteMovieBaseVo>> searchDepot(@RequestHeader("sid") Long sid,
-                                                                  @ApiParam("0:标签,1:专题,2:频道,3:热门VIP推荐") Integer from,
+                                                                  @ApiParam("0:找片,1:标签,2:专题,3:频道,4:热门VIP推荐") Integer from,
                                                                   @ApiParam("标签/专题/频道 主键") Long fromId,
+                                                                  @ApiParam("排序字段 HOT:最热,LATEST:最新,DURATION:时长") String sortType,
+                                                                  @ApiParam("排序顺序 0:ASC,1:DESC") Integer sortOrder,
                                                                   @ApiParam("当前页") Integer currPage,
                                                                   @ApiParam("每页条数") Integer pageSize) {
         try {
-            PornPageResult<KpnSiteMovieBaseVo> kpnSiteMoviePageResult = siteMovieService.searchDepot(sid, currPage, pageSize);
+            if(StrUtil.isBlank(sortType) || !KpnMovieSortTypeEnum.isLegalType(sortType)){
+                sortType = KpnMovieSortTypeEnum.HOT.getType();
+            }
+
+            if(ObjectUtil.isNull(sortOrder) || !KpnSortOrderEnum.isLegalCode(sortOrder)){
+                sortOrder = KpnSortOrderEnum.DESC.getCode();
+            }
+
+            PornPageResult<KpnSiteMovieBaseVo> kpnSiteMoviePageResult = siteMovieService.searchDepot(sid, from, fromId, sortType, sortOrder, currPage, pageSize);
             return Result.succeed(kpnSiteMoviePageResult, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);

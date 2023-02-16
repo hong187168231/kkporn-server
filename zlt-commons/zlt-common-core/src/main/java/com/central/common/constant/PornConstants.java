@@ -164,9 +164,9 @@ public final class PornConstants {
     public static final class Sql {
         public static final String LOCK_FOR_UPDATE = " FOR UPDATE";
         public static final String LOCK_IN_SHARE_MODE = " LOCK IN SHARE MODE";
-        public static final String COLUMN_VV = "vv";
-        public static final String COLUMN_DURATION = "duration";
-        public static final String COLUMN_CREATE_TIME = "create_time";
+        public static final String COLUMN_VV = "`vv`";
+        public static final String COLUMN_DURATION = "`duration`";
+        public static final String COLUMN_CREATE_TIME = "`create_time`";
     }
 
     //lock

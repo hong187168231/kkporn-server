@@ -22,6 +22,7 @@ import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
 import com.central.porn.enums.KpnMovieSortTypeEnum;
+import com.central.porn.enums.KpnSiteMovieSearchFromEnum;
 import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.mapper.KpnSiteMovieMapper;
 import com.central.porn.service.*;
@@ -258,7 +259,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
             lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getCreateTime);
         }
-        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.TIME.getType())) {
+        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
             lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getDuration);
         }
 
@@ -284,7 +285,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
             lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getCreateTime);
         }
-        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.TIME.getType())) {
+        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
             lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getDuration);
         }
 
@@ -310,25 +311,57 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer currPage, Integer pageSize) {
-        int startIndex = (currPage - 1) * pageSize;
+    public PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer from, Long fromId, String sortType, Integer sortOrder, Integer currPage, Integer pageSize) {
         Page<KpnSiteMovie> page = new Page<>(currPage, pageSize);
 
-        LambdaQueryWrapper<KpnSiteMovie> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(KpnSiteMovie::getSiteId, sid);
-        wrapper.orderByDesc(KpnSiteMovie::getVv);
+        List<Long> movieIds = new ArrayList<>();
+        Long total = 0L;
+        //找片
+        if (KpnSiteMovieSearchFromEnum.SEARCH.getCode().equals(from)) {
+            LambdaQueryWrapper<KpnSiteMovie> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(KpnSiteMovie::getSiteId, sid);
+            wrapper.orderByDesc(KpnSiteMovie::getVv);
 
-        long start = System.currentTimeMillis();
-        Page<KpnSiteMovie> list = baseMapper.selectPage(page, wrapper);
-        System.out.println("耗时1:" + (System.currentTimeMillis() - start));
-        long total = page.getTotal();
+            Page<KpnSiteMovie> list = baseMapper.selectPage(page, wrapper);
+            total = page.getTotal();
+            movieIds = list.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
+        }
+        //标签
+        else if (KpnSiteMovieSearchFromEnum.TAG.getCode().equals(from)) {
+            //最热 默认
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_VV, fromId);
+            //最新
+            if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_CREATETIME, fromId);
+            }
+            //时长
+            else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_DURATION, fromId);
+            }
 
-        start = System.currentTimeMillis();
-        List<Long> movieIds = list.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
-        List<KpnSiteMovieBaseVo> KpnSiteMovieBaseVos = this.getSiteMovieByIds(sid, movieIds, false);
-        System.out.println("耗时2:" + (System.currentTimeMillis() - start));
+            //倒序(默认)
+            int startIndex = (currPage - 1) * pageSize;
+            int endIndex = startIndex + (pageSize - 1);
+            //正序
+            if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                endIndex = -(pageSize * (currPage - 1)) + (-1);
+                startIndex = endIndex + (-(pageSize-1));
+            }
 
+            List<String> movieIdStrs = (ArrayList) RedisRepository.getList(redisKey, startIndex, endIndex);
+            boolean hasNullVoElem = movieIdStrs.stream().anyMatch(Objects::isNull);
+            if (!hasNullVoElem) {
+                movieIds = movieIdStrs.stream().map(Long::valueOf).collect(Collectors.toList());
+                //正序
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    CollectionUtil.reverse(movieIds);
+                }
+            }
+            total = RedisRepository.length(redisKey);
+        }
         Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);
+        List<KpnSiteMovieBaseVo> KpnSiteMovieBaseVos = this.getSiteMovieByIds(sid, movieIds, false);
+
         return PornPageResult.<KpnSiteMovieBaseVo>builder()
                 .data(KpnSiteMovieBaseVos)
                 .currPage(currPage)

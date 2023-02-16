@@ -4,7 +4,7 @@ public enum KpnMovieSortTypeEnum {
 
     HOT("HOT", "最热-观影次数"),
     LATEST("LATEST", "最新-上架时间"),
-    TIME("TIME", "时长-影片时长"),
+    DURATION("DURATION", "时长-影片时长"),
     ;
 
     //排序类型

@@ -115,11 +115,15 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
     /**
      * 查询影片库
      *
-     * @param sid      站点id
-     * @param currPage 当前页
-     * @param pageSize 每页条数
+     * @param sid       站点id
+     * @param from      0:标签,1:专题,2:频道,3:热门VIP推荐
+     * @param fromId    来源id
+     * @param sortType  排序字段 HOT:最热,LATEST:最新,TIME:时长
+     * @param sortOrder 排序顺序 0:ASC,1:DESC
+     * @param currPage  当前页
+     * @param pageSize  每页条数
      */
-    PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer currPage, Integer pageSize);
+    PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer from, Long fromId, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
 
     /**
      * 获取站点影片id

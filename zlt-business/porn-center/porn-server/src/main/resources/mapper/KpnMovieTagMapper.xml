@@ -10,9 +10,11 @@
     </select>
 
     <select id="getTageMovieIdsSortedByColumn" resultType="java.lang.Long">
-        select b.movie_id
-        from (select * from kpn_movie_tag where tag_id = #{tagId}) a
-                 left join (select * from kpn_site_movie b where site_id = #{sid} and status = 1) b on b.movie_id = a.movie_id
-        order by #{column} desc
+        select y.movie_id
+        from (select a.movie_id,a.tag_id
+              from kpn_movie_tag a
+              where tag_id = #{tagId} and exists(select id from kpn_site_movie b where site_id = #{sid} and status=1 and b.movie_id = a.movie_id)) x
+                 left join (select `movie_id`,`vv`,`create_time`,`duration` from kpn_site_movie b where site_id = #{sid} and status = 1) y on y.movie_id = x.movie_id
+        order by ${column} asc
     </select>
 </mapper>
