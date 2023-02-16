@@ -30,7 +30,7 @@ public class CacheMovieNamesJob implements CommandLineRunner {
     @Autowired
     private IKpnSiteMovieService siteMovieService;
 
-    @Scheduled(initialDelay = 10 * 1000, cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void cache() {
         log.info("CacheMovieNamesJob is running ....");
 

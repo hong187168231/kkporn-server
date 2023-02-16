@@ -12,7 +12,6 @@ import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnSiteTopicVo;
 import com.central.porn.mapper.KpnSiteTopicMapper;
-import com.central.porn.service.IKpnMovieService;
 import com.central.porn.service.IKpnSiteMovieService;
 import com.central.porn.service.IKpnSiteTopicMovieService;
 import com.central.porn.service.IKpnSiteTopicService;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,16 +32,25 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
     @Autowired
     private IKpnSiteMovieService siteMovieService;
 
-    @Autowired
-    private IKpnMovieService movieService;
+
+    public List<Long> getTopicIdsBySiteId(Long sid) {
+        String topicKey = StrUtil.format(PornConstants.RedisKey.SITE_TOPIC_KEY, sid);
+        List<KpnSiteTopic> siteTopics = (List<KpnSiteTopic>) RedisRepository.get(topicKey);
+        if (CollectionUtil.isEmpty(siteTopics)) {
+            siteTopics = this.lambdaQuery()
+                    .eq(KpnSiteTopic::getSiteId, sid)
+                    .eq(KpnSiteTopic::getStatus, SiteTopicEnum.ON_SHELF.getStatus())
+                    .list();
+            if (CollectionUtil.isNotEmpty(siteTopics)) {
+                RedisRepository.setExpire(topicKey, siteTopics, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+            }
+        }
+
+        return siteTopics.stream().map(KpnSiteTopic::getId).collect(Collectors.toList());
+    }
 
     @Override
     public List<KpnSiteTopicVo> getBySiteId(Long sid) {
-        //todo 如何对vo缓存 vv,favorites实时更新
-//        List<KpnSiteTopicVo> kpnSiteTopicVos = (List<KpnSiteTopicVo>) RedisRepository.get("CACHE:VO:SITE:TOPICS:1");
-//        if (CollectionUtil.isNotEmpty(kpnSiteTopicVos)) {
-//            return kpnSiteTopicVos;
-//        }
         //查询并缓存专题
         String topicKey = StrUtil.format(PornConstants.RedisKey.SITE_TOPIC_KEY, sid);
         List<KpnSiteTopic> siteTopics = (List<KpnSiteTopic>) RedisRepository.get(topicKey);
@@ -54,7 +61,7 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
                     .orderByDesc(KpnSiteTopic::getSort)
                     .list();
             if (CollectionUtil.isNotEmpty(siteTopics)) {
-                RedisRepository.setExpire(topicKey, siteTopics, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
+                RedisRepository.setExpire(topicKey, siteTopics, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
             }
         }
 
@@ -62,16 +69,12 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
             KpnSiteTopicVo topicVo = new KpnSiteTopicVo();
             BeanUtil.copyProperties(kpnSiteTopic, topicVo);
             topicVo.setName(LanguageUtil.getLanguageName(topicVo));
-            //查询关联最新的5部影片
-            List<Long> movieIds = topicMovieService.getMovieIds(sid, topicVo.getId(), 1, 5);
+            //查询关联最新的10部影片
+            List<Long> movieIds = topicMovieService.getTopicMovieIdsBySort(sid, topicVo.getId(), 1, 10);
             List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.getSiteMovieByIds(sid, movieIds, false);
             topicVo.setMovieBaseVos(kpnSiteMovieBaseVos);
             return topicVo;
         }).collect(Collectors.toList());
-//        if (CollectionUtil.isNotEmpty(kpnSiteTopicVos)) {
-//            RedisRepository.setExpire("CACHE:VO:SITE:TOPICS:1", kpnSiteTopicVos, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
-//        }
-//        return kpnSiteTopicVos;
     }
 }
 

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -21,8 +20,8 @@ import java.util.stream.Collectors;
 public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicMovieMapper, KpnSiteTopicMovie> implements IKpnSiteTopicMovieService {
 
     @Override
-    public List<Long> getMovieIds(Long sid, Long topicId, Integer currPage, Integer pageSize) {
-        String topicMovieIdRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_TOPIC_MOVIEID_KEY, sid, topicId);
+    public List<Long> getTopicMovieIdsBySort(Long sid, Long topicId, Integer currPage, Integer pageSize) {
+        String topicMovieIdRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_TOPIC_MOVIEID_SORT_KEY, sid, topicId);
 
         int start = (currPage - 1) * pageSize;
         int end = start + pageSize - 1;
@@ -32,7 +31,7 @@ public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicM
             List<KpnSiteTopicMovie> siteTopicMovies = this.lambdaQuery()
                     .eq(KpnSiteTopicMovie::getSiteId, sid)
                     .eq(KpnSiteTopicMovie::getTopicId, topicId)
-                    .orderByAsc(KpnSiteTopicMovie::getId)
+                    .orderByAsc(KpnSiteTopicMovie::getSort)
                     .list();
 
             if (CollectionUtil.isNotEmpty(siteTopicMovies)) {
@@ -40,13 +39,19 @@ public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicM
                         .map(kpnSiteTopicMovie -> String.valueOf(kpnSiteTopicMovie.getMovieId()))
                         .collect(Collectors.toList());
                 RedisRepository.leftPushAll(topicMovieIdRedisKey, topicMovieIds);
-                RedisRepository.setExpire(topicMovieIdRedisKey, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
+                RedisRepository.setExpire(topicMovieIdRedisKey, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
                 topicMovieIdList = (ArrayList) RedisRepository.getList(topicMovieIdRedisKey, start, end);
             } else {
                 topicMovieIdList = new ArrayList<>();
             }
         }
         return topicMovieIdList.stream().map(Long::parseLong).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<Long> getTopicMovieIdsSortedByColumn(Long sid, Long topicId, String column) {
+        return this.baseMapper.getTopicMovieIdsSortedByColumn(sid, topicId, column);
     }
 }
 

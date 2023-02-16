@@ -361,6 +361,36 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         }
         //主题 TOPIC
         else if (KpnSiteMovieSearchFromEnum.TOPIC.getCode().equals(from)) {
+            //最热 默认
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_VV, fromId);
+            //最新
+            if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_CREATETIME, fromId);
+            }
+            //时长
+            else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_DURATION, fromId);
+            }
+
+            //倒序(默认)
+            int startIndex = (currPage - 1) * pageSize;
+            int endIndex = startIndex + (pageSize - 1);
+            //正序
+            if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                endIndex = -(pageSize * (currPage - 1)) + (-1);
+                startIndex = endIndex + (-(pageSize-1));
+            }
+
+            List<String> movieIdStrs = (ArrayList) RedisRepository.getList(redisKey, startIndex, endIndex);
+            boolean hasNullVoElem = movieIdStrs.stream().anyMatch(Objects::isNull);
+            if (!hasNullVoElem) {
+                movieIds = movieIdStrs.stream().map(Long::valueOf).collect(Collectors.toList());
+                //正序
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    CollectionUtil.reverse(movieIds);
+                }
+            }
+            total = RedisRepository.length(redisKey);
 
         }
         Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);

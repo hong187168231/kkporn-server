@@ -32,5 +32,5 @@ public interface IKpnMovieTagService extends ISuperService<KpnMovieTag> {
      * @param column 排序字段
      * @return
      */
-    List<Long> getTageMovieIdsSortedByColumn(Long sid, Long tagId, String column);
+    List<Long> getTagMovieIdsSortedByColumn(Long sid, Long tagId, String column);
 }
