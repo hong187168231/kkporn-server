@@ -359,6 +359,10 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             }
             total = RedisRepository.length(redisKey);
         }
+        //主题 TOPIC
+        else if (KpnSiteMovieSearchFromEnum.TOPIC.getCode().equals(from)) {
+
+        }
         Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);
         List<KpnSiteMovieBaseVo> KpnSiteMovieBaseVos = this.getSiteMovieByIds(sid, movieIds, false);
 

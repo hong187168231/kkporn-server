@@ -1,6 +1,7 @@
 package com.central.porn.utils;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class PornUtil {
             String[] movieNameArr = PornConstants.LocalCache.LOCAL_MAP_MOVIE_NAME.get(movieId);
             if(ArrayUtil.isNotEmpty(movieNameArr)){
                 for (String movieName : movieNameArr) {
-                    if(movieName.contains(keywords)){
+                    if (StrUtil.isNotBlank(movieName) && movieName.contains(keywords)) {
                         resultMovieIds.add(movieId);
                         break;
                     }

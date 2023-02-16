@@ -323,7 +323,7 @@ public class SiteController {
 
     public Result<PornPageResult<KpnSiteMovieBaseVo>> searchDepot(@RequestHeader("sid") Long sid,
                                                                   @ApiParam("0:找片,1:标签,2:专题,3:频道,4:热门VIP推荐") Integer from,
-                                                                  @ApiParam("标签/专题/频道 主键") Long fromId,
+                                                                  @ApiParam("标签/专题/频道 ID") Long fromId,
                                                                   @ApiParam("排序字段 HOT:最热,LATEST:最新,DURATION:时长") String sortType,
                                                                   @ApiParam("排序顺序 0:ASC,1:DESC") Integer sortOrder,
                                                                   @ApiParam("当前页") Integer currPage,
