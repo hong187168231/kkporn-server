@@ -11,4 +11,6 @@ import java.util.List;
 public interface KpnSiteChannelMapper extends BaseMapper<KpnSiteChannel> {
 
     List<KpnSiteChannel> getMemberChannels(@Param("uid") Long uid);
+
+    List<Long> getChannelMovieIdsSortedByColumn(@Param("sid") Long sid, @Param("channelId") Long channelId, @Param("column") String column);
 }

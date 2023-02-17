@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSite;
 import com.central.common.redis.template.RedisRepository;
-import com.central.porn.service.IKpnMovieTagService;
+import com.central.porn.service.IKpnSiteChannelService;
 import com.central.porn.service.IKpnSiteService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.elasticjob.api.ShardingContext;
@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class SiteTagRptJob implements SimpleJob, CommandLineRunner {
+public class SiteChannelRptJob implements SimpleJob, CommandLineRunner {
 
     @Autowired
     private IKpnSiteService siteService;
 
     @Autowired
-    private IKpnMovieTagService movieTagService;
+    private IKpnSiteChannelService siteChannelService;
 
     @Override
     public void execute(ShardingContext shardingContext) {
-        log.info("SiteTagRptJob -> params:{}, time:{}", shardingContext.getJobParameter(), LocalDateTime.now());
+        log.info("SiteTopicRptJob -> params:{}, time:{}", shardingContext.getJobParameter(), LocalDateTime.now());
 
         cache();
     }
@@ -40,23 +40,23 @@ public class SiteTagRptJob implements SimpleJob, CommandLineRunner {
             for (KpnSite kpnSite : kpnSites) {
                 Long sid = kpnSite.getId();
 
-                List<Long> tagIds = movieTagService.getTagIdsBySiteId(sid);
-                for (Long tagId : tagIds) {
+                List<Long> channelIds = siteChannelService.getSiteNotStableChannelIds(sid);
+                for (Long channelId : channelIds) {
                     //按播放量高->低
-                    String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_VV, sid, tagId);
-                    List<Long> movieIdsByVvDesc = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_VV);
+                    String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV,sid, channelId);
+                    List<Long> movieIdsByVvDesc = siteChannelService.getChannelMovieIdsSortedByColumn(sid, channelId, PornConstants.Sql.COLUMN_VV);
                     RedisRepository.delete(redisKey);
                     RedisRepository.leftPushAll(redisKey, movieIdsByVvDesc.stream().map(String::valueOf).collect(Collectors.toList()));
 
                     //按影片时长高->低
-                    redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_DURATION, sid, tagId);
-                    List<Long> movieIdsByDuration = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_DURATION);
+                    redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_DURATION,sid, channelId);
+                    List<Long> movieIdsByDuration = siteChannelService.getChannelMovieIdsSortedByColumn(sid, channelId, PornConstants.Sql.COLUMN_DURATION);
                     RedisRepository.delete(redisKey);
                     RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
 
                     //按影片创建时间新->旧
-                    redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_CREATETIME, sid, tagId);
-                    List<Long> movieIdsByCreateTime = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_CREATE_TIME);
+                    redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_CREATETIME,sid, channelId);
+                    List<Long> movieIdsByCreateTime = siteChannelService.getChannelMovieIdsSortedByColumn(sid, channelId, PornConstants.Sql.COLUMN_CREATE_TIME);
                     RedisRepository.delete(redisKey);
                     RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));
                 }

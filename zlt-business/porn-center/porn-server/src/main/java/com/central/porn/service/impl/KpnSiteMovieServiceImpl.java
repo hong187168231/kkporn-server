@@ -329,14 +329,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         //标签
         else if (KpnSiteMovieSearchFromEnum.TAG.getCode().equals(from)) {
             //最热 默认
-            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_VV, fromId);
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_VV, sid, fromId);
             //最新
             if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
-                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_CREATETIME, fromId);
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_CREATETIME, sid, fromId);
             }
             //时长
             else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
-                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_DURATION, fromId);
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_DURATION, sid, fromId);
             }
 
             //倒序(默认)
@@ -362,14 +362,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         //主题 TOPIC
         else if (KpnSiteMovieSearchFromEnum.TOPIC.getCode().equals(from)) {
             //最热 默认
-            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_VV, fromId);
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_VV, sid, fromId);
             //最新
             if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
-                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_CREATETIME, fromId);
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_CREATETIME, sid, fromId);
             }
             //时长
             else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
-                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_DURATION, fromId);
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_DURATION, sid, fromId);
             }
 
             //倒序(默认)
@@ -391,7 +391,39 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                 }
             }
             total = RedisRepository.length(redisKey);
+        }
+        //频道
+        else if (KpnSiteMovieSearchFromEnum.CHANNEL.getCode().equals(from)) {
+            //最热 默认
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV, sid, fromId);
+            //最新
+            if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_CREATETIME, sid, fromId);
+            }
+            //时长
+            else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_DURATION, sid, fromId);
+            }
 
+            //倒序(默认)
+            int startIndex = (currPage - 1) * pageSize;
+            int endIndex = startIndex + (pageSize - 1);
+            //正序
+            if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                endIndex = -(pageSize * (currPage - 1)) + (-1);
+                startIndex = endIndex + (-(pageSize - 1));
+            }
+
+            List<String> movieIdStrs = (ArrayList) RedisRepository.getList(redisKey, startIndex, endIndex);
+            boolean hasNullVoElem = movieIdStrs.stream().anyMatch(Objects::isNull);
+            if (!hasNullVoElem) {
+                movieIds = movieIdStrs.stream().map(Long::valueOf).collect(Collectors.toList());
+                //正序
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    CollectionUtil.reverse(movieIds);
+                }
+            }
+            total = RedisRepository.length(redisKey);
         }
         Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);
         List<KpnSiteMovieBaseVo> KpnSiteMovieBaseVos = this.getSiteMovieByIds(sid, movieIds, false);

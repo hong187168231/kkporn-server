@@ -35,7 +35,7 @@ public class KpnSiteChannel extends SuperEntity {
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;
 
-    @ApiModelProperty(value = "频道状态 0下架,1上架")
+    @ApiModelProperty(value = "频道状态 0/false:下架,1/true:上架")
     private Boolean status;
 
     @ApiModelProperty(value = "关联标签(tag_id_1,tag_id_2,....)")

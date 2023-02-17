@@ -146,7 +146,10 @@ public class SiteController {
     @ApiOperation(value = "获取站点频道")
     public Result<List<KpnSiteChannelVo>> getChannels(@RequestHeader("sid") Long sid) {
         try {
-            List<KpnSiteChannel> channelList = siteChannelService.getBySiteId(sid);
+            long start = System.currentTimeMillis();
+            List<KpnSiteChannel> channelList = siteChannelService.getAllChannelsBySiteId(sid);
+            System.out.println("获取站点频道 耗时1: "+ (System.currentTimeMillis() - start));
+
             List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
                 KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
                 BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);

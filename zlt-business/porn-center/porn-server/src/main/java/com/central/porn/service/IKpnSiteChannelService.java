@@ -10,11 +10,19 @@ import java.util.List;
 public interface IKpnSiteChannelService extends ISuperService<KpnSiteChannel> {
 
     /**
-     * 获取站点频道
+     * 获取站点所有频道
      *
-     * @param id 站点id
+     * @param sid 站点id
      */
-    List<KpnSiteChannel> getBySiteId(Long id);
+    List<KpnSiteChannel> getAllChannelsBySiteId(Long sid);
+
+    /**
+     * 获取站点所有非固定频道id
+     *
+     * @param sid 站点id
+     * @return
+     */
+    List<Long> getSiteNotStableChannelIds(Long sid);
 
     /**
      * 获取会员频道
@@ -51,4 +59,14 @@ public interface IKpnSiteChannelService extends ISuperService<KpnSiteChannel> {
      * @param channelId 频道id
      */
     void removeChannel(Long uid, Long channelId);
+
+    /**
+     * 站点频道影片排序
+     *
+     * @param sid       站点id
+     * @param channelId 频道id
+     * @param column    排序字段
+     * @return
+     */
+    List<Long> getChannelMovieIdsSortedByColumn(Long sid, Long channelId, String column);
 }

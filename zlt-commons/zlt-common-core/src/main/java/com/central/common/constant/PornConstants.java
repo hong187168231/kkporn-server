@@ -100,7 +100,7 @@ public final class PornConstants {
         //缓存站点信息 siteid
         public static final String SITE_INFO_KEY = "SITE:INFO:{}";
         //缓存站点频道信息 siteid
-        public static final String SITE_CHANNEL_KEY = "SITE:CHANNEL:{}";
+        public static final String SITE_STASH_CHANNEL_KEY = "SITE:CHANNEL:{}";
         //缓存站点专题信息 siteid
         public static final String SITE_TOPIC_KEY = "SITE:TOPIC:{}";
         //缓存站点专题影片id信息 list类型  siteid,topicid
@@ -130,23 +130,32 @@ public final class PornConstants {
         //缓存站点搜索关键词总排行
         public static final String KPN_SITE_SEARCH_TOTAL_KEY = "KPN:SITE:SEARCH:TOTAL:{}";
 
-        //缓存站点标签影片id排序 播放量排序 高->低  TAGID
-        public static final String KPN_SITE_TAG_MOVIEID_VV = "KPN:SITE:TAG:MOVIEID:VV:{}";
+        //缓存站点标签影片id排序 播放量排序 高->低  SITEID,TAGID
+        public static final String KPN_SITE_TAG_MOVIEID_VV = "KPN:SITE:TAG:MOVIEID:VV:{}:{}";
 
-        //缓存站点标签影片id排序 时长排序 长->短
-        public static final String KPN_SITE_TAG_MOVIEID_DURATION = "KPN:SITE:TAG:MOVIEID:DURATION:{}";
+        //缓存站点标签影片id排序 时长排序 长->短 SITEID,TAGID
+        public static final String KPN_SITE_TAG_MOVIEID_DURATION = "KPN:SITE:TAG:MOVIEID:DURATION:{}:{}";
 
-        //缓存站点标签影片id排序 创建时间 新->旧
-        public static final String KPN_SITE_TAG_MOVIEID_CREATETIME = "KPN:SITE:TAG:MOVIEID:CREATETIME:{}";
+        //缓存站点标签影片id排序 创建时间 新->旧 SITEID,TAGID
+        public static final String KPN_SITE_TAG_MOVIEID_CREATETIME = "KPN:SITE:TAG:MOVIEID:CREATETIME:{}:{}";
 
-        //缓存站点标签影片id排序 播放量排序 高->低  TOPICID
-        public static final String KPN_SITE_TOPIC_MOVIEID_VV = "KPN:SITE:TOPIC:MOVIEID:VV:{}";
+        //缓存站点专题影片id排序 播放量排序 高->低  SITEID,TOPICID
+        public static final String KPN_SITE_TOPIC_MOVIEID_VV = "KPN:SITE:TOPIC:MOVIEID:VV:{}:{}";
 
-        //缓存站点标签影片id排序 时长排序 长->短
-        public static final String KPN_SITE_TOPIC_MOVIEID_DURATION = "KPN:SITE:TOPIC:MOVIEID:DURATION:{}";
+        //缓存站点专题影片id排序 时长排序 长->短 SITEID,TOPICID
+        public static final String KPN_SITE_TOPIC_MOVIEID_DURATION = "KPN:SITE:TOPIC:MOVIEID:DURATION:{}:{}";
 
-        //缓存站点标签影片id排序 创建时间 新->旧
-        public static final String KPN_SITE_TOPIC_MOVIEID_CREATETIME = "KPN:SITE:TOPIC:MOVIEID:CREATETIME:{}";
+        //缓存站点专题影片id排序 创建时间 新->旧 SITEID,TOPICID
+        public static final String KPN_SITE_TOPIC_MOVIEID_CREATETIME = "KPN:SITE:TOPIC:MOVIEID:CREATETIME:{}:{}";
+
+        //缓存站点频道影片id排序 播放量排序 高->低  SITEID,CHANNELID
+        public static final String KPN_SITE_CHANNEL_MOVIEID_VV = "KPN:SITE:CHANNEL:MOVIEID:VV:{}:{}";
+
+        //缓存站点频道影片id排序 时长排序 长->短 SITEID,CHANNELID
+        public static final String KPN_SITE_CHANNEL_MOVIEID_DURATION = "KPN:SITE:CHANNEL:MOVIEID:DURATION:{}:{}";
+
+        //缓存站点频道影片id排序 创建时间 新->旧 SITEID,CHANNELID
+        public static final String KPN_SITE_CHANNEL_MOVIEID_CREATETIME = "KPN:SITE:CHANNEL:MOVIEID:CREATETIME:{}:{}";
 
         //缓存会员频道信息 userid
         public static final String SITE_USER_CHANNEL_KEY = "SITE:USER:CHANNEL:{}";

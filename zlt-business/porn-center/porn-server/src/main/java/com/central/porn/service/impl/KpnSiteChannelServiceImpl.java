@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,26 +30,48 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
     @Autowired
     private IKpnSiteUserChannelService userChannelService;
 
+    //todo 过滤掉无影片的频道
     @Override
-    public List<KpnSiteChannel> getBySiteId(Long sid) {
-        String channelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_CHANNEL_KEY, sid);
-        List<KpnSiteChannel> siteChannels = (List<KpnSiteChannel>) RedisRepository.get(channelRedisKey);
+    public List<KpnSiteChannel> getAllChannelsBySiteId(Long sid) {
+        //固定频道
+        String stashChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_STASH_CHANNEL_KEY, sid);
+        List<KpnSiteChannel> siteChannels = (List<KpnSiteChannel>) RedisRepository.get(stashChannelRedisKey);
         if (CollectionUtil.isEmpty(siteChannels)) {
             siteChannels = this.lambdaQuery()
-                    .eq(KpnSiteChannel::getSiteId, sid)
-                    .or()
                     .eq(KpnSiteChannel::getIsStable, true)
                     .orderByDesc(KpnSiteChannel::getIsStable)
                     .orderByDesc(KpnSiteChannel::getSort)
                     .orderByDesc(KpnSiteChannel::getCreateTime)
                     .list();
             if (CollectionUtil.isNotEmpty(siteChannels)) {
-                RedisRepository.setExpire(channelRedisKey, siteChannels, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+                RedisRepository.setExpire(stashChannelRedisKey, siteChannels, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
             }
         }
+
+        //站点自定义频道,不展示无影片
+        String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV, sid, PornConstants.Symbol.ASTERISK);
+        Set<String> notStashChannelKeys = RedisRepository.keys(redisKey);
+
+        List<Long> channelIds = notStashChannelKeys.stream().map(s -> Long.parseLong(s.substring(s.lastIndexOf(":") + 1))).collect(Collectors.toList());
+        List<KpnSiteChannel> kpnSiteChannels = listByIds(channelIds);
+        kpnSiteChannels.sort(Comparator.comparingLong(KpnSiteChannel::getSort).thenComparing(KpnSiteChannel::getCreateTime).reversed());
+
+        siteChannels.addAll(kpnSiteChannels);
+
         return siteChannels;
     }
 
+    @Override
+    public List<Long> getSiteNotStableChannelIds(Long sid) {
+        List<KpnSiteChannel> list = this.lambdaQuery().eq(KpnSiteChannel::getSiteId, sid)
+                .eq(KpnSiteChannel::getStatus, true)
+                .eq(KpnSiteChannel::getIsStable, false)
+                .list();
+
+        return list.stream().map(KpnSiteChannel::getId).collect(Collectors.toList());
+    }
+
+    //todo 过滤掉无影片的频道
     @Override
     public List<KpnSiteChannel> getMemberChannels(Long uid) {
         String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_USER_CHANNEL_KEY, uid);
@@ -123,6 +148,11 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         RedisRepository.delete(userChannelRedisKey);
         getMemberChannels(uid);
         log.info("频道移除完成 userId: {},channelId: {}", uid, channelId);
+    }
+
+    @Override
+    public List<Long> getChannelMovieIdsSortedByColumn(Long sid, Long channelId, String column) {
+        return this.baseMapper.getChannelMovieIdsSortedByColumn(sid, channelId, column);
     }
 
 
