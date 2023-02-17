@@ -2,7 +2,10 @@ package com.central.backend.controller;
 
 import com.central.backend.co.KpnSiteChannelUpdateCo;
 import com.central.backend.service.IKpnSiteChannelService;
+import com.central.backend.service.IKpnTagService;
+import com.central.backend.vo.KpnTagVo;
 import com.central.common.model.KpnSiteChannel;
+import com.central.common.model.KpnTag;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 import io.swagger.annotations.Api;
@@ -15,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -26,6 +30,10 @@ public class KpnSiteChannelController {
 
     @Autowired
     private IKpnSiteChannelService siteChannelService;
+
+    @Autowired
+    private IKpnTagService kpnTagService;
+
 
     @ApiOperation("查询频道栏目列表")
     @ResponseBody
@@ -70,4 +78,16 @@ public class KpnSiteChannelController {
         boolean b = siteChannelService.deleteId(id);
         return b ? Result.succeed("删除成功") : Result.failed("删除失败");
     }
+
+    @ApiOperation("关联标签")
+    @ResponseBody
+    @GetMapping("/findTagList")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "siteCode", value = "站点code", required = true, dataType = "String")
+    })
+    public Result<List<KpnTagVo>> findTagList(@RequestParam Map<String, Object> params) {
+        List<KpnTagVo> list = kpnTagService.findTagList(params);
+        return Result.succeed(list);
+    }
+
 }

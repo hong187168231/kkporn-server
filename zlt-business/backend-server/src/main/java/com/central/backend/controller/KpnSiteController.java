@@ -51,8 +51,13 @@ public class KpnSiteController {
     @ApiOperation("查询站点下拉框数据")
     @ResponseBody
     @GetMapping("/findSiteBoxList")
-    public Result<List<KpnSiteListVo>> findSiteBoxList() {
-        List list = siteService.findSiteBoxList();
+    public Result<List<KpnSiteListVo>> findSiteBoxList(@LoginUser SysUser sysUser) {
+        //根据token判断当前账号是什么角色
+        Integer roleId=0;
+        if (sysUser !=null ){
+            roleId= Integer.valueOf(sysUser.getRoleId());
+        }
+        List list = siteService.findSiteBoxList(roleId);
         return Result.succeed(list);
     }
 

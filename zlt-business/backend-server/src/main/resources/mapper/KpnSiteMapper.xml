@@ -60,6 +60,11 @@
 			s.`name` as siteName
 		FROM
 			kpn_site s
+		<where>
+			<if test="roleId != null and roleId == 0 ">
+				and s.`status`=1
+			</if>
+		</where>
 	</select>
 
 </mapper>

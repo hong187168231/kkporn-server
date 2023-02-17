@@ -32,7 +32,7 @@ public interface IKpnSiteService extends ISuperService<KpnSite> {
     String getStringRandom(int length) ;
 
 
-    List<KpnSiteListVo> findSiteBoxList();
+    List<KpnSiteListVo> findSiteBoxList(Integer roleId);
 
 
 }

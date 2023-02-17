@@ -1,6 +1,7 @@
 package com.central.backend.mapper;
 
 import com.central.backend.model.vo.KpnTagVO;
+import com.central.backend.vo.KpnTagVo;
 import com.central.common.model.KpnTag;
 import com.central.db.mapper.SuperMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -25,4 +26,7 @@ public interface KpnTagMapper extends SuperMapper<KpnTag> {
      * @return
      */
     List<KpnTagVO> findList(Page<KpnTagVO> page, @Param("p") Map<String, Object> params);
+
+
+    List<KpnTagVo> findTagList( @Param("p")  Map<String, Object> params);
 }

@@ -3,6 +3,7 @@ package com.central.backend.service.impl;
 import com.central.backend.mapper.KpnTagMapper;
 import com.central.backend.model.vo.KpnTagVO;
 import com.central.backend.service.IKpnTagService;
+import com.central.backend.vo.KpnTagVo;
 import com.central.common.model.KpnTag;
 import com.central.common.model.SysUser;
 import com.central.common.service.impl.SuperServiceImpl;
@@ -42,5 +43,10 @@ public class KpnTagServiceImpl extends SuperServiceImpl<KpnTagMapper, KpnTag> im
         Page<KpnTagVO> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnTagVO> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnTagVO>builder().data(list).count(page.getTotal()).build();
+    }
+
+    @Override
+    public List<KpnTagVo> findTagList(Map<String, Object> params) {
+        return baseMapper.findTagList(params);
     }
 }

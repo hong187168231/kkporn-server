@@ -101,8 +101,8 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
     }
 
     @Override
-    public List<KpnSiteListVo> findSiteBoxList() {
-        return baseMapper.findSiteBoxList();
+    public List<KpnSiteListVo> findSiteBoxList(Integer roleId ) {
+        return baseMapper.findSiteBoxList(roleId);
     }
 
 }

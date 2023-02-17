@@ -24,5 +24,5 @@ public interface KpnSiteMapper extends SuperMapper<KpnSite> {
     KpnSiteVo findSiteTotal();
 
 
-    List<KpnSiteListVo>  findSiteBoxList();
+    List<KpnSiteListVo>  findSiteBoxList(Integer roleId);
 }
