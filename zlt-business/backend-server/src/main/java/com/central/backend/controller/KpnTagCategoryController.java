@@ -52,8 +52,8 @@ public class KpnTagCategoryController {
      */
     @ApiOperation(value = "查询所有分类")
     @GetMapping("/all")
-    public List<KpnTagCategory> listAll() {
-        return kpnTagCategoryService.findList();
+    public Result<List<KpnTagCategory>> listAll() {
+        return Result.succeed(kpnTagCategoryService.findList());
     }
 
     /**
