@@ -14,8 +14,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -35,6 +38,10 @@ public class KpnSiteChannelController {
     private IKpnTagService kpnTagService;
 
 
+    @Value("${zlt.minio.externalEndpoint}")
+    private String externalEndpoint;
+
+
     @ApiOperation("查询频道栏目列表")
     @ResponseBody
     @GetMapping("/findSiteChannelList")
@@ -45,21 +52,26 @@ public class KpnSiteChannelController {
     })
     public Result<PageResult<KpnSiteChannel>> findSiteChannelList(@RequestParam Map<String, Object> params) {
         PageResult<KpnSiteChannel> list = siteChannelService.findSiteChannelList(params);
+        list.getData().stream().forEach(info->{
+            if (info.getIcon()!=null){
+                info.setIcon(externalEndpoint+"/"+info.getIcon());
+            }
+        });
         return Result.succeed(list);
     }
 
 
 
     @ApiOperation(value = "新增or更新频道")
-    @PostMapping(value = "/saveOrUpdateSiteChannel")
-    public Result saveOrUpdateSiteChannel(@RequestBody  KpnSiteChannel siteChannel) {
+    @PostMapping(value = "/saveOrUpdateSiteChannel",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Result saveOrUpdateSiteChannel(@Valid KpnSiteChannel siteChannel, @Valid MultipartFile file) {
 /*       if (siteChannel.getId() == null) {
            siteChannel.setUpdateBy(sysUser.getUsername());
            siteChannel.setCreateBy(sysUser.getUsername());
         }else {
            siteChannel.setUpdateBy(sysUser.getUsername());
         }*/
-        return  siteChannelService.saveOrUpdateSiteChannel(siteChannel);
+        return  siteChannelService.saveOrUpdateSiteChannel(siteChannel,file);
     }
 
 
