@@ -7,6 +7,8 @@ public enum KpnSiteMovieSearchFromEnum {
     TOPIC(2, "专题"),
     CHANNEL(3, "频道"),
     VIP_RECOMMEND(4, "热门VIP推荐"),
+    LATEST(5, "最新"),
+    HOTTEST(6, "最热"),
     ;
 
     private Integer code;

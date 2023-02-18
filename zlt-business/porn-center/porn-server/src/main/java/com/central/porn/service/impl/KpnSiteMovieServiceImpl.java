@@ -99,7 +99,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                     kpnMovieVo.setTagVos(kpnTagVos);
 
                     //获取播放量/收藏量
-                    KpnSiteMovie siteMovie = siteMovieService.getSiteMovie(sid, kpnMovie.getId());
+                    KpnSiteMovie siteMovie = siteMovieService.getSiteMovieVvFavorites(sid, kpnMovie.getId());
                     kpnMovieVo.setVv(siteMovie.getVv());
                     kpnMovieVo.setFavorites(siteMovie.getFavorites());
 
@@ -155,7 +155,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public KpnSiteMovie getSiteMovie(Long sid, Long movieId) {
+    public KpnSiteMovie getSiteMovieVvFavorites(Long sid, Long movieId) {
         //先缓存
         String siteMovieVvKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_VV_KEY, sid, movieId);
         cacheSiteMovieVv(siteMovieVvKey, sid, movieId);
@@ -270,7 +270,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public List<KpnSiteMovieBaseVo> searchSiteMovie(Long sid, MovieSearchParamCo searchParam, String sortType, Integer sortOrder, Integer currPage, Integer pageSize) {
+    public List<KpnSiteMovieBaseVo> getFillingSiteMovie(Long sid, MovieSearchParamCo searchParam, List<Long> movieIds) {
         LambdaQueryChainWrapper<KpnSiteMovie> lambdaQueryChainWrapper = this.lambdaQuery();
         lambdaQueryChainWrapper.select(KpnSiteMovie::getMovieId);
         lambdaQueryChainWrapper.eq(KpnSiteMovie::getSiteId, sid);
@@ -278,21 +278,13 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         if (ObjectUtil.isNotEmpty(searchParam.getPayType())) {
             lambdaQueryChainWrapper.eq(KpnSiteMovie::getPayType, searchParam.getPayType());
         }
-
-        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.HOT.getType())) {
-            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);
+        lambdaQueryChainWrapper.notIn(KpnSiteMovie::getMovieId, movieIds);
+        List<KpnSiteMovie> fillingMovies = lambdaQueryChainWrapper.list();
+        if (CollectionUtil.isEmpty(fillingMovies)) {
+            return new ArrayList<>();
         }
-        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
-            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getCreateTime);
-        }
-        if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
-            lambdaQueryChainWrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getDuration);
-        }
-
-        Page<KpnSiteMovie> kpnSiteMoviePage = lambdaQueryChainWrapper.page(new Page<>(currPage, pageSize));
-        List<Long> movieIds = kpnSiteMoviePage.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
-
-        return getSiteMovieByIds(sid, movieIds, false);
+        List<Long> fillingMovieIds = fillingMovies.stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
+        return getSiteMovieByIds(sid, fillingMovieIds, false);
     }
 
     @Override
@@ -332,7 +324,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_VV, sid, fromId);
             //最新
             if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
-                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_CREATETIME, sid, fromId);
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_LATEST, sid, fromId);
             }
             //时长
             else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
@@ -365,7 +357,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_VV, sid, fromId);
             //最新
             if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
-                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_CREATETIME, sid, fromId);
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_LATEST, sid, fromId);
             }
             //时长
             else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
@@ -398,12 +390,85 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV, sid, fromId);
             //最新
             if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
-                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_CREATETIME, sid, fromId);
+                redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_LATEST, sid, fromId);
             }
             //时长
             else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
                 redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_DURATION, sid, fromId);
             }
+
+            //倒序(默认)
+            int startIndex = (currPage - 1) * pageSize;
+            int endIndex = startIndex + (pageSize - 1);
+            //正序
+            if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                endIndex = -(pageSize * (currPage - 1)) + (-1);
+                startIndex = endIndex + (-(pageSize - 1));
+            }
+
+            List<String> movieIdStrs = (ArrayList) RedisRepository.getList(redisKey, startIndex, endIndex);
+            boolean hasNullVoElem = movieIdStrs.stream().anyMatch(Objects::isNull);
+            if (!hasNullVoElem) {
+                movieIds = movieIdStrs.stream().map(Long::valueOf).collect(Collectors.toList());
+                //正序
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    CollectionUtil.reverse(movieIds);
+                }
+            }
+            total = RedisRepository.length(redisKey);
+        }
+        //热门VIP推荐
+        else if (KpnSiteMovieSearchFromEnum.VIP_RECOMMEND.getCode().equals(from)) {
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_MOVIEID_VV, sid, fromId);
+
+            //倒序(默认)
+            int startIndex = (currPage - 1) * pageSize;
+            int endIndex = startIndex + (pageSize - 1);
+            //正序
+            if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                endIndex = -(pageSize * (currPage - 1)) + (-1);
+                startIndex = endIndex + (-(pageSize - 1));
+            }
+
+            List<String> movieIdStrs = (ArrayList) RedisRepository.getList(redisKey, startIndex, endIndex);
+            boolean hasNullVoElem = movieIdStrs.stream().anyMatch(Objects::isNull);
+            if (!hasNullVoElem) {
+                movieIds = movieIdStrs.stream().map(Long::valueOf).collect(Collectors.toList());
+                //正序
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    CollectionUtil.reverse(movieIds);
+                }
+            }
+            total = RedisRepository.length(redisKey);
+        }
+        //最新
+        else if (KpnSiteMovieSearchFromEnum.LATEST.getCode().equals(from)) {
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ALL_MOVIEID_LATEST, sid, fromId);
+
+            //倒序(默认)
+            int startIndex = (currPage - 1) * pageSize;
+            int endIndex = startIndex + (pageSize - 1);
+            //正序
+            if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                endIndex = -(pageSize * (currPage - 1)) + (-1);
+                startIndex = endIndex + (-(pageSize - 1));
+            }
+
+            List<String> movieIdStrs = (ArrayList) RedisRepository.getList(redisKey, startIndex, endIndex);
+            boolean hasNullVoElem = movieIdStrs.stream().anyMatch(Objects::isNull);
+            if (!hasNullVoElem) {
+                movieIds = movieIdStrs.stream().map(Long::valueOf).collect(Collectors.toList());
+                //正序
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    CollectionUtil.reverse(movieIds);
+                }
+            }
+            total = RedisRepository.length(redisKey);
+        }
+        //最热
+        else if (KpnSiteMovieSearchFromEnum.HOTTEST.getCode().equals(from)) {
+            //最热 默认
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ALL_MOVIEID_VV, sid, fromId);
 
             //倒序(默认)
             int startIndex = (currPage - 1) * pageSize;
@@ -439,9 +504,37 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
     @Override
     public List<Long> getSiteMovieIds(Long sid) {
-        return this.lambdaQuery().eq(KpnSiteMovie::getSiteId, sid).eq(KpnSiteMovie::getStatus, true)
+        return this.lambdaQuery()
+                .eq(KpnSiteMovie::getSiteId, sid)
+                .eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus())
                 .list()
                 .stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getSiteMovieIdsOrderByVv(Long sid, Boolean isVip) {
+        LambdaQueryChainWrapper<KpnSiteMovie> wrapper = this.lambdaQuery()
+                .select(KpnSiteMovie::getMovieId)
+                .eq(KpnSiteMovie::getSiteId, sid)
+                .eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus());
+
+        if (isVip) {
+            wrapper.eq(KpnSiteMovie::getPayType, true);
+        }
+        wrapper.orderByAsc(KpnSiteMovie::getVv, KpnSiteMovie::getId);
+        List<KpnSiteMovie> kpnSiteMovies = wrapper.list();
+        List<Long> movieIds = kpnSiteMovies.stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
+        return movieIds;
+    }
+
+    @Override
+    public List<KpnSiteMovieBaseVo> searchSiteVipMovieTop5(Long sid) {
+        String siteVipMovieIdsKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_MOVIEID_VV, sid);
+        List<String> movieIdStrs = (ArrayList) RedisRepository.getList(siteVipMovieIdsKey, 0, 4);
+
+        List<Long> movieIds = movieIdStrs.stream().map(Long::parseLong).collect(Collectors.toList());
+
+        return getSiteMovieByIds(sid, movieIds, false);
     }
 
     private void cacheSiteMovieVv(String siteMovieVvKey, Long sid, Long movieId) {

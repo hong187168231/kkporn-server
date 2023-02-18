@@ -38,7 +38,7 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * @param movieId 影片id
      * @return
      */
-    KpnSiteMovie getSiteMovie(Long sid, Long movieId);
+    KpnSiteMovie getSiteMovieVvFavorites(Long sid, Long movieId);
 
     /**
      * 增加站点影片播放量
@@ -90,17 +90,13 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
     List<KpnSiteMovieBaseVo> getSiteMovieByActor(Long sid, Long actorId, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
 
     /**
-     * 搜索站点影片
+     * 补足 1.月播放量排行榜 2.
      *
      * @param sid         站点id
      * @param searchParam 查询参数
-     * @param sortType    排序字段
-     * @param sortOrder   排序顺序
-     * @param currPage    当前页
-     * @param pageSize    每页条数
-     * @return
+     * @param movieIds    已经存在的影片id
      */
-    List<KpnSiteMovieBaseVo> searchSiteMovie(Long sid, MovieSearchParamCo searchParam, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
+    List<KpnSiteMovieBaseVo> getFillingSiteMovie(Long sid, MovieSearchParamCo searchParam, List<Long> movieIds);
 
 
     /**
@@ -132,4 +128,19 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * @return
      */
     List<Long> getSiteMovieIds(Long sid);
+
+    /**
+     * 获取站点影片id,按播放量排序
+     *
+     * @param sid
+     * @return
+     */
+    List<Long> getSiteMovieIdsOrderByVv(Long sid, Boolean isVip);
+
+    /**
+     * 获取vip推荐
+     * @param sid 站点id
+     * @return
+     */
+    List<KpnSiteMovieBaseVo> searchSiteVipMovieTop5(Long sid);
 }

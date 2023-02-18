@@ -30,7 +30,6 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
     @Autowired
     private IKpnSiteUserChannelService userChannelService;
 
-    //todo 过滤掉无影片的频道
     @Override
     public List<KpnSiteChannel> getAllChannelsBySiteId(Long sid) {
         //固定频道
@@ -52,12 +51,12 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV, sid, PornConstants.Symbol.ASTERISK);
         Set<String> notStashChannelKeys = RedisRepository.keys(redisKey);
 
+        //todo 走库了
         List<Long> channelIds = notStashChannelKeys.stream().map(s -> Long.parseLong(s.substring(s.lastIndexOf(":") + 1))).collect(Collectors.toList());
         List<KpnSiteChannel> kpnSiteChannels = listByIds(channelIds);
-        kpnSiteChannels.sort(Comparator.comparingLong(KpnSiteChannel::getSort).thenComparing(KpnSiteChannel::getCreateTime).reversed());
+        kpnSiteChannels.sort(Comparator.comparingLong(KpnSiteChannel::getSort).thenComparing(KpnSiteChannel::getId).reversed());
 
         siteChannels.addAll(kpnSiteChannels);
-
         return siteChannels;
     }
 

@@ -4,24 +4,17 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
-import com.central.common.model.KpnMovie;
 import com.central.common.model.RptSiteMovieDate;
-import com.central.common.model.enums.SiteMovieStatusEnum;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
-import com.central.porn.enums.KpnMovieSortTypeEnum;
-import com.central.porn.enums.KpnSortOrderEnum;
-import com.central.porn.mapper.KpnMovieMapper;
 import com.central.porn.mapper.RptSiteMovieDateMapper;
-import com.central.porn.service.IKpnMovieService;
 import com.central.porn.service.IKpnSiteMovieService;
 import com.central.porn.service.IRptSiteMovieDateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -56,12 +49,12 @@ public class RptSiteMovieDateServiceImpl extends SuperServiceImpl<RptSiteMovieDa
             siteMonthMovies = siteMovieService.getSiteMovieByIds(sid, movieIds,false);
             if (siteMonthMovies.size() < 10) {
                 MovieSearchParamCo movieSearchParam = MovieSearchParamCo.builder().build();
-                List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovie(sid, movieSearchParam, KpnMovieSortTypeEnum.HOT.getType(), KpnSortOrderEnum.DESC.getCode(), 1, 10 - siteMonthMovies.size());
+                List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.getFillingSiteMovie(sid, movieSearchParam, movieIds);
                 siteMonthMovies.addAll(kpnSiteMovieBaseVos);
             }
 
             if (CollectionUtil.isNotEmpty(siteMonthMovies)) {
-                RedisRepository.setExpire(redisKey, siteMonthMovies, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+                RedisRepository.setExpire(redisKey, siteMonthMovies, PornConstants.RedisKey.EXPIRE_TIME_1_DAYS);
             }
         }
         return siteMonthMovies;

@@ -12,7 +12,6 @@ import com.central.common.model.Result;
 import com.central.common.utils.I18nUtil;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
-import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.*;
 import com.central.porn.enums.KpnActorSortTypeEnum;
 import com.central.porn.enums.KpnMovieSortTypeEnum;
@@ -232,27 +231,25 @@ public class SiteController {
     }
 
     /**
-     * 热门VIP影片推荐
+     * 热门VIP推荐
      */
     @GetMapping("/vip/top5")
-    @ApiOperation(value = "热门VIP影片推荐")
+    @ApiOperation(value = "热门VIP推荐")
     public Result<List<KpnSiteMovieBaseVo>> getVipTop5(@RequestHeader("sid") Long sid) {
         try {
-            MovieSearchParamCo movieSearchParam = MovieSearchParamCo.builder().payType(true).build();
-            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovie(sid, movieSearchParam, KpnMovieSortTypeEnum.HOT.getType(), KpnSortOrderEnum.DESC.getCode(), 1, 5);
-            return Result.succeed(kpnSiteMovieBaseVos, "succeed");
+            List<KpnSiteMovieBaseVo> siteMoviesVipTop5 = siteMovieService.searchSiteVipMovieTop5(sid);
+            return Result.succeed(siteMoviesVipTop5, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
         }
     }
 
-
     /**
      * 月播放排行榜
      */
     @GetMapping("/movie/month")
-    @ApiOperation(value = "热门VIP影片推荐")
+    @ApiOperation(value = "月播放排行榜")
     public Result<List<KpnSiteMovieBaseVo>> getMovieMonth(@RequestHeader("sid") Long sid) {
         try {
             List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = rptSiteMovieDateService.searchSiteMovieMonth(sid);
@@ -325,7 +322,7 @@ public class SiteController {
     @ApiOperation(value = "搜索影片库")
 
     public Result<PornPageResult<KpnSiteMovieBaseVo>> searchDepot(@RequestHeader("sid") Long sid,
-                                                                  @ApiParam("0:找片,1:标签,2:专题,3:频道,4:热门VIP推荐") Integer from,
+                                                                  @ApiParam("0:找片,1:标签,2:专题,3:频道,4:热门VIP推荐,5:最新,6:最热") Integer from,
                                                                   @ApiParam("标签/专题/频道 ID") Long fromId,
                                                                   @ApiParam("排序字段 HOT:最热,LATEST:最新,DURATION:时长") String sortType,
                                                                   @ApiParam("排序顺序 0:ASC,1:DESC") Integer sortOrder,

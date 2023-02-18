@@ -59,7 +59,7 @@ public class SiteTopicRptJob implements SimpleJob, CommandLineRunner {
                     RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
 
                     //按影片创建时间新->旧
-                    redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_CREATETIME,sid, topicId);
+                    redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_LATEST,sid, topicId);
                     List<Long> movieIdsByCreateTime = siteTopicMovieService.getTopicMovieIdsSortedByColumn(sid, topicId, PornConstants.Sql.COLUMN_CREATE_TIME);
                     RedisRepository.delete(redisKey);
                     RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));

@@ -55,7 +55,7 @@ public class SiteTagRptJob implements SimpleJob, CommandLineRunner {
                     RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
 
                     //按影片创建时间新->旧
-                    redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_CREATETIME, sid, tagId);
+                    redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_LATEST, sid, tagId);
                     List<Long> movieIdsByCreateTime = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_CREATE_TIME);
                     RedisRepository.delete(redisKey);
                     RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));

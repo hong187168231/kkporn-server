@@ -23,6 +23,9 @@ public class PornUtil {
             if(ArrayUtil.isNotEmpty(movieNameArr)){
                 for (String movieName : movieNameArr) {
                     if (StrUtil.isNotBlank(movieName) && movieName.contains(keywords)) {
+                        if(resultMovieIds.size()>=300){
+                            return resultMovieIds;
+                        }
                         resultMovieIds.add(movieId);
                         break;
                     }

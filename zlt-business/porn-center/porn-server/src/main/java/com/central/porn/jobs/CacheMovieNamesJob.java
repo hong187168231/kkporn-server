@@ -15,6 +15,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -30,14 +31,10 @@ public class CacheMovieNamesJob implements CommandLineRunner {
     @Autowired
     private IKpnSiteMovieService siteMovieService;
 
-//    @Scheduled(cron = "0 0/1 * * * ?")
-    public void cache() {
+    //todo 并发问题,再考虑
+    @Scheduled(cron = "0 0/1 * * * ?")
+    public void loadCacheJob() {
         log.info("CacheMovieNamesJob is running ....");
-
-        //为空时加载
-        if (CollectionUtil.isEmpty(PornConstants.LocalCache.LOCAL_MAP_MOVIE_NAME)) {
-            cacheData();
-        }
 
         List<KpnSite> kpnSites = siteService.getList();
         for (KpnSite kpnSite : kpnSites) {
@@ -52,15 +49,15 @@ public class CacheMovieNamesJob implements CommandLineRunner {
 
                 //暗示
                 System.gc();
+                sleep();
             }
-            sleep();
             RedisRepository.set(redisFlagKey, PornConstants.Numeric.CLOSE);
         }
     }
 
     private void sleep() {
         try {
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -68,11 +65,19 @@ public class CacheMovieNamesJob implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        cacheData();
         List<KpnSite> kpnSites = siteService.getList();
         for (KpnSite kpnSite : kpnSites) {
-            String redisFlagKey = StrUtil.format(PornConstants.RedisKey.SITE_MOVIE_CHANGE_FLAG, kpnSite.getId());
-            RedisRepository.set(redisFlagKey, PornConstants.Numeric.OPEN);
+            Long sid = kpnSite.getId();
+            reCacheSiteData(sid);
+            log.info("sid:{},数据同步完成!", sid);
+
+            String redisFlagKey = StrUtil.format(PornConstants.RedisKey.SITE_MOVIE_CHANGE_FLAG, sid);
+            RedisRepository.set(redisFlagKey, PornConstants.Numeric.CLOSE);
         }
+
+        //暗示
+        System.gc();
     }
 
     private void cacheData() {
@@ -88,19 +93,32 @@ public class CacheMovieNamesJob implements CommandLineRunner {
                 kpnSiteMovie -> new String[]{kpnSiteMovie.getNameZh(), kpnSiteMovie.getNameEn(), kpnSiteMovie.getNameKh()}, (s1, s2) -> s2));
         PornConstants.LocalCache.LOCAL_MAP_MOVIE_NAME.putAll(collect);
 
-
     }
 
     private void reCacheSiteData(Long sid) {
         PornConstants.LocalCache.LOCAL_MAP_SITE_MOVIE_IDS.remove(sid);
         List<KpnSiteMovie> kpnSiteMovies = siteMovieService.lambdaQuery()
-                .select(KpnSiteMovie::getMovieId)
+                .select(KpnSiteMovie::getId, KpnSiteMovie::getMovieId, KpnSiteMovie::getVv, KpnSiteMovie::getDuration, KpnSiteMovie::getCreateTime)
                 .eq(KpnSiteMovie::getSiteId, sid)
                 .eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus())
                 .list();
 
+        if (CollectionUtil.isEmpty(kpnSiteMovies)) {
+            return;
+        }
+
         List<Long> movieIds = kpnSiteMovies.stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
         PornConstants.LocalCache.LOCAL_MAP_SITE_MOVIE_IDS.put(sid, movieIds);
+
+        //影片上架时间排序缓存redis
+        String siteAllLatestRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ALL_MOVIEID_LATEST, sid);
+        List<String> siteAllLatestMovieIds = kpnSiteMovies.stream()
+                .sorted(Comparator.comparing(KpnSiteMovie::getCreateTime).thenComparing(KpnSiteMovie::getId))
+                .map(kpnSiteMovie -> String.valueOf(kpnSiteMovie.getMovieId()))
+                .collect(Collectors.toList());
+
+        RedisRepository.delete(siteAllLatestRedisKey);
+        RedisRepository.leftPushAll(siteAllLatestRedisKey, siteAllLatestMovieIds);
     }
 
 
