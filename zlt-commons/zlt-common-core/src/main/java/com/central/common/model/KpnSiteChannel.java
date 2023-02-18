@@ -32,6 +32,9 @@ public class KpnSiteChannel extends SuperEntity {
     @ApiModelProperty(value = "频道名称(柬文)")
     private String nameKh;
 
+    @ApiModelProperty(value = "图标url")
+    private String icon;
+
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;
 
