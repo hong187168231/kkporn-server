@@ -44,16 +44,20 @@ public class SysWhiteIpServiceImpl extends SuperServiceImpl<SysWhiteIpMapper, Sy
         List<SysWhiteIp> list  =  baseMapper.selectList(wrapper);
         if(null!=list&&list.size()>0){
             for(SysWhiteIp sysWhiteIp:list){
-                String[] ipBytes = sysWhiteIp.getIp().split("-");
-                //判断给定ip地址是否在指定范围内:
-                long start = IP2Long( ipBytes[0] );
-                long end = IP2Long( ipBytes[1] );
-                long ipAddress = IP2Long( ip );
-                Boolean inRange = (ipAddress >= start && ipAddress <= end);
-                if (inRange){
-                    //IP 地址在范围内！
+                if(ip.equals(sysWhiteIp.getIp())){
                     return true;
                 }
+                //IP段验证注释掉
+//                String[] ipBytes = sysWhiteIp.getIp().split("-");
+//                //判断给定ip地址是否在指定范围内:
+//                long start = IP2Long( ipBytes[0] );
+//                long end = IP2Long( ipBytes[1] );
+//                long ipAddress = IP2Long( ip );
+//                Boolean inRange = (ipAddress >= start && ipAddress <= end);
+//                if (inRange){
+//                    //IP 地址在范围内！
+//                    return true;
+//                }
             }
         }
         return b;

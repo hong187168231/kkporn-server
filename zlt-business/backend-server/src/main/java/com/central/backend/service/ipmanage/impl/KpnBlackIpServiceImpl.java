@@ -43,16 +43,19 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
         List<KpnBlackIp> list  =  baseMapper.selectList(wrapper);
         if(null!=list&&list.size()>0){
             for(KpnBlackIp kpnBlackIp:list){
-                String[] ipBytes = kpnBlackIp.getIpSection().split("-");
-                //判断给定ip地址是否在指定范围内:
-                long start = IP2Long( ipBytes[0] );
-                long end = IP2Long( ipBytes[1] );
-                long ipAddress = IP2Long( ip );
-                Boolean inRange = (ipAddress >= start && ipAddress <= end);
-                if (inRange){
-                    //IP 地址在范围内！
+                if(ip.equals(kpnBlackIp.getIpSection())){
                     return true;
                 }
+//                String[] ipBytes = kpnBlackIp.getIpSection().split("-");
+//                //判断给定ip地址是否在指定范围内:
+//                long start = IP2Long( ipBytes[0] );
+//                long end = IP2Long( ipBytes[1] );
+//                long ipAddress = IP2Long( ip );
+//                Boolean inRange = (ipAddress >= start && ipAddress <= end);
+//                if (inRange){
+//                    //IP 地址在范围内！
+//                    return true;
+//                }
             }
         }
         return b;
