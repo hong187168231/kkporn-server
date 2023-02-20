@@ -1,5 +1,7 @@
 package com.central.common.constant;
 
+import cn.hutool.core.util.RandomUtil;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +45,25 @@ public final class PornConstants {
         public static final long DEFAULT_SORT_VALUE = 0L;
     }
 
+    //正则表达式
+    public static final class Reg {
+        /**账号校验*/
+        public static final String CHECK_USERNAME = "^[a-zA-Z0-9]{6,10}$";
+        /**密码校验*/
+        public static final String CHECK_PASSWORD = "^[a-zA-Z0-9]{6,20}$";
+
+    }
+
     //字符串常量
     public static final class Str {
         public static final String EMPTY = "";
         public static final String SPACE = " ";
         public static final String ALL = "ALL";
-        public static final String USERAGENT = "User-Agent";
-        public static final String LOGINIP = "LOGINIP";
+        public static final String RANDOM_BASE_STR = RandomUtil.BASE_CHAR_NUMBER+"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        public static final String VERIFY_CODE_ID = "VerifyCodeId";
+        public static final String VERIFY_CODE_SECONDS = "VerifyCodeSeconds";
+        public static final String USER_AGENT = "User-Agent";
+        public static final String LOGIN_IP = "login_ip";
         public static final String REHOST = "reHost";
         public static final String SID = "sid";
         public static final String Host = "Host";
@@ -58,6 +72,7 @@ public final class PornConstants {
         public static final String SHOOTING = "shooting";
         public static final String SUBTITLE = "subtitle";
         public static final String PAY = "pay";
+        public static final String ACCESS_TOKEN = "access_token";
         public static final String IPHONE = "iPhone";
         public static final String ANDROID = "Android";
         public static final String WINDOWS = "Windows";
@@ -89,6 +104,8 @@ public final class PornConstants {
 
     //redis
     public static final class RedisKey {
+        //缓存时间 1分钟
+        public static final Long EXPIRE_TIME_1_MINUTE = 1 * 60L;
         //缓存时间 30天
         public static final Long EXPIRE_TIME_30_DAYS = 30 * 24 * 60 * 60L;
         //缓存时间 30天

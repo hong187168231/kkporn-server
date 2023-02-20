@@ -278,7 +278,9 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         if (ObjectUtil.isNotEmpty(searchParam.getPayType())) {
             lambdaQueryChainWrapper.eq(KpnSiteMovie::getPayType, searchParam.getPayType());
         }
-        lambdaQueryChainWrapper.notIn(KpnSiteMovie::getMovieId, movieIds);
+        if (CollectionUtil.isNotEmpty(movieIds)) {
+            lambdaQueryChainWrapper.notIn(KpnSiteMovie::getMovieId, movieIds);
+        }
         List<KpnSiteMovie> fillingMovies = lambdaQueryChainWrapper.list();
         if (CollectionUtil.isEmpty(fillingMovies)) {
             return new ArrayList<>();

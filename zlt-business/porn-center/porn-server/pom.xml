@@ -106,6 +106,17 @@
             <artifactId>htmlunit</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.zlt</groupId>
+            <artifactId>user-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-captcha</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>

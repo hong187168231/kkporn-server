@@ -1,5 +1,6 @@
 package com.central.oauth.component;
 
+import com.central.common.constant.PornConstants;
 import com.central.common.model.LoginAppUser;
 import com.central.common.utils.ServletUtil;
 import com.central.oauth.service.ProcessLoginInfoService;
@@ -29,7 +30,7 @@ public class ApplicationListenerAuthencationSuccess implements ApplicationListen
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         log.info("AuthenticationSuccessEvent, {}", event.getSource());
-        String uaaLoginIp = ServletUtil.getHttpServletRequest().getHeader("LoginIp");
+        String uaaLoginIp = ServletUtil.getHttpServletRequest().getHeader(PornConstants.Str.LOGIN_IP);
         log.info("uaa login ip:{}", uaaLoginIp);
         if (null != event.getSource() && event.getSource() instanceof AbstractAuthenticationToken) {
             if (null != ((AbstractAuthenticationToken) event.getSource()).getPrincipal() &&

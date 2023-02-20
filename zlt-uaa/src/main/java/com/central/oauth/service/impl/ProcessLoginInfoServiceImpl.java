@@ -3,9 +3,10 @@ package com.central.oauth.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.CommonConstant;
-import com.central.common.model.LoginLog;
+import com.central.common.model.SiteLoginLog;
 import com.central.common.model.SysUser;
 import com.central.oauth.service.ProcessLoginInfoService;
 import com.central.user.feign.UserService;
@@ -16,7 +17,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Slf4j
@@ -36,7 +36,8 @@ public class ProcessLoginInfoServiceImpl implements ProcessLoginInfoService {
         sysUser.setLoginIp(loginIp);
         sysUser.setLogin(Boolean.TRUE);
         sysUser.setOnlineStatus(CommonConstant.ONLINE);
-        sysUser.setLastLoginTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+//        sysUser.setLastLoginTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        sysUser.setLastLoginTime(DateUtil.formatDateTime(new Date()));
         log.info("+++++++ sysUser {}", sysUser);
         userService.saveOrUpdate(sysUser);
         if (StrUtil.isNotBlank(loginIp)) {
@@ -45,18 +46,23 @@ public class ProcessLoginInfoServiceImpl implements ProcessLoginInfoService {
     }
 
     private void addLoginLog(SysUser sysUser, String loginIp) {
-        LoginLog loginLog = new LoginLog();
-        loginLog.setLoginIp(loginIp);
-        loginLog.setLoginTime(DateTime.now());
-        loginLog.setPlatName(sysUser.getUsername());
-        loginLog.setUserId(sysUser.getId());
-        loginLog.setType(sysUser.getType());
-        loginLog.setNickName(sysUser.getNickname());
+        SiteLoginLog siteLoginLog = new SiteLoginLog();
+        siteLoginLog.setSiteId(sysUser.getSiteId());
+        siteLoginLog.setSiteCode(sysUser.getSiteCode());
+        siteLoginLog.setSiteName(sysUser.getSiteName());
+        siteLoginLog.setUserId(sysUser.getId());
+        siteLoginLog.setUserName(sysUser.getUsername());
+        siteLoginLog.setNickName(sysUser.getNickname());
+        siteLoginLog.setLoginIp(loginIp);
+        siteLoginLog.setLoginTime(DateTime.now());
+        siteLoginLog.setType(sysUser.getType());
+        siteLoginLog.setVip(sysUser.getVip());
+        siteLoginLog.setNickName(sysUser.getNickname());
         if ((sysUser.getType().equals("BACKEND")) && CollUtil.isNotEmpty(sysUser.getRoles())) {
-            loginLog.setRoleId(sysUser.getRoles().get(0).getId());
+            siteLoginLog.setRoleId(sysUser.getRoles().get(0).getId());
 //            loginLog.setLoginIp("127.0.0.1");
         }
-//        userService.addLoginlog(loginLog);
+        userService.addSiteLoginlog(siteLoginLog);
     }
 
 

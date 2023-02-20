@@ -5,17 +5,11 @@ import com.central.common.dto.LoginLogPageDto;
 //import com.central.common.model.*;
 import com.central.common.model.*;
 import com.central.user.model.co.*;
-import com.central.common.vo.SysMoneyVO;
-import com.central.common.vo.SysTransferMoneyLogVo;
 import com.central.user.feign.callback.UserServiceFallbackFactory;
-import com.central.user.model.vo.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -137,14 +131,7 @@ public interface UserService {
     @GetMapping(value ="/users/updateGaBind", params = "SysUser")
     Result updateGaBind(@SpringQueryMap GaBindCo params);
 
-    /**
-     * 新增用户钱包
-     * @param sysUserMoney
-     * @return
-     */
-    @PostMapping("/userMoney/save")
-    Result<SysUserMoney> save(@RequestBody SysUserMoneyCo sysUserMoney);
 
-
-
+    @PostMapping(value = "/loginLog/addLog", params = "LoginLog")
+    Result<Boolean> addSiteLoginlog(@RequestBody SiteLoginLog siteLoginLog);
 }

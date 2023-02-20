@@ -70,6 +70,7 @@
         <docker.java.opts>-Xms128m -Xmx128m</docker.java.opts>
         <jsoup.version>1.11.3</jsoup.version>
         <htmlunit.version>2.33</htmlunit.version>
+        <hutool-captcha.version>5.8.12</hutool-captcha.version>
     </properties>
 
     <dependencies>
@@ -106,6 +107,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- 添加图形验证码依赖 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-captcha</artifactId>
+                <version>${hutool-captcha.version}</version>
+            </dependency>
             <!-- jsoup HTML parser library @ https://jsoup.org/ -->
             <dependency>
                 <groupId>org.jsoup</groupId>

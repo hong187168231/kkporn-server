@@ -31,7 +31,7 @@ public class SysUser extends SuperEntity {
     @ApiModelProperty("上级id")
     private Long parentId;
     @ApiModelProperty("上级账号")
-    private Long parentName;
+    private String parentName;
     @ApiModelProperty(value = "邀请码")
     private String inviteCode;
     @ApiModelProperty(value = "用户名")

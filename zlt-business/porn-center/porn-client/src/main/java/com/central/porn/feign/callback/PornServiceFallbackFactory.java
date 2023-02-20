@@ -1,6 +1,6 @@
-package com.central.lottery.feign.callback;
+package com.central.porn.feign.callback;
 
-import com.central.lottery.feign.PornService;
+import com.central.porn.feign.PornService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
 

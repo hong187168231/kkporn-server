@@ -38,7 +38,7 @@ public class RequestStatisticsFilter implements GlobalFilter, Ordered {
         log.info("remoteAddr: {}, requestPath:{}", remoteAddr, request.getPath());
 
         ServerHttpRequest.Builder builder = request.mutate();
-        builder.header(PornConstants.Str.LOGINIP, remoteAddr);
+        builder.header(PornConstants.Str.LOGIN_IP, remoteAddr);
 
         //埋点
         PointUtil.debug("1", "request-statistics",

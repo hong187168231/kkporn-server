@@ -28,6 +28,12 @@ public class UserServiceFallbackFactory implements FallbackFactory<UserService> 
 //            }
 
             @Override
+            public Result<Boolean> addSiteLoginlog(SiteLoginLog siteLoginLog) {
+                log.error("新增登录日志失败:{}", siteLoginLog, throwable);
+                return Result.failed("新增登录日志失败");
+            }
+
+            @Override
             public SysUser selectByUsername(String username) {
                 log.error("服务器异常，selectByUsername通过用户名查询用户异常:{}", username);
                 return null;
@@ -35,7 +41,7 @@ public class UserServiceFallbackFactory implements FallbackFactory<UserService> 
 
             @Override
             public Result<LoginAppUser> getLoginAppUser() {
-                log.error("服务器异常，getLoginAppUser根据access_token当前登录用户异常" ,throwable);
+                log.error("服务器异常，getLoginAppUser根据access_token当前登录用户异常", throwable);
                 return Result.failed("查询当前登录用户失败");
             }
 
@@ -142,13 +148,6 @@ public class UserServiceFallbackFactory implements FallbackFactory<UserService> 
                 log.error("updateGaBind修改绑定二维码状态异常:{}", params, throwable);
                 return Result.failed("修改绑定二维码状态失败");
             }
-
-            @Override
-            public Result<SysUserMoney> save(SysUserMoneyCo sysUserMoney) {
-                log.error("新增用户钱包失败:{}", sysUserMoney, throwable);
-                return Result.failed("新增用户钱包失败");
-            }
-
 
         };
     }

@@ -1,7 +1,7 @@
-package com.central.lottery.feign;
+package com.central.porn.feign;
 
 import com.central.common.constant.ServiceNameConstants;
-import com.central.lottery.feign.callback.PornServiceFallbackFactory;
+import com.central.porn.feign.callback.PornServiceFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

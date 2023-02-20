@@ -1,26 +1,36 @@
 package com.central.porn.controller;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
-import com.central.common.model.KpnSiteChannel;
-import com.central.common.model.Result;
-import com.central.common.model.SysUser;
+import com.central.common.constant.PornConstants;
+import com.central.common.model.*;
+import com.central.common.model.enums.CodeEnum;
+import com.central.common.redis.template.RedisRepository;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.KpnMemberChannelVo;
-import com.central.porn.service.IKpnMovieService;
-import com.central.porn.service.IKpnSiteActorService;
-import com.central.porn.service.IKpnSiteChannelService;
-import com.central.porn.service.IKpnSiteMovieService;
+import com.central.porn.service.*;
+import com.central.user.feign.UaaService;
+import com.central.user.feign.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -39,12 +49,9 @@ public class MemberController {
     @Autowired
     private IKpnSiteChannelService siteChannelService;
 
-
-    @Autowired
-    private IKpnMovieService movieService;
-
     @Autowired
     private IKpnSiteMovieService siteMovieService;
+
 
     /**
      * 获取会员自定义频道
