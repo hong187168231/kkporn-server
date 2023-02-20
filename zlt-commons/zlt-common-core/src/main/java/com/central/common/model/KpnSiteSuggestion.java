@@ -33,6 +33,8 @@ public class KpnSiteSuggestion extends SuperEntity {
 
 	@ApiModelProperty(value = "意见反馈")
 	private String content;
+	@ApiModelProperty(value = "手机号")
+	private String mobile;
 
 	@ApiModelProperty(value = "邮箱")
 	private String email;
