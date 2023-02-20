@@ -63,15 +63,15 @@ public class KpnSiteChannelController {
 
 
     @ApiOperation(value = "新增or更新频道")
-    @PostMapping(value = "/saveOrUpdateSiteChannel",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Result saveOrUpdateSiteChannel(@Valid KpnSiteChannel siteChannel, @Valid MultipartFile file) {
+    @PostMapping(value = "/saveOrUpdateSiteChannel")
+    public Result saveOrUpdateSiteChannel(@RequestBody  KpnSiteChannel siteChannel) {
 /*       if (siteChannel.getId() == null) {
            siteChannel.setUpdateBy(sysUser.getUsername());
            siteChannel.setCreateBy(sysUser.getUsername());
         }else {
            siteChannel.setUpdateBy(sysUser.getUsername());
         }*/
-        return  siteChannelService.saveOrUpdateSiteChannel(siteChannel,file);
+        return  siteChannelService.saveOrUpdateSiteChannel(siteChannel);
     }
 
 

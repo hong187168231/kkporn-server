@@ -44,20 +44,23 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
     }
 
     @Override
-    public Result saveOrUpdateSite(KpnSite kpnSite, MultipartFile file) {
-        if (file!=null){
-            //校验图片格式支持MP4,JPG,GIF,PNG,JPEG,不超过10M
-            Boolean aBoolean = PictureUtil.verifyFormat(file);
-            if (!aBoolean){
-                return  Result.failed("文件仅支持MP4,JPG,GIF,PNG,JPEG,且大小不超过10M");
+    public Result saveOrUpdateSite(KpnSite kpnSite ) {
+        boolean insert =false;
+        //新增
+        if (kpnSite.getId() == null) {
+            insert = super.save(kpnSite);
+        }else {
+            KpnSite info = baseMapper.selectById(kpnSite.getId());
+            if (info == null) {
+                return Result.failed("数据不存在");
             }
-            //随机生成文件名字
-            file = PictureUtil.generateRandomName(file);
-            ObjectInfo objectInfo = minioTemplate.upload(file);
-            kpnSite.setLogoUrl(objectInfo.getObjectPath());
+            //修改
+            insert = super.updateById(kpnSite);
         }
-        boolean b = super.saveOrUpdate(kpnSite);
-        return b ? Result.succeed("操作成功") : Result.failed("操作失败") ;
+        if(insert){
+            return  Result.succeed(kpnSite, "操作成功");
+        }
+        return Result.failed("操作失败");
     }
 
     @Override

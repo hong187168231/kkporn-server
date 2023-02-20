@@ -50,15 +50,15 @@ public class KpnSiteAdvertiseController {
 
 
     @ApiOperation(value = "新增or更新广告")
-    @PostMapping(value = "/saveOrUpdateAdvertise",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Result saveOrUpdateAdvertise(@Valid KpnSiteAdvertise advertise, @Valid MultipartFile file)  {
+    @PostMapping(value = "/saveOrUpdateAdvertise")
+    public Result saveOrUpdateAdvertise(@RequestBody  KpnSiteAdvertise advertise)  {
 /*       if (advertise.getId() == null) {
             advertise.setUpdateBy(sysUser.getUsername());
             advertise.setCreateBy(sysUser.getUsername());
         }else {
             advertise.setUpdateBy(sysUser.getUsername());
         }*/
-        return  advertiseService.saveOrUpdateAdvertise(advertise,file);
+        return  advertiseService.saveOrUpdateAdvertise(advertise);
     }
 
     @ApiOperation(value = "修改广告状态")

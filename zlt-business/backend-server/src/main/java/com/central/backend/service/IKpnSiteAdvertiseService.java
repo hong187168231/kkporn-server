@@ -18,7 +18,7 @@ public interface IKpnSiteAdvertiseService extends ISuperService<KpnSiteAdvertise
 
     PageResult<KpnSiteAdvertise> findAdvertiseList(KpnSiteAdvertiseCo params);
 
-    Result saveOrUpdateAdvertise(KpnSiteAdvertise advertise, MultipartFile file);
+    Result saveOrUpdateAdvertise(KpnSiteAdvertise advertise);
 
     Result updateEnabledAdvertise(KpnSiteAdvertiseUpdateCo params);
 

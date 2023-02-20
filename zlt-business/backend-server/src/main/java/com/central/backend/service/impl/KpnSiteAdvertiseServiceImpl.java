@@ -8,6 +8,7 @@ import com.central.backend.mapper.KpnSiteAdvertiseMapper;
 import com.central.backend.service.IKpnSiteAdvertiseService;
 import com.central.backend.util.PictureUtil;
 import com.central.common.model.KpnSiteAdvertise;
+import com.central.common.model.KpnSiteAnnouncement;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 import com.central.common.service.impl.SuperServiceImpl;
@@ -64,21 +65,23 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
    }
 
    @Override
-   public Result saveOrUpdateAdvertise(KpnSiteAdvertise advertise,MultipartFile file) {
-
-      if (file!=null){
-         //校验图片格式支持MP4,JPG,GIF,PNG,JPEG,不超过10M
-         Boolean aBoolean = PictureUtil.verifyFormat(file);
-         if (!aBoolean){
-            return  Result.failed("文件仅支持MP4,JPG,GIF,PNG,JPEG,且大小不超过10M");
+   public Result saveOrUpdateAdvertise(KpnSiteAdvertise advertise) {
+      boolean insert =false;
+      //新增
+      if (advertise.getId() == null) {
+         insert = super.save(advertise);
+      }else {
+         KpnSiteAdvertise advertiseInfo = baseMapper.selectById(advertise.getId());
+         if (advertiseInfo == null) {
+            return Result.failed("数据不存在");
          }
-         //随机生成文件名字
-         file = PictureUtil.generateRandomName(file);
-         ObjectInfo objectInfo = minioTemplate.upload(file);
-         advertise.setUrl(objectInfo.getObjectPath());
+         //修改
+         insert = super.updateById(advertise);
       }
-      boolean b = super.saveOrUpdate(advertise);
-      return b ? Result.succeed("操作成功") : Result.failed("操作失败") ;
+      if(insert){
+         return  Result.succeed(advertise, "操作成功");
+      }
+      return Result.failed("操作失败");
    }
 
    @Override

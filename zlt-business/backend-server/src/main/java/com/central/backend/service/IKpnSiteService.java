@@ -24,7 +24,7 @@ public interface IKpnSiteService extends ISuperService<KpnSite> {
     KpnSiteVo findSiteTotal();
 
 
-    Result saveOrUpdateSite( KpnSite kpnSite,MultipartFile file);
+    Result saveOrUpdateSite( KpnSite kpnSite);
 
 
     Result updateEnabledSite(KpnSiteUpdateCo params);

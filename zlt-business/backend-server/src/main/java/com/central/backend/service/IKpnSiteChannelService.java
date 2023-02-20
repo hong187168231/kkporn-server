@@ -24,5 +24,5 @@ public interface IKpnSiteChannelService extends ISuperService<KpnSiteChannel> {
    Boolean deleteId( Long id);
 
 
-    Result saveOrUpdateSiteChannel(KpnSiteChannel siteChannel, MultipartFile file);
+    Result saveOrUpdateSiteChannel(KpnSiteChannel siteChannel);
 }

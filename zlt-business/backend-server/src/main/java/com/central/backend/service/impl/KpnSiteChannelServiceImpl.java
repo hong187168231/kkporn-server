@@ -58,19 +58,22 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
     }
 
     @Override
-    public Result saveOrUpdateSiteChannel(KpnSiteChannel siteChannel, MultipartFile file) {
-        if (file!=null){
-            //校验图片格式支持MP4,JPG,GIF,PNG,JPEG,不超过10M
-            Boolean aBoolean = PictureUtil.verifyFormat(file);
-            if (!aBoolean){
-                return  Result.failed("文件仅支持MP4,JPG,GIF,PNG,JPEG,且大小不超过10M");
+    public Result saveOrUpdateSiteChannel(KpnSiteChannel siteChannel) {
+        boolean insert =false;
+        //新增
+        if (siteChannel.getId() == null) {
+            insert = super.save(siteChannel);
+        }else {
+            KpnSiteChannel info = baseMapper.selectById(siteChannel.getId());
+            if (info == null) {
+                return Result.failed("数据不存在");
             }
-            //随机生成文件名字
-            file = PictureUtil.generateRandomName(file);
-            ObjectInfo objectInfo = minioTemplate.upload(file);
-            siteChannel.setIcon(objectInfo.getObjectPath());
+            //修改
+            insert = super.updateById(siteChannel);
         }
-        boolean b = super.saveOrUpdate(siteChannel);
-        return b ? Result.succeed("操作成功") : Result.failed("操作失败") ;
+        if(insert){
+            return  Result.succeed(siteChannel, "操作成功");
+        }
+        return Result.failed("操作失败");
     }
 }
