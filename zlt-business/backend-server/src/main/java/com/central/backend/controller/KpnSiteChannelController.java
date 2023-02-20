@@ -3,6 +3,7 @@ package com.central.backend.controller;
 import com.central.backend.co.KpnSiteChannelUpdateCo;
 import com.central.backend.service.IKpnSiteChannelService;
 import com.central.backend.service.IKpnTagService;
+import com.central.backend.vo.CategoryVo;
 import com.central.backend.vo.KpnTagVo;
 import com.central.common.model.KpnSiteChannel;
 import com.central.common.model.KpnTag;
@@ -95,10 +96,19 @@ public class KpnSiteChannelController {
     @ResponseBody
     @GetMapping("/findTagList")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "siteCode", value = "站点code", required = true, dataType = "String")
+            @ApiImplicitParam(name = "siteCode", value = "站点code", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "categoryId", value = "分类id", required = true, dataType = "Long"),
     })
     public Result<List<KpnTagVo>> findTagList(@RequestParam Map<String, Object> params) {
         List<KpnTagVo> list = kpnTagService.findTagList(params);
+        return Result.succeed(list);
+    }
+
+    @ApiOperation("分类")
+    @ResponseBody
+    @GetMapping("/findTagCategoryList")
+    public Result<List<CategoryVo>> findTagCategoryList() {
+        List<CategoryVo> list = kpnTagService.findTagCategoryList();
         return Result.succeed(list);
     }
 

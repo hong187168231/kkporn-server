@@ -11,10 +11,6 @@ public class KpnTagVo {
 
     @ApiModelProperty(value = "id")
     private Long id;
-    @ApiModelProperty(value = "标签分类id")
-    private Long categoryId;
-    @ApiModelProperty(value = "标签分类名称")
-    private String categoryName;
     @ApiModelProperty(value = "标签名称(中文)")
     private String nameZh;
     @ApiModelProperty(value = "标签名称(英文)")

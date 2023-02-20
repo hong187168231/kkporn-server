@@ -1,9 +1,11 @@
 package com.central.backend.service;
 
 import com.central.backend.model.vo.KpnTagVO;
+import com.central.backend.vo.CategoryVo;
 import com.central.backend.vo.KpnTagVo;
 import com.central.common.model.KpnTag;
 import com.central.common.model.PageResult;
+import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.service.ISuperService;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,5 +30,7 @@ public interface IKpnTagService extends ISuperService<KpnTag> {
 
 
     List<KpnTagVo> findTagList( Map<String, Object> params);
+
+    List<CategoryVo> findTagCategoryList( ) ;
 }
 
