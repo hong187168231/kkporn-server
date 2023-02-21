@@ -7,7 +7,7 @@ import com.central.backend.service.IKpnFrontpageCountService;
 import com.central.backend.service.IKpnMoneyLogService;
 import com.central.backend.service.ISysUserService;
 import com.central.common.constant.PornConstants;
-import com.central.common.model.KpnFrontpageCount;
+import com.central.common.model.RptSiteSummary;
 import com.central.common.model.SysUser;
 import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.redis.template.RedisRepository;
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageCountMapper, KpnFrontpageCount> implements IKpnFrontpageCountService {
+public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageCountMapper, RptSiteSummary> implements IKpnFrontpageCountService {
     @Autowired
     private ISysUserService userService;
     @Autowired
@@ -106,11 +106,11 @@ public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageC
     }
 
     @Override
-    public List<KpnFrontpageCount> dataTrend(Map<String, Object> params,SysUser user){
+    public List<KpnFrontpageCountVO> dataTrend(Map<String, Object> params,SysUser user){
         if(null!=user && user.getSiteId()!=null && user.getSiteId()!=0){
             params.put("siteId",user.getSiteId());
         }
-        List<KpnFrontpageCount> kpnFrontpageCountList =  baseMapper.dataTrend(params);
+        List<KpnFrontpageCountVO> kpnFrontpageCountList =  baseMapper.dataTrend(params);
 
         return kpnFrontpageCountList;
     }

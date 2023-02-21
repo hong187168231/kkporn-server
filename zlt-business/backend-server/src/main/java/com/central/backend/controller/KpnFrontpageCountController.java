@@ -6,7 +6,6 @@ import java.util.Map;
 import com.central.backend.model.vo.KpnFrontpageCountVO;
 import com.central.backend.service.IKpnFrontpageCountService;
 import com.central.common.annotation.LoginUser;
-import com.central.common.model.KpnFrontpageCount;
 import com.central.common.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
-import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 
 /**
@@ -56,7 +54,7 @@ public class KpnFrontpageCountController {
     })
     @GetMapping("/dataTrend")
     public Result dataTrend(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
-        List<KpnFrontpageCount> kpnFrontpageCountList = kpnFrontpageCountService.dataTrend(params,user);
+        List<KpnFrontpageCountVO> kpnFrontpageCountList = kpnFrontpageCountService.dataTrend(params,user);
         return Result.succeed(kpnFrontpageCountList, "查询成功");
     }
 //

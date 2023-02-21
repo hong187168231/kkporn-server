@@ -41,7 +41,8 @@ public class RptSiteSummary extends SuperEntity{
 
     @ApiModelProperty(value = "新增vip数")
     private int newVipNum;
-
+    @ApiModelProperty(value = "充值人数")
+    private int rechargeNum;
     @ApiModelProperty(value = "充值金额")
     private BigDecimal recharge;
 

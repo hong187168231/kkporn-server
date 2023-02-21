@@ -57,6 +57,7 @@
             <if test="p.payType != null and  p.payType != ''">
                 and t.pay_type LIKE CONCAT('%',#{p.payType},'%')
             </if>
+             ORDER BY t.create_time DESC
         </where>
     </select>
 
