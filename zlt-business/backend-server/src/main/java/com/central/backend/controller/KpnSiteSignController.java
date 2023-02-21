@@ -35,10 +35,10 @@ public class KpnSiteSignController {
     @ResponseBody
     @GetMapping("/findSignList")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "siteCode", value = "站点编码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "siteId", value = "站点id", required = true, dataType = "Long"),
     })
-    public Result< List<KpnSiteSign>> findSignList(@RequestParam("siteCode") String siteCode) {
-        List<KpnSiteSign> signList = signService.findSignList(siteCode);
+    public Result< List<KpnSiteSign>> findSignList(@RequestParam("siteId") Long siteId) {
+        List<KpnSiteSign> signList = signService.findSignList(siteId);
         return Result.succeed(signList);
     }
 

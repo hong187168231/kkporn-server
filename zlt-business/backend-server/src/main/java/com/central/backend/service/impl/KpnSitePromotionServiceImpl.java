@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 public class KpnSitePromotionServiceImpl extends SuperServiceImpl<KpnSitePromotionMapper, KpnSitePromotion> implements IKpnSitePromotionService {
 
     @Override
-    public KpnSitePromotion findPromotionInfo(String siteCode) {
+    public KpnSitePromotion findPromotionInfo(Long siteId) {
         LambdaQueryWrapper<KpnSitePromotion> wrapper=new LambdaQueryWrapper<>();
-        if (StringUtils.isNotBlank(siteCode)){
-            wrapper.eq(KpnSitePromotion::getSiteCode,siteCode);
+        if (siteId!=null){
+            wrapper.eq(KpnSitePromotion::getSiteId,siteId);
         }
         return baseMapper.selectOne(wrapper);
     }

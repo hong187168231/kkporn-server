@@ -434,8 +434,8 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
     public PageResult<SysUser> findUserList(SysUserCo params) {
         Page<SysUser> page = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<SysUser> wrapper=new LambdaQueryWrapper<>();
-        if (StringUtils.isNotBlank(params.getSiteCode())){
-            wrapper.eq(SysUser::getSiteCode, params.getSiteCode());
+        if (params.getSiteId()!=null){
+            wrapper.like(SysUser::getSiteId, params.getSiteId());
         }
         if (StringUtils.isNotBlank(params.getUserName())){
             wrapper.eq(SysUser::getUsername, params.getUserName());
@@ -497,8 +497,9 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             if (userInfo == null) {
                 return Result.failed("会员不存在");
             }
-            userInfo.setMobile(user.getMobile());
+            //userInfo.setMobile(user.getMobile());
             userInfo.setUpdateBy(user.getUpdateBy());
+            userInfo.setSex(user.getSex());
             int i = baseMapper.updateById(userInfo);
             insert=i>0 ? true:false;
         }

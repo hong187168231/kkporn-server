@@ -34,8 +34,8 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
    public PageResult<KpnSiteAdvertise> findAdvertiseList(KpnSiteAdvertiseCo params) {
       Page<KpnSiteAdvertise> page = new Page<>(params.getPage(), params.getLimit());
       LambdaQueryWrapper<KpnSiteAdvertise> wrapper=new LambdaQueryWrapper<>();
-      if (StringUtils.isNotBlank(params.getSiteCode())){
-         wrapper.eq(KpnSiteAdvertise::getSiteCode, params.getSiteCode());
+      if (params.getSiteId()!=null){
+         wrapper.eq(KpnSiteAdvertise::getSiteId, params.getSiteId());
       }
 
       if (StringUtils.isNotBlank(params.getName())){

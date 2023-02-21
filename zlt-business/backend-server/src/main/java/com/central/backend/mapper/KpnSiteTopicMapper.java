@@ -16,7 +16,7 @@ import java.util.List;
 @Mapper
 public interface KpnSiteTopicMapper extends SuperMapper<KpnSiteTopic> {
 
-    List<KpnSiteTopicVo> selectTopicPage(Page<KpnSiteTopicVo> page, @Param("siteCode") String siteCode);
+    List<KpnSiteTopicVo> selectTopicPage(Page<KpnSiteTopicVo> page, @Param("siteId") Long siteId);
 
 
 }

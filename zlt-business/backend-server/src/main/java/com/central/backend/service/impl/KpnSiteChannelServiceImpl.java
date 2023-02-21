@@ -29,9 +29,9 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
     public PageResult<KpnSiteChannel> findSiteChannelList( Map<String, Object> params) {
         Page<KpnSiteChannel> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         LambdaQueryWrapper<KpnSiteChannel> wrapper=new LambdaQueryWrapper<>();
-        String siteCode = MapUtils.getString(params, "siteCode");
-        if (StringUtils.isNotBlank(siteCode)){
-            wrapper.eq(KpnSiteChannel::getSiteCode,siteCode);
+        Long siteId = MapUtils.getLong(params, "siteId");
+        if (siteId!=null){
+            wrapper.eq(KpnSiteChannel::getSiteId,siteId);
         }
         wrapper.orderByDesc(KpnSiteChannel::getIsStable).orderByAsc(KpnSiteChannel::getId);
         Page<KpnSiteChannel> list = baseMapper.selectPage(page, wrapper);

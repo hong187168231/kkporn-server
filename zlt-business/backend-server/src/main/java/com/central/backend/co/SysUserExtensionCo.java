@@ -10,8 +10,8 @@ import lombok.Data;
 public class SysUserExtensionCo extends PageCo {
 
 
-    @ApiModelProperty(value = "站点编码",required = true)
-    private String siteCode;
+    @ApiModelProperty(value = "站点id",required = true)
+    private  Long siteId;
     @ApiModelProperty(value = "会员账号")
     private String userName;
     @ApiModelProperty(value = "上级账号")

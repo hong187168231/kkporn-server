@@ -314,8 +314,8 @@
 				and u.parent_name = #{r.parentName}
 			</if>
 
-			<if test="r.siteCode != null and r.siteCode != ''">
-				and u.site_code = #{r.siteCode}
+			<if test="r.siteId != null ">
+				and u.site_id = #{r.siteId}
 			</if>
 
 			<if test="r.startTime != null and r.startTime != ''">

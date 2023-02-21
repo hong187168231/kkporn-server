@@ -54,6 +54,9 @@ public class KpnSiteOrder extends SuperEntity {
     @ApiModelProperty(value = "产品名称")
     private String productName;
 
+    @ApiModelProperty(value = "手机号码")
+    private String mobile;
+
 
     @ApiModelProperty(value = "货币价格")
     private BigDecimal productPrice;

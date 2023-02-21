@@ -47,7 +47,7 @@ public class KpnSiteChannelController {
     @ResponseBody
     @GetMapping("/findSiteChannelList")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "siteCode", value = "站点code", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "siteId", value = "站点Id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
@@ -96,7 +96,7 @@ public class KpnSiteChannelController {
     @ResponseBody
     @GetMapping("/findTagList")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "siteCode", value = "站点code", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "siteId", value = "站点Id", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "categoryId", value = "分类id", required = true, dataType = "Long"),
     })
     public Result<List<KpnTagVo>> findTagList(@RequestParam Map<String, Object> params) {

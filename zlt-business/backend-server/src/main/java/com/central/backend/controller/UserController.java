@@ -2,11 +2,10 @@ package com.central.backend.controller;
 
 
 import com.central.backend.co.*;
+import com.central.backend.service.IKpnSiteOrderService;
 import com.central.backend.service.ISysUserService;
 import com.central.common.annotation.LoginUser;
-import com.central.common.model.PageResult;
-import com.central.common.model.Result;
-import com.central.common.model.SysUser;
+import com.central.common.model.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +15,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -30,12 +32,30 @@ public class UserController {
     private ISysUserService userService;
 
 
+    @Autowired
+    private IKpnSiteOrderService orderService;
+
+
 
     @ApiOperation("查询会员列表")
     @ResponseBody
     @GetMapping("/findUserList")
     public Result<PageResult<SysUser>> findUserList(@ModelAttribute SysUserCo params) {
         PageResult<SysUser> userList = userService.findUserList(params);
+        if (userList!=null && userList.getData().size() > 0){
+            List<Long> userIds = userList.getData().stream().map(SysUser::getId).collect(Collectors.toList());
+            //查询充值订单数据
+            List<KpnSiteOrder> orderMobileList = orderService.findOrderMobileList(userIds);
+            if (orderMobileList!=null && orderMobileList.size()>0){
+                Map<Long, KpnSiteOrder> map = orderMobileList.stream().collect(Collectors.toMap(KpnSiteOrder::getUserId, (p) -> p));
+                userList.getData().stream().forEach(info ->{
+                    KpnSiteOrder siteOrderInfo = map.get(info.getId());
+                    if (siteOrderInfo!=null){
+                        info.setMobile(siteOrderInfo.getMobile());
+                    }
+                });
+            }
+        }
         return Result.succeed(userList);
     }
 

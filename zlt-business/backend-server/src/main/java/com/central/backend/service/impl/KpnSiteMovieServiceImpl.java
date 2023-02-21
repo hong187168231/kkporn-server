@@ -4,6 +4,7 @@ import com.central.backend.mapper.KpnSiteMovieMapper;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.model.vo.KpnSiteMovieVO;
 import com.central.backend.service.IKpnSiteMovieService;
+import com.central.backend.vo.MovieVo;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.model.SysUser;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,12 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     @Override
     public void updateBatchPayTypeById(List<KpnSiteMovieStatusDto> list){
         baseMapper.updateBatchPayTypeById(list);
+    }
+
+    @Override
+    public PageResult<MovieVo> findMovieList(Map<String, Object> params) {
+        Page<MovieVo> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
+        List<MovieVo> list  =  baseMapper.findMovieList(page, params);
+        return PageResult.<MovieVo>builder().data(list).count(page.getTotal()).build();
     }
 }

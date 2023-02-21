@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 /*
@@ -17,5 +18,7 @@ import java.math.BigDecimal;
 public interface KpnSiteOrderMapper extends SuperMapper<KpnSiteOrder> {
 
     BigDecimal findOrderTotal( @Param("r") KpnSiteOrderTotalCo params);
+
+    List<KpnSiteOrder> findOrderMobileList(@Param("userIds") List<Long> userIds);
 
 }

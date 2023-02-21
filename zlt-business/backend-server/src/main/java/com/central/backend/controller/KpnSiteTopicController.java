@@ -1,8 +1,13 @@
 package com.central.backend.controller;
 
+import com.central.backend.co.KpnSiteTopicSaveCo;
 import com.central.backend.co.KpnSiteTopicUpdateCo;
+import com.central.backend.service.IKpnSiteMovieService;
+import com.central.backend.service.IKpnSiteTopicMovieService;
 import com.central.backend.service.IKpnSiteTopicService;
 import com.central.backend.vo.KpnSiteTopicVo;
+import com.central.backend.vo.MovieVo;
+import com.central.backend.vo.SiteMovieListVo;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 import io.swagger.annotations.Api;
@@ -27,12 +32,17 @@ public class KpnSiteTopicController {
     @Autowired
     private IKpnSiteTopicService siteTopicService;
 
+    @Autowired
+    private IKpnSiteTopicMovieService siteTopicMovieService;
+
+    @Autowired
+    private IKpnSiteMovieService siteMovieService;
 
     @ApiOperation("查询推荐页专题列表")
     @ResponseBody
     @GetMapping("/findSiteTopicList")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "siteCode", value = "站点编码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "siteId", value = "站点Id", required = true, dataType = "String"),
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
@@ -40,6 +50,20 @@ public class KpnSiteTopicController {
         PageResult<KpnSiteTopicVo> list = siteTopicService.findSiteTopicList(params);
         return Result.succeed(list);
     }
+
+    @ApiOperation("查询专题关联影片列表")
+    @ResponseBody
+    @GetMapping("/findSiteTopicMovieList")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "topicId", value = "专题id", required = true, dataType = "Long"),
+            @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
+    })
+    public Result<PageResult<SiteMovieListVo>> findSiteMovieList(@RequestParam Map<String, Object> params) {
+        PageResult<SiteMovieListVo> list = siteTopicMovieService.findSiteMovieList(params);
+        return Result.succeed(list);
+    }
+
 
 
 
@@ -59,6 +83,36 @@ public class KpnSiteTopicController {
         return b ? Result.succeed("删除成功") : Result.failed("删除失败");
     }
 
+
+    @ApiOperation(value = "新增or更新")
+    @PostMapping("/saveOrUpdateTopic")
+    public Result saveOrUpdateTopic(@RequestBody KpnSiteTopicSaveCo params) {
+   /*     if (info.getId() == null) {
+            info.setUpdateBy(sysUser.getUsername());
+            info.setCreateBy(sysUser.getUsername());
+        }else {
+            info.setUpdateBy(sysUser.getUsername());
+        }*/
+        return siteTopicService.saveOrUpdateTopic(params);
+    }
+
+
+
+
+    @ApiOperation("查询影片列表")
+    @ResponseBody
+    @GetMapping("/findMovieList")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "siteId", value = "站点编码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "name", value = "影片名称", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "movieId", value = "影片id", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
+    })
+    public Result<PageResult<MovieVo>> findMovieList(@RequestParam Map<String, Object> params) {
+        PageResult<MovieVo> list = siteMovieService.findMovieList(params);
+        return Result.succeed(list);
+    }
 
 
 }

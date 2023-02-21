@@ -10,8 +10,8 @@ import lombok.Data;
 public class KpnMoneyLogCo extends PageCo {
 
 
-    @ApiModelProperty(value = "站点编码",required = true)
-    private String siteCode;
+    @ApiModelProperty(value = "站点Id",required = true)
+    private Long siteId;
 
     @ApiModelProperty(value = "会员账号")
     private String userName;

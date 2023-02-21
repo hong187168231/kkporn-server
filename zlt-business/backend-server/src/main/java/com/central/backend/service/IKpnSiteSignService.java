@@ -8,7 +8,7 @@ import java.util.List;
 public interface IKpnSiteSignService extends ISuperService<KpnSiteSign> {
 
 
-    List<KpnSiteSign> findSignList(String siteCode);
+    List<KpnSiteSign> findSignList(Long siteId);
 
 
     Boolean saveOrUpdateSign(List<KpnSiteSign> list);
