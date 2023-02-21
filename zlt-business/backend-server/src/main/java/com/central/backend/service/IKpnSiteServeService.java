@@ -2,6 +2,7 @@ package com.central.backend.service;
 
 import com.central.common.model.KpnSiteServe;
 import com.central.common.model.PageResult;
+import com.central.common.model.SysUser;
 import com.central.common.service.ISuperService;
 
 import java.util.Map;
@@ -18,6 +19,6 @@ public interface IKpnSiteServeService extends ISuperService<KpnSiteServe> {
      * @param params
      * @return
      */
-    PageResult<KpnSiteServe> findList(Map<String, Object> params);
+    PageResult<KpnSiteServe> findList(Map<String, Object> params, SysUser user);
 }
 

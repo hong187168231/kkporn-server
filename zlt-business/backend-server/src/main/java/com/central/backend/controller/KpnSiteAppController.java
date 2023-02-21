@@ -3,7 +3,9 @@ package com.central.backend.controller;
 import java.util.Map;
 
 import com.central.backend.service.IKpnSiteAppService;
+import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSiteApp;
+import com.central.common.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
@@ -38,8 +40,8 @@ public class KpnSiteAppController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnSiteApp>> list(@RequestParam Map<String, Object> params) {
-        return Result.succeed(kpnSiteAppService.findList(params));
+    public Result<PageResult<KpnSiteApp>> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        return Result.succeed(kpnSiteAppService.findList(params,user));
     }
 
     /**

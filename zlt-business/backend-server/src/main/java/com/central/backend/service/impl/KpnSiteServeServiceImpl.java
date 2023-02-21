@@ -3,6 +3,7 @@ package com.central.backend.service.impl;
 import com.central.backend.mapper.KpnSiteServeMapper;
 import com.central.backend.service.IKpnSiteServeService;
 import com.central.common.model.KpnSiteServe;
+import com.central.common.model.SysUser;
 import org.springframework.stereotype.Service;
 import com.central.common.model.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -29,7 +30,10 @@ public class KpnSiteServeServiceImpl extends SuperServiceImpl<KpnSiteServeMapper
      * @return
      */
     @Override
-    public PageResult<KpnSiteServe> findList(Map<String, Object> params){
+    public PageResult<KpnSiteServe> findList(Map<String, Object> params, SysUser user){
+        if(null!=user && null!=user.getSiteId() && user.getSiteId()!=0){
+            params.put("siteId",user.getSiteId());
+        }
         Page<KpnSiteServe> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnSiteServe> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSiteServe>builder().data(list).count(page.getTotal()).build();
