@@ -37,12 +37,12 @@ public class FileController {
     /**
      * 文件删除
      *
-     * @param id
+     * @param path
      */
-    @DeleteMapping("/files/{id}")
-    public Result delete(@PathVariable String id) {
+    @DeleteMapping("/files/delete")
+    public Result delete(@RequestParam("path") String path) {
         try {
-            fileService.delete(id);
+            fileService.delete(path);
             return Result.succeed("操作成功");
         } catch (Exception ex) {
             return Result.failed("操作失败");
@@ -55,10 +55,10 @@ public class FileController {
      * @param params
      * @return
      */
-    @GetMapping("/files")
-    public PageResult<FileInfo> findFiles(@RequestParam Map<String, Object> params) {
-        return fileService.findList(params);
-    }
+//    @GetMapping("/files")
+//    public PageResult<FileInfo> findFiles(@RequestParam Map<String, Object> params) {
+//        return fileService.findList(params);
+//    }
 
     /**
      * test

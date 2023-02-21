@@ -42,7 +42,7 @@ public abstract class AbstractIFileService extends ServiceImpl<FileMapper, FileI
         // 设置文件来源
         fileInfo.setSource(fileType());
         // 将文件信息保存到数据库
-        baseMapper.insert(fileInfo);
+//        baseMapper.insert(fileInfo);
 
         return fileInfo;
     }
@@ -63,15 +63,15 @@ public abstract class AbstractIFileService extends ServiceImpl<FileMapper, FileI
 
     /**
      * 删除文件
-     * @param id 文件id
+     * @param path 文件路径
      */
     @Override
-    public void delete(String id) {
-        FileInfo fileInfo = baseMapper.selectById(id);
-        if (fileInfo != null) {
-            baseMapper.deleteById(fileInfo.getId());
-            this.deleteFile(fileInfo.getPath());
-        }
+    public void delete(String path) {
+//        FileInfo fileInfo = baseMapper.selectById(id);
+//        if (fileInfo != null) {
+//            baseMapper.deleteById(fileInfo.getId());
+            this.deleteFile(path);
+//        }
     }
 
     /**
