@@ -8,7 +8,7 @@ public interface IKpnSitePromotionService extends ISuperService<KpnSitePromotion
 
 
 
-    KpnSitePromotion findPromotionInfo(String siteCode);
+    KpnSitePromotion findPromotionInfo(Long siteId);
 
 
     Boolean saveOrUpdatePromotion(KpnSitePromotion info);

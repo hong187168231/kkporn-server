@@ -19,10 +19,10 @@ import java.util.List;
 public class KpnSiteSignServiceImpl extends SuperServiceImpl<KpnSiteSignMapper, KpnSiteSign> implements IKpnSiteSignService {
 
     @Override
-    public List<KpnSiteSign> findSignList(String siteCode) {
+    public List<KpnSiteSign> findSignList(Long siteId) {
         LambdaQueryWrapper<KpnSiteSign> wrapper=new LambdaQueryWrapper<>();
-        if (StringUtils.isNotBlank(siteCode)){
-            wrapper.eq(KpnSiteSign::getSiteCode,siteCode);
+        if (siteId!=null){
+            wrapper.eq(KpnSiteSign::getSiteId,siteId);
         }
         return baseMapper.selectList(wrapper);
     }

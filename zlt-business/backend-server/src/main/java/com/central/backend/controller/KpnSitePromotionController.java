@@ -34,10 +34,10 @@ public class KpnSitePromotionController {
     @ResponseBody
     @GetMapping("/findPromotionInfo")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "siteCode", value = "站点编码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "siteId", value = "站点id", required = true, dataType = "Long"),
     })
-    public Result<KpnSitePromotion> findPromotionInfo(@RequestParam("siteCode") String siteCode) {
-        KpnSitePromotion promotion = promotionService.findPromotionInfo(siteCode);
+    public Result<KpnSitePromotion> findPromotionInfo(@RequestParam("siteId") Long siteId) {
+        KpnSitePromotion promotion = promotionService.findPromotionInfo(siteId);
         return Result.succeed(promotion);
     }
 

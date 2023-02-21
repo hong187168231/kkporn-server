@@ -17,8 +17,8 @@
 			rpt_site_summary s
 
 		<where>
-			<if test="r.siteCode != null and r.siteCode != ''">
-				and s.site_code = #{r.siteCode}
+			<if test="r.siteId != null ">
+				and s.site_id = #{r.siteId}
 			</if>
 
 			<if test="r.startTime != null and r.startTime != ''">

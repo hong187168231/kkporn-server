@@ -24,8 +24,8 @@ public class KpnSiteLoginLogServiceImpl extends SuperServiceImpl<KpnSiteLoginLog
     public PageResult<KpnSiteLoginLog> findUserLoginLogList(KpnSiteLoginLogCo params) {
         Page<KpnSiteLoginLog> page = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<KpnSiteLoginLog> wrapper=new LambdaQueryWrapper<>();
-        if (StringUtils.isNotBlank(params.getSiteCode())){
-            wrapper.eq(KpnSiteLoginLog::getSiteCode, params.getSiteCode());
+        if (params.getSiteId()!=null){
+            wrapper.eq(KpnSiteLoginLog::getSiteId, params.getSiteId());
         }
         if (StringUtils.isNotBlank(params.getUserName())){
             wrapper.eq(KpnSiteLoginLog::getUserName, params.getUserName());

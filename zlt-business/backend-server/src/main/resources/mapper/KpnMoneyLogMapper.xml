@@ -23,8 +23,8 @@
 			<if test="r.orderNo != null and r.orderNo != ''">
 				and m.order_no = #{r.orderNo}
 			</if>
-			<if test="r.siteCode != null and r.siteCode != ''">
-				and u.site_code = #{r.siteCode}
+			<if test="r.siteId != null ">
+				and u.site_id = #{r.siteId}
 			</if>
 			<if test="r.startTime != null and r.startTime != ''">
 				AND  m.create_time <![CDATA[>=]]> #{r.startTime}

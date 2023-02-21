@@ -44,8 +44,8 @@
         kpn_tag t
         LEFT JOIN kpn_movie_tag mt ON mt.tag_id = t.id
         LEFT JOIN kpn_site_movie m ON m.movie_id = mt.movie_id
-        <if test="p.siteCode != null and p.siteCode != ''">
-            and m.site_code = #{p.siteCode}
+        <if test="p.siteId != null ">
+            and m.site_id = #{p.siteId}
         </if>
        <where>
            <if test="p.categoryId != null and p.categoryId != ''">

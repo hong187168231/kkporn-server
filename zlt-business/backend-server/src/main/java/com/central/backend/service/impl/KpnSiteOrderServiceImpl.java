@@ -24,8 +24,8 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
     public PageResult<KpnSiteOrder> findOrderList(KpnSiteOrderCo params) {
         Page<KpnSiteOrder> page = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<KpnSiteOrder> wrapper=new LambdaQueryWrapper<>();
-        if (StringUtils.isNotBlank(params.getSiteCode())){
-            wrapper.eq(KpnSiteOrder::getSiteCode, params.getSiteCode());
+        if (params.getSiteId()!=null){
+            wrapper.eq(KpnSiteOrder::getSiteId, params.getSiteId());
         }
         if (StringUtils.isNotBlank(params.getUserName())){
             wrapper.eq(KpnSiteOrder::getUserName, params.getUserName());

@@ -26,8 +26,8 @@ public class KpnSiteSuggestionServiceImpl extends SuperServiceImpl<KpnSiteSugges
         Page<KpnSiteSuggestion> page = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<KpnSiteSuggestion> wrapper=new LambdaQueryWrapper<>();
 
-        if (StringUtils.isNotBlank(params.getSiteCode())){
-            wrapper.like(KpnSiteSuggestion::getSiteCode, params.getSiteCode());
+        if (params.getSiteId()!=null){
+            wrapper.like(KpnSiteSuggestion::getSiteId, params.getSiteId());
         }
         if (StringUtils.isNotBlank(params.getContent())){
             wrapper.like(KpnSiteSuggestion::getContent, params.getContent());

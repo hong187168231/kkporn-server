@@ -21,7 +21,9 @@ public class RptSiteSummaryServiceImpl extends SuperServiceImpl<RptSiteSummaryMa
     public PageResult<RptSiteSummary> findSummaryList(RptSiteSummaryCo params) {
         Page<RptSiteSummary> page = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<RptSiteSummary> wrapper=new LambdaQueryWrapper<>();
-
+        if (params.getSiteId()!=null){
+            wrapper.like(RptSiteSummary::getSiteId, params.getSiteId());
+        }
         if (StringUtils.isNotBlank(params.getStartTime())) {
             wrapper.ge(RptSiteSummary::getCreateTime, params.getStartTime());
         }

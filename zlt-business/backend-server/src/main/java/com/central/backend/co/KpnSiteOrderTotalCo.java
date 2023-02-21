@@ -8,10 +8,8 @@ import lombok.Data;
 @ApiModel
 public class KpnSiteOrderTotalCo {
 
-
-    @ApiModelProperty(value = "站点编码",required = true)
-    private String siteCode;
-
+    @ApiModelProperty(value = "站点id",required = true)
+    private Long siteId;
     @ApiModelProperty(value = "会员账号")
     private String userName;
 

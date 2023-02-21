@@ -13,8 +13,8 @@ public class KpnSiteAdvertiseCo extends PageCo {
     @ApiModelProperty(value = "广告名称")
     private String name;
 
-    @ApiModelProperty(value = "站点编码",required = true)
-    private String siteCode;
+    @ApiModelProperty(value = "站点id",required = true)
+    private Long siteId;
 
 
     @ApiModelProperty(value = "投放平台(H5,PC)")

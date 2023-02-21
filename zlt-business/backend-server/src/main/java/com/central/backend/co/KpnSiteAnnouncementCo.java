@@ -10,8 +10,8 @@ import lombok.Data;
 public class KpnSiteAnnouncementCo extends PageCo {
 
 
-    @ApiModelProperty(value = "站点编码",required = true)
-    private String siteCode;
+    @ApiModelProperty(value = "站点id",required = true)
+    private Long siteId;
 
     @ApiModelProperty(value = "操作人")
     private String operator;

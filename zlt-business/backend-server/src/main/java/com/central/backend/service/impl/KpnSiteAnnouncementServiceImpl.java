@@ -29,8 +29,8 @@ public class KpnSiteAnnouncementServiceImpl extends SuperServiceImpl<KpnSiteAnno
     public PageResult<KpnSiteAnnouncement> findNoticeList(KpnSiteAnnouncementCo params) {
         Page<KpnSiteAnnouncement> page = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<KpnSiteAnnouncement> wrapper=new LambdaQueryWrapper<>();
-        if (StringUtils.isNotBlank(params.getSiteCode())){
-            wrapper.eq(KpnSiteAnnouncement::getSiteCode, params.getSiteCode());
+        if (params.getSiteId()!=null){
+            wrapper.eq(KpnSiteAnnouncement::getSiteId, params.getSiteId());
         }
 
         if (StringUtils.isNotBlank(params.getOperator())){
