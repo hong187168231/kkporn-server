@@ -46,7 +46,7 @@ public class SysUser extends SuperEntity {
     private String headImgUrl;
     @ApiModelProperty(value = "手机号")
     private String mobile;
-    @ApiModelProperty(value = "性别")
+    @ApiModelProperty(value = "性别(0:女,1:男)")
     private Integer sex;
     @ApiModelProperty(value = "账号类型：APP：前端app用户，BACKEND：后端管理用户")
     private String type;

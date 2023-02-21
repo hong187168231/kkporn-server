@@ -499,6 +499,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             }
             userInfo.setMobile(user.getMobile());
             userInfo.setUpdateBy(user.getUpdateBy());
+            userInfo.setSex(user.getSex());
             int i = baseMapper.updateById(userInfo);
             insert=i>0 ? true:false;
         }
