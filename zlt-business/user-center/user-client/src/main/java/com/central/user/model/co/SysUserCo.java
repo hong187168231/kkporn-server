@@ -37,7 +37,7 @@ public class SysUserCo {
     private String remark;
 
     @ApiModelProperty(value = "是否登录过 0：未登录，1：已登录")
-    private boolean isLogin;
+    private Boolean isLogin;
     @ApiModelProperty(value = "在线状态：1:在线，2：下线")
     private Integer onlineStatus;
 

@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @ApiModel("意见反馈")
 public class KpnSiteSuggestion extends SuperEntity {
 	@ApiModelProperty(value = "站点id")
-	private int siteId;
+	private Long siteId;
 
 	@ApiModelProperty(value = "站点编码")
 	private String siteCode;
@@ -25,7 +25,7 @@ public class KpnSiteSuggestion extends SuperEntity {
 	private String siteName;
 
 	@ApiModelProperty(value = "会员id")
-	private String userId;
+	private Long userId;
 
 
 	@ApiModelProperty(value = "会员账号")

@@ -15,6 +15,7 @@ public final class PornConstants {
     public static final class Symbol {
         public static final String ARRIVE = "-";
         public static final String ASTERISK = "*";
+        public static final String FORWARD_SLASH = "/";
         public static final String SHARP = "#";
         public static final String COMMA = ",";
         public static final String COLON = ":";
@@ -51,6 +52,8 @@ public final class PornConstants {
         public static final String CHECK_USERNAME = "^[a-zA-Z0-9]{6,10}$";
         /**密码校验*/
         public static final String CHECK_PASSWORD = "^[a-zA-Z0-9]{6,20}$";
+        /**邮箱校验*/
+        public static final String CHECK_EMAIL = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
     }
 

@@ -34,7 +34,7 @@ public class ProcessLoginInfoServiceImpl implements ProcessLoginInfoService {
         SysUserCo sysUser = new SysUserCo();
         BeanUtil.copyProperties(user, sysUser);
         sysUser.setLoginIp(loginIp);
-        sysUser.setLogin(Boolean.TRUE);
+        sysUser.setIsLogin(Boolean.TRUE);
         sysUser.setOnlineStatus(CommonConstant.ONLINE);
 //        sysUser.setLastLoginTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         sysUser.setLastLoginTime(DateUtil.formatDateTime(new Date()));
