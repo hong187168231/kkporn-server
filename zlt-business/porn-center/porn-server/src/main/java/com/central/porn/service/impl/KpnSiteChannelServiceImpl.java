@@ -37,6 +37,7 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         List<KpnSiteChannel> siteChannels = (List<KpnSiteChannel>) RedisRepository.get(stashChannelRedisKey);
         if (CollectionUtil.isEmpty(siteChannels)) {
             siteChannels = this.lambdaQuery()
+                    .eq(KpnSiteChannel::getSiteId, sid)
                     .eq(KpnSiteChannel::getIsStable, true)
                     .orderByDesc(KpnSiteChannel::getIsStable)
                     .orderByDesc(KpnSiteChannel::getSort)
@@ -47,22 +48,25 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
             }
         }
 
-        //站点自定义频道,不展示无影片
+        //站点自定义频道,无影片不展示
         String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV, sid, PornConstants.Symbol.ASTERISK);
         Set<String> notStashChannelKeys = RedisRepository.keys(redisKey);
 
         //todo 走库了
         List<Long> channelIds = notStashChannelKeys.stream().map(s -> Long.parseLong(s.substring(s.lastIndexOf(":") + 1))).collect(Collectors.toList());
-        List<KpnSiteChannel> kpnSiteChannels = listByIds(channelIds);
-        kpnSiteChannels.sort(Comparator.comparingLong(KpnSiteChannel::getSort).thenComparing(KpnSiteChannel::getId).reversed());
+        if(CollectionUtil.isNotEmpty(channelIds)){
+            List<KpnSiteChannel> kpnSiteChannels = listByIds(channelIds);
+            kpnSiteChannels.sort(Comparator.comparingLong(KpnSiteChannel::getSort).thenComparing(KpnSiteChannel::getId).reversed());
 
-        siteChannels.addAll(kpnSiteChannels);
+            siteChannels.addAll(kpnSiteChannels);
+        }
         return siteChannels;
     }
 
     @Override
     public List<Long> getSiteNotStableChannelIds(Long sid) {
-        List<KpnSiteChannel> list = this.lambdaQuery().eq(KpnSiteChannel::getSiteId, sid)
+        List<KpnSiteChannel> list = this.lambdaQuery()
+                .eq(KpnSiteChannel::getSiteId, sid)
                 .eq(KpnSiteChannel::getStatus, true)
                 .eq(KpnSiteChannel::getIsStable, false)
                 .list();

@@ -34,4 +34,7 @@ public class KpnSiteChannelVo  extends LanguageNameMulti implements Serializable
 
     @ApiModelProperty(value = "是否找片页")
     private Boolean isSearch;
+
+    @ApiModelProperty(value = "图标url")
+    private String icon;
 }

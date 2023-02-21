@@ -167,18 +167,16 @@ public class SiteController {
     @ApiOperation(value = "获取站点频道")
     public Result<List<KpnSiteChannelVo>> getChannels(@RequestHeader("sid") Long sid) {
         try {
-            long start = System.currentTimeMillis();
             List<KpnSiteChannel> channelList = siteChannelService.getAllChannelsBySiteId(sid);
-            System.out.println("获取站点频道 耗时1: "+ (System.currentTimeMillis() - start));
 
             List<KpnSiteChannelVo> channelVos = channelList.stream().map(kpnSiteChannel -> {
                 KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
                 BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
                 kpnSiteChannelVo.setName(LanguageUtil.getLanguageName(kpnSiteChannelVo));
-                if (KpnStableChannelEnum.RECOMMEND.getSort().equals(kpnSiteChannelVo.getSort())) {
+                if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.RECOMMEND.getSort().equals(kpnSiteChannelVo.getSort()) ) {
                     kpnSiteChannelVo.setIsRecommend(true);
                 }
-                if (KpnStableChannelEnum.SEARCH.getSort().equals(kpnSiteChannelVo.getSort())) {
+                if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.SEARCH.getSort().equals(kpnSiteChannelVo.getSort())) {
                     kpnSiteChannelVo.setIsSearch(true);
                 }
                 return kpnSiteChannelVo;
@@ -430,8 +428,8 @@ public class SiteController {
     @ApiOperation("登录-图形验证码")
     @GetMapping("/login")
     public Result<String> login(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid,
-                                @ApiParam(value = "图形验证码id", required = true) String verifyCodeId,
-                                @ApiParam(value = "验证码", required = true) String verifyCode,
+//                                @ApiParam(value = "图形验证码id", required = true) String verifyCodeId,
+//                                @ApiParam(value = "验证码", required = true) String verifyCode,
                                 @ApiParam(value = "登录账号", required = true) String username,
                                 @ApiParam(value = "密码", required = true) String password) {
         //校验账号
@@ -442,18 +440,18 @@ public class SiteController {
             return Result.failed("密码不能为空");
         }
 
-        //校验验证码
-        if (StrUtil.isBlank(verifyCodeId) || StrUtil.isBlank(verifyCode)) {
-            return Result.failed("验证码不能为空");
-        }
-        String cachedCode = (String) RedisRepository.get(verifyCodeId);
-        if (StrUtil.isBlank(cachedCode)) {
-            return Result.failed("验证码已过期");
-        }
-
-        if (!cachedCode.equalsIgnoreCase(verifyCode)) {
-            return Result.failed("验证码错误");
-        }
+//        //校验验证码
+//        if (StrUtil.isBlank(verifyCodeId) || StrUtil.isBlank(verifyCode)) {
+//            return Result.failed("验证码不能为空");
+//        }
+//        String cachedCode = (String) RedisRepository.get(verifyCodeId);
+//        if (StrUtil.isBlank(cachedCode)) {
+//            return Result.failed("验证码已过期");
+//        }
+//
+//        if (!cachedCode.equalsIgnoreCase(verifyCode)) {
+//            return Result.failed("验证码错误");
+//        }
 
         KpnSite kpnSite = kpnSiteService.getInfoById(sid);
 
@@ -482,8 +480,8 @@ public class SiteController {
     @ApiOperation("注册")
     @GetMapping("/register")
     public Result<String> register(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid,
-                                   @ApiParam(value = "图形验证码id", required = true) String verifyCodeId,
-                                   @ApiParam(value = "验证码", required = true) String verifyCode,
+//                                   @ApiParam(value = "图形验证码id", required = true) String verifyCodeId,
+//                                   @ApiParam(value = "验证码", required = true) String verifyCode,
                                    @ApiParam(value = "邀请码") String inviteCode,
                                    @ApiParam(value = "登录账号", required = true) String username,
                                    @ApiParam(value = "密码", required = true) String password) {
@@ -505,16 +503,16 @@ public class SiteController {
             }
 
             //校验验证码
-            if (StrUtil.isBlank(verifyCode) || StrUtil.isBlank(verifyCode)) {
-                return Result.failed("验证码不能为空");
-            }
-            String cachedCode = (String) RedisRepository.get(verifyCodeId);
-            if (StrUtil.isBlank(cachedCode)) {
-                return Result.failed("验证码已过期");
-            }
-            if (!cachedCode.equalsIgnoreCase(verifyCode)) {
-                return Result.failed("验证码错误");
-            }
+//            if (StrUtil.isBlank(verifyCode) || StrUtil.isBlank(verifyCode)) {
+//                return Result.failed("验证码不能为空");
+//            }
+//            String cachedCode = (String) RedisRepository.get(verifyCodeId);
+//            if (StrUtil.isBlank(cachedCode)) {
+//                return Result.failed("验证码已过期");
+//            }
+//            if (!cachedCode.equalsIgnoreCase(verifyCode)) {
+//                return Result.failed("验证码错误");
+//            }
 
 
             //检查邀请码 可以为空,不为空时保证存在

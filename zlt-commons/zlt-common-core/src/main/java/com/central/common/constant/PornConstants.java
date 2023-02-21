@@ -165,13 +165,13 @@ public final class PornConstants {
         //缓存站点专题影片id排序 创建时间 新->旧 SITEID,TOPICID
         public static final String KPN_SITE_TOPIC_MOVIEID_LATEST = "KPN:SITE:TOPIC:MOVIEID:LATEST:{}:{}";
 
-        //缓存站点频道影片id排序 播放量排序 高->低  SITEID,CHANNELID
+        //缓存站点频道影片播放量排序 高->低  SITEID,CHANNELID
         public static final String KPN_SITE_CHANNEL_MOVIEID_VV = "KPN:SITE:CHANNEL:MOVIEID:VV:{}:{}";
 
-        //缓存站点频道影片id排序 时长排序 长->短 SITEID,CHANNELID
+        //缓存站点频道影片时长排序 长->短 SITEID,CHANNELID
         public static final String KPN_SITE_CHANNEL_MOVIEID_DURATION = "KPN:SITE:CHANNEL:MOVIEID:DURATION:{}:{}";
 
-        //缓存站点频道影片id排序 创建时间 新->旧 SITEID,CHANNELID
+        //缓存站点频道影片创建时间 新->旧 SITEID,CHANNELID
         public static final String KPN_SITE_CHANNEL_MOVIEID_LATEST = "KPN:SITE:CHANNEL:MOVIEID:LATEST:{}:{}";
 
         //缓存站点最新影片 上架时间排序 新->旧  SITEID
