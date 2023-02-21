@@ -6,14 +6,12 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
 import com.central.common.constant.PornConstants;
-import com.central.common.model.KpnSiteChannel;
-import com.central.common.model.KpnSiteSuggestion;
-import com.central.common.model.Result;
-import com.central.common.model.SysUser;
+import com.central.common.model.*;
 import com.central.oss.model.ObjectInfo;
 import com.central.oss.template.MinioTemplate;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.co.MemberChannelSortCo;
+import com.central.porn.entity.vo.AnnouncementVo;
 import com.central.porn.entity.vo.KpnMemberChannelVo;
 import com.central.porn.entity.vo.SysUserVo;
 import com.central.porn.service.*;
@@ -106,11 +104,11 @@ public class MemberController {
     }
 
     /**
-     * 意见反馈
+     * 保存意见反馈
      */
-    @ApiOperation(value = "意见反馈")
+    @ApiOperation(value = "保存意见反馈")
     @PostMapping("/saveSuggestion")
-    public Result<SysUserVo> save(@ApiIgnore @LoginUser SysUser user, String email, String content) {
+    public Result<String> save(@ApiIgnore @LoginUser SysUser user, String email, String content) {
         try {
             if (StrUtil.isBlank(content)) {
                 return Result.failed("意见内容不能为空");
@@ -143,6 +141,31 @@ public class MemberController {
             }
             siteSuggestionService.save(siteSuggestion);
             return Result.succeed("succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    @Autowired
+    private IKpnSiteAnnouncementService siteAnnouncementService;
+
+    /**
+     * 获取邮件消息(公告)
+     */
+    @ApiOperation(value = "获取邮件消息")
+    @GetMapping("/getAnnouncements")
+    public Result<List<AnnouncementVo>> save(@ApiIgnore @LoginUser SysUser user) {
+        try {
+            List<KpnSiteAnnouncement> kpnSiteAnnouncements = siteAnnouncementService.lambdaQuery()
+                    .eq(KpnSiteAnnouncement::getSiteId, user.getSiteId())
+                    .eq(KpnSiteAnnouncement::getStatus, true)
+                    .orderByDesc(KpnSiteAnnouncement::getSort, KpnSiteAnnouncement::getCreateTime)
+                    .list();
+
+            List<AnnouncementVo> announcementVos = kpnSiteAnnouncements.stream().map(AnnouncementVo::new).collect(Collectors.toList());
+
+            return Result.succeed(announcementVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
