@@ -35,5 +35,26 @@
 	</select>
 
 
+	<select id="findOrderMobileList" resultType="com.central.common.model.KpnSiteOrder">
+		select u.user_id,u.mobile from (
+		SELECT
+		o.user_id,
+		o.user_name,
+		o.mobile,
+		o.create_time
+		FROM
+		kpn_site_order o
+		<where>
+			and  o.user_id  in
+			<foreach collection="userIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+		HAVING 1
+		ORDER BY o.create_time desc
+		) u
+		GROUP BY u.user_id
+	</select>
+
 
 </mapper>

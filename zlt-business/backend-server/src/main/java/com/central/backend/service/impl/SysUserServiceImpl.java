@@ -497,7 +497,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             if (userInfo == null) {
                 return Result.failed("会员不存在");
             }
-            userInfo.setMobile(user.getMobile());
+            //userInfo.setMobile(user.getMobile());
             userInfo.setUpdateBy(user.getUpdateBy());
             userInfo.setSex(user.getSex());
             int i = baseMapper.updateById(userInfo);

@@ -9,6 +9,7 @@ import com.central.common.model.Result;
 import com.central.common.service.ISuperService;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 /*
@@ -22,4 +23,6 @@ public interface IKpnSiteOrderService extends ISuperService<KpnSiteOrder> {
     BigDecimal findOrderTotal(KpnSiteOrderTotalCo params);
 
     Result updateStatus(KpnSiteOrderUpdateCo params);
+
+    List<KpnSiteOrder> findOrderMobileList(List<Long> userIds) ;
 }

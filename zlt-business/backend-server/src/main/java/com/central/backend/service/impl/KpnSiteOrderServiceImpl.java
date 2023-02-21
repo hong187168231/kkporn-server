@@ -13,6 +13,7 @@ import com.central.common.service.impl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;;import java.math.BigDecimal;
+import java.util.List;
 
 
 @Slf4j
@@ -70,5 +71,10 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
         siteOrder.setUpdateBy(params.getUpdateBy());
         int i = baseMapper.updateById(siteOrder);
         return i > 0 ?Result.succeed(siteOrder, "更新成功") : Result.failed("更新失败");
+    }
+
+    @Override
+    public  List<KpnSiteOrder> findOrderMobileList(List<Long> userIds) {
+        return baseMapper.findOrderMobileList(userIds);
     }
 }
