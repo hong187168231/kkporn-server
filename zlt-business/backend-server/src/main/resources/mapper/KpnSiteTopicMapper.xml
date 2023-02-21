@@ -21,8 +21,8 @@
 		LEFT JOIN kpn_site_topic_movie m ON m.topic_id = t.id
 
 		<where>
-			<if test="siteCode != null and siteCode != ''">
-				and t.site_code = #{siteCode}
+			<if test="siteId != null and siteId != ''">
+				and t.site_id = #{siteId}
 			</if>
 		</where>
 		GROUP BY

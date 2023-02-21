@@ -83,4 +83,34 @@
         </foreach>
     </update>
 
+
+
+
+    <select id="findMovieList" resultType="com.central.backend.vo.MovieVo">
+        select
+        t.movie_id AS movieId,
+        t.name_zh AS nameZh,
+        t.name_en AS nameEn,
+        t.name_kh AS nameKh,
+        t.cover_url AS coverUrl,
+        t.STATUS AS status
+        from kpn_site_movie t
+        <where>
+            1=1
+            <if test="p.movieId != null and  p.movieId != '' and p.movieId !=0">
+                and t.movie_id LIKE CONCAT('%',#{p.movieId},'%')
+            </if>
+            <if test="p.siteId != null and  p.siteId != ''">
+                and t.site_id LIKE CONCAT('%',#{p.siteId},'%')
+            </if>
+            <if test="p.name != null and  p.name != ''">
+                and (
+                t.name_zh LIKE CONCAT('%',#{p.name},'%')
+                or t.name_en LIKE CONCAT('%',#{p.name},'%')
+                or t.name_kh LIKE CONCAT('%',#{p.name},'%')
+                )
+            </if>
+        </where>
+    </select>
+
 </mapper>

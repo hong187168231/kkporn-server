@@ -2,6 +2,7 @@ package com.central.backend.service;
 
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.model.vo.KpnSiteMovieVO;
+import com.central.backend.vo.MovieVo;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.model.PageResult;
 import com.central.common.model.SysUser;
@@ -27,5 +28,14 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
     public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list);
 
     public void updateBatchPayTypeById(List<KpnSiteMovieStatusDto> list);
+
+
+    /**
+     * 根据站点查询影片列表
+     * @param params
+     * @return
+     */
+    PageResult<MovieVo> findMovieList(Map<String, Object> params);
+
 }
 
