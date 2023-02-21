@@ -1,36 +1,30 @@
 package com.central.porn.controller;
 
-import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
-import com.central.common.constant.PornConstants;
-import com.central.common.model.*;
-import com.central.common.model.enums.CodeEnum;
-import com.central.common.redis.template.RedisRepository;
+import com.central.common.model.KpnSiteChannel;
+import com.central.common.model.Result;
+import com.central.common.model.SysUser;
+import com.central.oss.model.ObjectInfo;
+import com.central.oss.template.MinioTemplate;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.KpnMemberChannelVo;
-import com.central.porn.service.*;
-import com.central.user.feign.UaaService;
-import com.central.user.feign.UserService;
+import com.central.porn.service.IKpnSiteActorService;
+import com.central.porn.service.IKpnSiteChannelService;
+import com.central.porn.service.IKpnSiteMovieService;
+import com.central.porn.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.LinkedHashMap;
+import javax.annotation.Resource;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +45,28 @@ public class MemberController {
 
     @Autowired
     private IKpnSiteMovieService siteMovieService;
+
+    @Resource
+    private MinioTemplate minioTemplate;
+
+    @Autowired
+    private ISysUserService userService;
+
+    /**
+     * 上传头像
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("/upload/header")
+    public Result<String> upload(@ApiIgnore @LoginUser SysUser user, @RequestParam("file") MultipartFile file) {
+        ObjectInfo upload = minioTemplate.upload(file);
+        String headerImgUrl = upload.getObjectPath();
+
+        userService.lambdaUpdate().eq(SysUser::getId, user.getId()).set(SysUser::getHeadImgUrl, headerImgUrl).update();
+        return Result.succeed("操作成功");
+    }
+
 
 
     /**
