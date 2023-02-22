@@ -12,10 +12,7 @@ import com.central.oss.model.ObjectInfo;
 import com.central.oss.template.MinioTemplate;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.co.MemberChannelSortCo;
-import com.central.porn.entity.vo.AnnouncementVo;
-import com.central.porn.entity.vo.KpnMemberChannelVo;
-import com.central.porn.entity.vo.KpnSiteUserSignResultVo;
-import com.central.porn.entity.vo.SysUserVo;
+import com.central.porn.entity.vo.*;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,7 +57,7 @@ public class MemberController {
     private ISysUserService userService;
 
     @Autowired
-    private IKpnSiteUserVipLogService siteUserVipLogService;
+    private IKpnSiteSignDetailService siteSignDetailService;
 
     @Value("${zlt.minio.externalEndpoint}")
     private String externalEndpoint;
@@ -178,11 +175,41 @@ public class MemberController {
         }
     }
 
-    @Autowired
-    private IKpnSiteSignDetailService siteSignDetailService;
+    /**
+     * 获取月份签到信息
+     */
+    @ApiOperation(value = "获取月份签到信息")
+    @GetMapping("/sign/history")
+    public Result<List<KpnSiteUserSignHistoryVo>> getSignHistory(@ApiIgnore @LoginUser SysUser user,
+                                                                 @ApiParam("当前年月(yyyy-MM),为空时返回当前月份签到数据") String month) {
+        try {
+            SysUser sysUser = userService.getById(user.getId());
+            if (StrUtil.isBlank(month)) {
+                month = DateUtil.format(new Date(), PornConstants.Format.YYYY_MM);
+            }
 
-    @Autowired
-    private IKpnMoneyLogService moneyLogService;
+            List<KpnSiteUserSignHistoryVo> resultVos = siteSignDetailService.getSignHistory(sysUser, month);
+            return Result.succeed(resultVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
+     * 获取累计签到天数
+     */
+    @ApiOperation(value = "获取累计签到天数")
+    @GetMapping("/sign/days")
+    public Result<Integer> getSignDays(@ApiIgnore @LoginUser SysUser user) {
+        try {
+            Integer days = siteSignDetailService.getUserSignDays(user.getId());
+            return Result.succeed(days, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
 
     /**
      * 签到

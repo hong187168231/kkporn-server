@@ -29,6 +29,8 @@ public class KpnSiteSignDetail implements Serializable {
     private String username;
     @ApiModelProperty("连续签到天数")
     private Integer days;
+    @ApiModelProperty("签到月份")
+    private String signMonth;
     @ApiModelProperty("签到日期")
     private String signDate;
     @ApiModelProperty("是否得到奖励(0/false:未得到,1/true:获取到)")

@@ -95,6 +95,7 @@ public final class PornConstants {
     public static final class Format {
         public static final String yyyyMMdd = "yyyyMMdd";
         public static final String HHmmss = "HHmmss";
+        public static final String YYYY_MM = "yyyy-MM";
     }
 
     //redis
@@ -213,6 +214,7 @@ public final class PornConstants {
         public static final String COLUMN_DURATION = "`duration`";
         public static final String COLUMN_CREATE_TIME = "`create_time`";
         public static final String LIMIT_ONLY_ONE = " limit 1";
+        public static final String LIMIT_EMPTY = " limit ";
     }
 
     //lock

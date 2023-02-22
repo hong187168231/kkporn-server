@@ -3,7 +3,10 @@ package com.central.porn.service;
 import com.central.common.model.KpnSiteSignDetail;
 import com.central.common.model.SysUser;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.vo.KpnSiteUserSignHistoryVo;
 import com.central.porn.entity.vo.KpnSiteUserSignResultVo;
+
+import java.util.List;
 
 
 public interface IKpnSiteSignDetailService extends ISuperService<KpnSiteSignDetail> {
@@ -25,4 +28,19 @@ public interface IKpnSiteSignDetailService extends ISuperService<KpnSiteSignDeta
      * @return
      */
     boolean checkHasSigned(Long userId, String date);
+
+    /**
+     * 获取月份签到数据
+     * @param sysUser 会员信息
+     * @param month 当前年月
+     * @return
+     */
+    List<KpnSiteUserSignHistoryVo> getSignHistory(SysUser sysUser, String month);
+
+    /**
+     * 获取连续签到天数
+     * @param userId 会员id
+     * @return
+     */
+    Integer getUserSignDays(Long userId);
 }
