@@ -122,9 +122,9 @@ public final class PornConstants {
         //缓存站点频道信息 siteid
         public static final String SITE_STASH_CHANNEL_KEY = "SITE:CHANNEL:{}";
         //缓存站点专题信息 siteid
-        public static final String SITE_TOPIC_KEY = "SITE:TOPIC:{}";
+        public static final String KPN_SITE_TOPIC_KEY = "KPN:SITE:TOPIC:{}";
         //缓存站点专题影片id信息 list类型  siteid,topicid
-        public static final String SITE_TOPIC_MOVIEID_SORT_KEY = "SITE:TOPIC:MOVIEID:SORT:{}:{}";
+        public static final String KPN_SITE_TOPIC_MOVIEID_SORT_KEY = "KPN:SITE:TOPIC:MOVIEID:SORT:{}:{}";
         //缓存影片VO信息 str movieid
         public static final String KPN_MOVIEID_VO_KEY = "KPN:MOVIEID:VO:{}";
         //缓存影片标签信息 list movieid
@@ -187,10 +187,13 @@ public final class PornConstants {
         public static final String KPN_SITE_VIP_MOVIEID_VV = "KPN:SITE:VIP:MOVIEID:VV:{}";
 
         //缓存会员频道信息 userid
-        public static final String SITE_USER_CHANNEL_KEY = "SITE:USER:CHANNEL:{}";
+        public static final String KPN_SITE_USER_CHANNEL_KEY = "KPN:SITE:USER:CHANNEL:{}";
 
-        //站点影片信息变动标识 默认0,删除-1,增加1
-        public static final String SITE_MOVIE_CHANGE_FLAG = "SITE:MOVIE:CHANGE:FLAG:{}";
+        //站点影片信息变动标识 默认0,有变动1
+        public static final String KPN_SITE_MOVIE_CHANGE_FLAG = "KPN:SITE:MOVIE:CHANGE:FLAG:{}";
+
+        //站点签到配置 siteId
+        public static final String KPN_SITE_SIGN_CONFIG = "KPN:SITE:SIGN:CONFIG:{}";
 
 
         //缓存后台管理员ip
@@ -209,12 +212,15 @@ public final class PornConstants {
         public static final String COLUMN_VV = "`vv`";
         public static final String COLUMN_DURATION = "`duration`";
         public static final String COLUMN_CREATE_TIME = "`create_time`";
+        public static final String LIMIT_ONLY_ONE = " limit 1";
     }
 
     //lock
     public static final class Lock {
         public static final Integer WAIT_TIME = 120;//等待 120s
-        public static final Integer LEASE_TIME = 30;//自动释放 30s
+        public static final Integer LEASE_TIME = 30;//自动释放 30s\
+
+        public static final String USER_SIGN_LOCK = "Lock:sign:userId:{}";
     }
 
     //多语言key

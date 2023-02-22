@@ -7,16 +7,19 @@ import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.*;
+import com.central.common.redis.lock.RedissLockUtil;
 import com.central.oss.model.ObjectInfo;
 import com.central.oss.template.MinioTemplate;
 import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.AnnouncementVo;
 import com.central.porn.entity.vo.KpnMemberChannelVo;
+import com.central.porn.entity.vo.KpnSiteUserSignResultVo;
 import com.central.porn.entity.vo.SysUserVo;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +30,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +47,6 @@ public class MemberController {
     @Autowired
     private IKpnSiteActorService siteActorService;
 
-
     @Autowired
     private IKpnSiteChannelService siteChannelService;
 
@@ -56,11 +59,17 @@ public class MemberController {
     @Autowired
     private ISysUserService userService;
 
+    @Autowired
+    private IKpnSiteUserVipLogService siteUserVipLogService;
+
     @Value("${zlt.minio.externalEndpoint}")
     private String externalEndpoint;
 
     @Autowired
     private IKpnSiteSuggestionService siteSuggestionService;
+
+    @Autowired
+    private IKpnSiteAnnouncementService siteAnnouncementService;
 
     /**
      * 上传头像
@@ -108,7 +117,7 @@ public class MemberController {
      */
     @ApiOperation(value = "保存意见反馈")
     @PostMapping("/saveSuggestion")
-    public Result<String> save(@ApiIgnore @LoginUser SysUser user, String email, String content) {
+    public Result<String> saveSuggestion(@ApiIgnore @LoginUser SysUser user, String email, String content) {
         try {
             if (StrUtil.isBlank(content)) {
                 return Result.failed("意见内容不能为空");
@@ -147,15 +156,12 @@ public class MemberController {
         }
     }
 
-    @Autowired
-    private IKpnSiteAnnouncementService siteAnnouncementService;
-
     /**
      * 获取邮件消息(公告)
      */
     @ApiOperation(value = "获取邮件消息")
     @GetMapping("/getAnnouncements")
-    public Result<List<AnnouncementVo>> save(@ApiIgnore @LoginUser SysUser user) {
+    public Result<List<AnnouncementVo>> getAnnouncements(@ApiIgnore @LoginUser SysUser user) {
         try {
             List<KpnSiteAnnouncement> kpnSiteAnnouncements = siteAnnouncementService.lambdaQuery()
                     .eq(KpnSiteAnnouncement::getSiteId, user.getSiteId())
@@ -169,6 +175,52 @@ public class MemberController {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
+        }
+    }
+
+    @Autowired
+    private IKpnSiteSignDetailService siteSignDetailService;
+
+    @Autowired
+    private IKpnMoneyLogService moneyLogService;
+
+    /**
+     * 签到
+     */
+    @ApiOperation(value = "签到")
+    @PostMapping("/sign")
+    public Result<KpnSiteUserSignResultVo> sign(@ApiIgnore @LoginUser SysUser user,
+                                                @ApiParam("签到日期") String date) {
+
+        String lockKey = StrUtil.format(PornConstants.Lock.USER_SIGN_LOCK, user.getId());
+        try {
+            boolean lockedSuccess = RedissLockUtil.tryLock(lockKey, PornConstants.Lock.WAIT_TIME, PornConstants.Lock.LEASE_TIME);
+            if (!lockedSuccess) {
+                throw new RuntimeException("加锁失败");
+            }
+            //只有当天可以签到
+            if (!(DateUtil.formatDate(new Date()).equalsIgnoreCase(date))) {
+                log.error("签到日期:{}", date);
+                return Result.failed("只有今日可以签到");
+            }
+
+            //判断当天是否已经签到
+            boolean hasSigned = siteSignDetailService.checkHasSigned(user.getId(), date);
+            if (hasSigned) {
+                return Result.failed("今日已经签到");
+            }
+
+            //签到
+            SysUser sysUser = userService.getById(user.getId());
+            KpnSiteUserSignResultVo resultVo = siteSignDetailService.sign(sysUser, date);
+
+            return Result.succeed(resultVo, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        } finally {
+            log.info("释放锁:" + lockKey);
+            RedissLockUtil.unlock(lockKey);
         }
     }
 

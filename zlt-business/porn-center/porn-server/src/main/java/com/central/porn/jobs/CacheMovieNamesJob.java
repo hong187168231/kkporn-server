@@ -40,7 +40,7 @@ public class CacheMovieNamesJob implements CommandLineRunner {
         for (KpnSite kpnSite : kpnSites) {
             Long sid = kpnSite.getId();
 
-            String redisFlagKey = StrUtil.format(PornConstants.RedisKey.SITE_MOVIE_CHANGE_FLAG, sid);
+            String redisFlagKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_CHANGE_FLAG, sid);
             Integer oper = (Integer) RedisRepository.get(redisFlagKey);
             if (oper != null && oper == PornConstants.Numeric.OPEN) {
                 cacheData();
@@ -72,7 +72,7 @@ public class CacheMovieNamesJob implements CommandLineRunner {
             reCacheSiteData(sid);
             log.info("sid:{},数据同步完成!", sid);
 
-            String redisFlagKey = StrUtil.format(PornConstants.RedisKey.SITE_MOVIE_CHANGE_FLAG, sid);
+            String redisFlagKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_CHANGE_FLAG, sid);
             RedisRepository.set(redisFlagKey, PornConstants.Numeric.CLOSE);
         }
 

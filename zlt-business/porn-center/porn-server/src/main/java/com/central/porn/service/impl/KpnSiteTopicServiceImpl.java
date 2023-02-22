@@ -34,7 +34,7 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
 
 
     public List<Long> getTopicIdsBySiteId(Long sid) {
-        String topicKey = StrUtil.format(PornConstants.RedisKey.SITE_TOPIC_KEY, sid);
+        String topicKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_KEY, sid);
         List<KpnSiteTopic> siteTopics = (List<KpnSiteTopic>) RedisRepository.get(topicKey);
         if (CollectionUtil.isEmpty(siteTopics)) {
             siteTopics = this.lambdaQuery()
@@ -52,7 +52,7 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
     @Override
     public List<KpnSiteTopicVo> getBySiteId(Long sid) {
         //查询并缓存专题
-        String topicKey = StrUtil.format(PornConstants.RedisKey.SITE_TOPIC_KEY, sid);
+        String topicKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_KEY, sid);
         List<KpnSiteTopic> siteTopics = (List<KpnSiteTopic>) RedisRepository.get(topicKey);
         if (CollectionUtil.isEmpty(siteTopics)) {
             siteTopics = this.lambdaQuery()

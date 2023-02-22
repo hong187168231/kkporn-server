@@ -21,7 +21,7 @@ public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicM
 
     @Override
     public List<Long> getTopicMovieIdsBySort(Long sid, Long topicId, Integer currPage, Integer pageSize) {
-        String topicMovieIdRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_TOPIC_MOVIEID_SORT_KEY, sid, topicId);
+        String topicMovieIdRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_SORT_KEY, sid, topicId);
 
         int start = (currPage - 1) * pageSize;
         int end = start + pageSize - 1;
