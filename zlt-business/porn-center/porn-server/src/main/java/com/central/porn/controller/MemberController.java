@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
@@ -250,6 +251,29 @@ public class MemberController {
             RedissLockUtil.unlock(lockKey);
         }
     }
+
+    private IKpnSiteUserVipLogService siteUserVipLogService;
+//    /**
+//     * 获取我的推广数据
+//     */
+//    @ApiOperation(value = "获取我的推广数据")
+//    @GetMapping("/promotion/info")
+//    public Result<KpnPromotionInfoVo> getpromotionInfo(@ApiIgnore @LoginUser SysUser user) {
+//        try {
+//            Long userId = user.getId();
+//
+//            String promotionCode = userService.getById(userId).getPromotionCode();
+//            Integer members = userService.getPromotionMemeberCount(userId);
+//            Integer vipDays = siteUserVipLogService.getPromotionRewardVipDays(userId);
+//            BigDecimal kbs = siteUserVipLogService.getPromotionRewardVipDays(userId);
+//
+//            KpnPromotionInfoVo promotionInfoVo = KpnPromotionInfoVo.builder().members(members).vipDays(vipDays).kbs(kbs).build();
+//            return Result.succeed(promotionInfoVo, "succeed");
+//        } catch (Exception e) {
+//            log.error(e.getMessage(), e);
+//            return Result.failed("failed");
+//        }
+//    }
 
 
     /**

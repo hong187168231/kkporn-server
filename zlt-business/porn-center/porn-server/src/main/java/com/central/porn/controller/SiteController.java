@@ -10,6 +10,7 @@ import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
 import com.central.common.model.*;
 import com.central.common.model.enums.CodeEnum;
+import com.central.common.model.enums.UserRegTypeEnum;
 import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.utils.I18nUtil;
@@ -85,6 +86,12 @@ public class SiteController {
 
     @Autowired
     private UaaService uaaService;
+
+    @Autowired
+    private ISysUserService sysUserService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private IKpnSiteService kpnSiteService;
@@ -471,11 +478,7 @@ public class SiteController {
         return Result.succeed(accessToken, "succeed");
     }
 
-    @Autowired
-    private ISysUserService sysUserService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @ApiOperation("注册")
     @GetMapping("/register")
@@ -542,6 +545,7 @@ public class SiteController {
             appUser.setNickname(nickName);
             appUser.setType(UserTypeEnum.APP.name());
             appUser.setPassword(passwordEncoder.encode(password));
+            appUser.setIsReg(UserRegTypeEnum.SELF_REG.getType());
 
             if (ObjectUtil.isNotEmpty(inviteSysUser)) {
                 appUser.setParentId(inviteSysUser.getId());
@@ -551,11 +555,12 @@ public class SiteController {
             boolean succeed = false;
             int tryTimes = 1;
             do {
+                String promotionCode = RandomUtil.randomString(PornConstants.Str.RANDOM_BASE_STR, 6);
                 try {
-                    appUser.setPromotionCode(RandomUtil.randomString(PornConstants.Str.RANDOM_BASE_STR, 6));
+                    appUser.setPromotionCode(promotionCode);
                     succeed = sysUserService.save(appUser);
                 } catch (Exception e) {
-                    log.error(e.getMessage(), e);
+                    log.error(promotionCode+" : "+e.getMessage(), e);
                     if (tryTimes++ >= 3) {
                         throw e;
                     }

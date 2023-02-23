@@ -76,6 +76,8 @@ public class SysUser extends SuperEntity {
     private String gaKey;
     @ApiModelProperty(value = "是否验证 1：是，其他：否")
     private Integer verify;
+    @ApiModelProperty(value = "创建方式 0:注册, 1:后台创建")
+    private Integer isReg;
 
     @TableField(exist = false)
     private List<SysRole> roles;
