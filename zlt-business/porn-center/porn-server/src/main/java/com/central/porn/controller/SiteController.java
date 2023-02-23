@@ -4,14 +4,11 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
 import com.central.common.model.*;
 import com.central.common.model.enums.CodeEnum;
-import com.central.common.model.enums.UserRegTypeEnum;
-import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.utils.I18nUtil;
 import com.central.porn.core.language.LanguageUtil;
@@ -98,6 +95,9 @@ public class SiteController {
 
     @Value("${porn.business.authorization:Basic d2ViQXBwOndlYkFwcA==}")
     private String authorization;
+
+    @Autowired
+    private IKpnSitePromotionService promotionConfigService;
 
     public static final String AUTHENTICATION_MODE = "password_code";
 
@@ -483,8 +483,6 @@ public class SiteController {
     @ApiOperation("注册")
     @GetMapping("/register")
     public Result<String> register(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid,
-//                                   @ApiParam(value = "图形验证码id", required = true) String verifyCodeId,
-//                                   @ApiParam(value = "验证码", required = true) String verifyCode,
                                    @ApiParam(value = "邀请码") String inviteCode,
                                    @ApiParam(value = "登录账号", required = true) String username,
                                    @ApiParam(value = "密码", required = true) String password) {
@@ -505,24 +503,11 @@ public class SiteController {
                 return Result.failed("密码不合法,需为6到10位的数字或字母");
             }
 
-            //校验验证码
-//            if (StrUtil.isBlank(verifyCode) || StrUtil.isBlank(verifyCode)) {
-//                return Result.failed("验证码不能为空");
-//            }
-//            String cachedCode = (String) RedisRepository.get(verifyCodeId);
-//            if (StrUtil.isBlank(cachedCode)) {
-//                return Result.failed("验证码已过期");
-//            }
-//            if (!cachedCode.equalsIgnoreCase(verifyCode)) {
-//                return Result.failed("验证码错误");
-//            }
-
-
             //检查邀请码 可以为空,不为空时保证存在
-            SysUser inviteSysUser = null;
+            SysUser promoteUser = null;
             if (StrUtil.isNotBlank(inviteCode)) {
-                inviteSysUser = sysUserService.getByInviteCode(inviteCode);
-                if (ObjectUtil.isEmpty(inviteSysUser)) {
+                promoteUser = sysUserService.getByInviteCode(inviteCode);
+                if (ObjectUtil.isEmpty(promoteUser)) {
                     return Result.failed("邀请码错误");
                 }
             }
@@ -535,37 +520,7 @@ public class SiteController {
                 return Result.failed("账号已经存在");
             }
 
-            KpnSite siteInfo = siteService.getInfoById(sid);
-
-            SysUser appUser = new SysUser();
-            appUser.setSiteId(sid);
-            appUser.setSiteCode(siteInfo.getCode());
-            appUser.setSiteName(siteInfo.getName());
-            appUser.setUsername(username);
-            appUser.setNickname(nickName);
-            appUser.setType(UserTypeEnum.APP.name());
-            appUser.setPassword(passwordEncoder.encode(password));
-            appUser.setIsReg(UserRegTypeEnum.SELF_REG.getType());
-
-            if (ObjectUtil.isNotEmpty(inviteSysUser)) {
-                appUser.setParentId(inviteSysUser.getId());
-                appUser.setParentName(inviteSysUser.getUsername());
-                appUser.setInviteCode(inviteCode);
-            }
-            boolean succeed = false;
-            int tryTimes = 1;
-            do {
-                String promotionCode = RandomUtil.randomString(PornConstants.Str.RANDOM_BASE_STR, 6);
-                try {
-                    appUser.setPromotionCode(promotionCode);
-                    succeed = sysUserService.save(appUser);
-                } catch (Exception e) {
-                    log.error(promotionCode+" : "+e.getMessage(), e);
-                    if (tryTimes++ >= 3) {
-                        throw e;
-                    }
-                }
-            } while (!succeed);
+            sysUserService.register(sid, promoteUser, nickName, username, password);
 
             //登录
             Result tokenResult = uaaService.login(authorization, username, password, AUTHENTICATION_MODE);

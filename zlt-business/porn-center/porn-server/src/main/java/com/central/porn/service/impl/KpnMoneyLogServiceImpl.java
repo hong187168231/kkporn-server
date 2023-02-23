@@ -1,6 +1,8 @@
 package com.central.porn.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.central.common.model.KpnMoneyLog;
 import com.central.common.model.SysUser;
 import com.central.common.model.enums.KbChangeTypeEnum;
@@ -11,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Map;
 
 
 @Slf4j
@@ -18,7 +22,7 @@ import java.math.BigDecimal;
 public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, KpnMoneyLog> implements IKpnMoneyLogService {
 
     @Override
-    public void addKbChangeLog(SysUser sysUser, Integer type, BigDecimal rewardKb) {
+    public void addKbChangeLog(SysUser sysUser, Integer type, BigDecimal rewardKb, Map<String, Object> params) {
         KpnMoneyLog kpnMoneyLog = new KpnMoneyLog();
         kpnMoneyLog.setUserId(sysUser.getId());
         kpnMoneyLog.setUserName(sysUser.getUsername());
@@ -27,11 +31,59 @@ public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, 
         kpnMoneyLog.setBeforeMoney(sysUser.getKBalance());
         kpnMoneyLog.setMoney(rewardKb);
         kpnMoneyLog.setAfterMoney(sysUser.getKBalance().add(rewardKb));
+        kpnMoneyLog.setDate(DateUtil.formatDate(new Date()));
         //签到获取奖励
         if (type.equals(KbChangeTypeEnum.SIGN_REWARD.getType())) {
             kpnMoneyLog.setRemark("签到奖励kb:" + rewardKb.toPlainString());
         }
+        //填入邀请码获取奖励
+        else if (type.equals(KbChangeTypeEnum.FILL_INVITE_CODE.getType())) {
+            kpnMoneyLog.setRemark("填写邀请码奖励kb:" + rewardKb.toPlainString());
+        }
+        //推广获取奖励
+        else if (type.equals(KbChangeTypeEnum.PROMOTION.getType())) {
+            kpnMoneyLog.setRemark(StrUtil.format("推广会员id:{} , 奖励kb: {}", params.get("userId"), rewardKb.toPlainString()));
+        }
 
         save(kpnMoneyLog);
     }
+
+    @Override
+    public BigDecimal getPromotionRewardTotalKbs(Long userId) {
+        return this.baseMapper.getRewardKbsByKbChangeType(userId, KbChangeTypeEnum.PROMOTION.getType());
+    }
+
+    @Override
+    public BigDecimal getUserTodayPromoteTotalKbs(Long userId) {
+        String today = DateUtil.formatDate(new Date());
+        Integer kbChangeTypeCode = KbChangeTypeEnum.PROMOTION.getType();
+        return this.baseMapper.getUserTodayPromoteTotalKb(userId, today, kbChangeTypeCode);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

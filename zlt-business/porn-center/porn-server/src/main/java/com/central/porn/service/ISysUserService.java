@@ -36,4 +36,23 @@ public interface ISysUserService extends ISuperService<SysUser> {
      * @param rewardKb 奖励K币数
      */
     void addRewardKb(SysUser sysUser, BigDecimal rewardKb);
+
+    /**
+     * 获取总推广人数
+     *
+     * @param promotionCode 推广码
+     * @return
+     */
+    Integer getPromotionMemberCount(String promotionCode);
+
+    /**
+     * 注册
+     *
+     * @param sid        站点id
+     * @param promoteUser 推广人
+     * @param username   账号
+     * @param password   密码
+     */
+    void register(Long sid, SysUser promoteUser,String nickName, String username, String password);
+
 }

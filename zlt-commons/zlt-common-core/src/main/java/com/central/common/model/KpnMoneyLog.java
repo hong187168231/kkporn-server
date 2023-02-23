@@ -40,7 +40,8 @@ public class KpnMoneyLog extends SuperEntity {
     @ApiModelProperty(value = "账变类型")
     private Integer orderType;
 
-
+    @ApiModelProperty(value = "日期(yyyy-MM-dd)")
+    private String date;
 
     @ApiModelProperty(value = "账变类型名称")
     @TableField(exist = false)

@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
@@ -68,6 +69,15 @@ public class MemberController {
 
     @Autowired
     private IKpnSiteAnnouncementService siteAnnouncementService;
+
+    @Autowired
+    private IKpnSiteUserVipLogService siteUserVipLogService;
+
+    @Autowired
+    private IKpnMoneyLogService moneyLogService;
+
+    @Autowired
+    private IKpnSitePromotionService promotionConfigService;
 
     /**
      * 上传头像
@@ -252,28 +262,77 @@ public class MemberController {
         }
     }
 
-    private IKpnSiteUserVipLogService siteUserVipLogService;
-//    /**
-//     * 获取我的推广数据
-//     */
-//    @ApiOperation(value = "获取我的推广数据")
-//    @GetMapping("/promotion/info")
-//    public Result<KpnPromotionInfoVo> getpromotionInfo(@ApiIgnore @LoginUser SysUser user) {
-//        try {
-//            Long userId = user.getId();
-//
-//            String promotionCode = userService.getById(userId).getPromotionCode();
-//            Integer members = userService.getPromotionMemeberCount(userId);
-//            Integer vipDays = siteUserVipLogService.getPromotionRewardVipDays(userId);
-//            BigDecimal kbs = siteUserVipLogService.getPromotionRewardVipDays(userId);
-//
-//            KpnPromotionInfoVo promotionInfoVo = KpnPromotionInfoVo.builder().members(members).vipDays(vipDays).kbs(kbs).build();
-//            return Result.succeed(promotionInfoVo, "succeed");
-//        } catch (Exception e) {
-//            log.error(e.getMessage(), e);
-//            return Result.failed("failed");
-//        }
-//    }
+    /**
+     * 填写邀请码
+     */
+    @ApiOperation(value = "会员填写邀请码")
+    @PostMapping("/inviteCode/save")
+    @Transactional
+    public Result<String> saveInviteCode(@ApiIgnore @LoginUser SysUser user,
+                                         @ApiParam(value = "邀请码", required = true) String inviteCode) {
+        String lockKey = StrUtil.format(PornConstants.Lock.USER_SAVE_INVITE_CODE_LOCK, user.getId());
+        try {
+            boolean lockedSuccess = RedissLockUtil.tryLock(lockKey, PornConstants.Lock.WAIT_TIME, PornConstants.Lock.LEASE_TIME);
+            if (!lockedSuccess) {
+                throw new RuntimeException("加锁失败");
+            }
+            if (StrUtil.isBlank(inviteCode) || inviteCode.length() != PornConstants.Numeric.INVITE_CODE_LENGTH) {
+                return Result.failed("邀请码错误");
+            }
+
+            SysUser promoteUser = userService.getByInviteCode(inviteCode);
+            if (ObjectUtil.isEmpty(promoteUser)) {
+                return Result.failed("邀请码错误");
+            }
+
+            SysUser sysUser = userService.getById(user.getId());
+            sysUser.setInviteCode(inviteCode);
+            sysUser.setParentId(promoteUser.getId());
+            sysUser.setParentName(promoteUser.getUsername());
+            userService.saveOrUpdate(sysUser);
+
+            //推广活动
+            KpnSitePromotion sitePromotionConfig = promotionConfigService.getBySiteId(user.getSiteId());
+            if (ObjectUtil.isEmpty(sitePromotionConfig)) {
+                return Result.succeed("succeed");
+            }
+
+            promotionConfigService.addPromotionDatas(sitePromotionConfig, sysUser, promoteUser, inviteCode);
+            return Result.succeed("succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        } finally {
+            RedissLockUtil.unlock(lockKey);
+        }
+    }
+
+    /**
+     * 获取我的推广数据
+     */
+    @ApiOperation(value = "获取我的推广数据")
+    @GetMapping("/promotion/info")
+    public Result<KpnPromotionInfoVo> getPromotionInfo(@ApiIgnore @LoginUser SysUser user) {
+        try {
+            SysUser sysUser = userService.getById(user.getId());
+            String promotionCode = sysUser.getPromotionCode();
+            if (StrUtil.isBlank(promotionCode)) {
+                log.error("会员推广码为空,userId: {}", sysUser.getId());
+                KpnPromotionInfoVo emptyVo = KpnPromotionInfoVo.builder().promotionCode(promotionCode).members(0).vipDays(0).kbs(BigDecimal.ZERO).build();
+                return Result.succeed(emptyVo, "succeed");
+            }
+
+            Integer members = userService.getPromotionMemberCount(promotionCode);
+            Integer vipDays = siteUserVipLogService.getPromotionRewardVipDays(sysUser.getId());
+            BigDecimal kbs = moneyLogService.getPromotionRewardTotalKbs(sysUser.getId()).setScale(2, RoundingMode.FLOOR);
+
+            KpnPromotionInfoVo promotionInfoVo = KpnPromotionInfoVo.builder().promotionCode(promotionCode).members(members).vipDays(vipDays).kbs(kbs).build();
+            return Result.succeed(promotionInfoVo, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
 
 
     /**

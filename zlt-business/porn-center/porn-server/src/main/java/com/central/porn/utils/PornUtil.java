@@ -4,6 +4,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,5 +34,23 @@ public class PornUtil {
             }
         }
         return resultMovieIds;
+    }
+
+    /**
+     * 判断bigdecimal 是否大于 0
+     */
+    public static boolean isDecimalBigThanZero(BigDecimal bigDecimal) {
+        return bigDecimal.compareTo(BigDecimal.ZERO) >= 1;
+    }
+
+    /**
+     * source >= target
+     *
+     * @param source
+     * @param target
+     * @return
+     */
+    public static boolean isDecimalGeThan(BigDecimal source, BigDecimal target) {
+        return source.compareTo(target) >= 0;
     }
 }

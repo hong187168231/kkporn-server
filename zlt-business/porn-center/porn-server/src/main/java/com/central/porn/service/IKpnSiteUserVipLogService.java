@@ -22,4 +22,10 @@ public interface IKpnSiteUserVipLogService extends ISuperService<KpnSiteUserVipL
      */
     void addVipDaysChangeLog(SysUser sysUser, Integer changeTypeCode, Integer days, BigDecimal amount, String currencyCode, Map<String, Object> params);
 
+    /**
+     * 获取推广奖励vip天数
+     * @param userId 会员id
+     * @return
+     */
+    Integer getPromotionRewardVipDays(Long userId);
 }

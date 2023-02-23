@@ -1,6 +1,5 @@
 package com.central.porn.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
@@ -44,7 +43,7 @@ public class KpnSiteSignDetailServiceImpl extends SuperServiceImpl<KpnSiteSignDe
     @Transactional
     public KpnSiteUserSignResultVo sign(SysUser sysUser, String date) {
 
-        //连续签到做法
+        //连续签到
         /*String yesterday = DateUtil.formatDate(DateUtil.yesterday());
         KpnSiteSignDetail yesterdaySign = this.lambdaQuery().select(KpnSiteSignDetail::getDays).eq(KpnSiteSignDetail::getUserId, sysUser.getId()).eq(KpnSiteSignDetail::getSignDate, yesterday).orderByDesc(KpnSiteSignDetail::getId).last(PornConstants.Sql.LIMIT_ONLY_ONE).one();
 
@@ -53,7 +52,7 @@ public class KpnSiteSignDetailServiceImpl extends SuperServiceImpl<KpnSiteSignDe
             signDays = yesterdaySign.getDays() + 1;
         }*/
 
-        //累计做法
+        //累计
         KpnSiteSignDetail lastSign = this.lambdaQuery()
                 .select(KpnSiteSignDetail::getDays)
                 .eq(KpnSiteSignDetail::getUserId, sysUser.getId())
@@ -98,7 +97,7 @@ public class KpnSiteSignDetailServiceImpl extends SuperServiceImpl<KpnSiteSignDe
 
         //K币变动
         userService.addRewardKb(sysUser, rewordSignConfig.getRewardKb());
-        moneyLogService.addKbChangeLog(sysUser, KbChangeTypeEnum.SIGN_REWARD.getType(), rewordSignConfig.getRewardKb());
+        moneyLogService.addKbChangeLog(sysUser, KbChangeTypeEnum.SIGN_REWARD.getType(), rewordSignConfig.getRewardKb(), null);
 
         resultVo.setIsReward(Boolean.TRUE);
         resultVo.setRewardVip(rewordSignConfig.getRewardVip());

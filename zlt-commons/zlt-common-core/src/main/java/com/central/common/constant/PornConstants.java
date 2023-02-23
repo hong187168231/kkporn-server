@@ -38,6 +38,9 @@ public final class PornConstants {
         public static final int OPEN = 1;
         //关
         public static final int CLOSE = 0;
+
+        //邀请码长度
+        public static final int INVITE_CODE_LENGTH = 6;
         // 30分钟的秒数
         public static final long MINUTE_30_IN_SECONDS = 30 * 60;
         // 订单号长度
@@ -223,6 +226,7 @@ public final class PornConstants {
         public static final Integer LEASE_TIME = 30;//自动释放 30s\
 
         public static final String USER_SIGN_LOCK = "Lock:sign:userId:{}";
+        public static final String USER_SAVE_INVITE_CODE_LOCK = "Lock:save:inviteCode:userId:{}";
     }
 
     //多语言key

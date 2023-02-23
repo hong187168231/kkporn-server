@@ -35,13 +35,29 @@ public class KpnSiteUserVipLogServiceImpl extends SuperServiceImpl<KpnSiteUserVi
         }
         siteUserVipLog.setBeforeExpire(sysUser.getVipExpire());
         siteUserVipLog.setDays(days);
-        siteUserVipLog.setAfterExpire(sysUser.getVipExpire() == null ? DateUtil.offsetDay(new Date(), days):DateUtil.offsetDay(sysUser.getVipExpire(), days));
+        siteUserVipLog.setAfterExpire(sysUser.getVipExpire() == null ? DateUtil.offsetDay(new Date(), days) : DateUtil.offsetDay(sysUser.getVipExpire(), days));
         //签到
         if (changeTypeCode.equals(VipChangeTypeEnum.SIGN.getCode())) {
             String remark = StrUtil.format(VipChangeTypeEnum.getLogFormatByCode(changeTypeCode), params.get("signDays"), days);
             siteUserVipLog.setRemark(remark);
         }
+        //填写邀请码
+        else if (changeTypeCode.equals(VipChangeTypeEnum.FILL_INVITE_CODE.getCode())) {
+            String remark = StrUtil.format(VipChangeTypeEnum.getLogFormatByCode(changeTypeCode), params.get("inviteCode"), days);
+            siteUserVipLog.setRemark(remark);
+        }
+        //推广
+        else if (changeTypeCode.equals(VipChangeTypeEnum.PROMOTION.getCode())) {
+            String remark = StrUtil.format(VipChangeTypeEnum.getLogFormatByCode(changeTypeCode), params.get("userId"), days);
+            siteUserVipLog.setRemark(remark);
+        }
 
         save(siteUserVipLog);
+    }
+
+    @Override
+    public Integer getPromotionRewardVipDays(Long userId) {
+
+        return this.baseMapper.getRewardVipDaysByVipChangeType(userId, VipChangeTypeEnum.PROMOTION.getCode());
     }
 }
