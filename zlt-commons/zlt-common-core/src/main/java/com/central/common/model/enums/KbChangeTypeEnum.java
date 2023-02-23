@@ -38,4 +38,15 @@ public enum KbChangeTypeEnum {
     public int getAddOrSub() {
         return addOrSub;
     }
+
+
+    public static String getTypeName(Integer type) {
+        for (KbChangeTypeEnum value : values()) {
+            if(value.type == type){
+                return value.name;
+            }
+        }
+        return null;
+    }
+
 }

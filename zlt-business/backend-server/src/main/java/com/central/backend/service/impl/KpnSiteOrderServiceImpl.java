@@ -57,6 +57,11 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
     }
 
     @Override
+    public KpnSiteUserVipLog findKpnSiteOrderInfo(Long id) {
+        return  baseMapper.findKpnSiteOrderInfo(id);
+    }
+
+    @Override
     public Result updateStatus(KpnSiteOrderUpdateCo params) {
         Long id = params.getId();
         Integer state = params.getStatus();

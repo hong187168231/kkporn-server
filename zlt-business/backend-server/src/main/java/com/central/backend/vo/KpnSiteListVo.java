@@ -10,7 +10,7 @@ import lombok.Data;
 public class KpnSiteListVo {
 
     @ApiModelProperty(value = "站点id")
-    private String siteId;
+    private Long siteId;
 
     @ApiModelProperty(value = "站点编码")
     private String siteCode;

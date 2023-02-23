@@ -1,5 +1,6 @@
 package com.central.backend.service.impl;
 
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -9,13 +10,17 @@ import com.central.backend.mapper.SysRoleMenuMapper;
 import com.central.backend.mapper.SysUserMapper;
 import com.central.backend.service.ISysRoleUserService;
 import com.central.backend.service.ISysUserService;
+import com.central.backend.util.DateUtil;
 import com.central.backend.util.PasswordUtil;
 import com.central.backend.vo.SysUserInfoMoneyVo;
 import com.central.backend.vo.UserExtensionListInfoVo;
 import com.central.backend.vo.UserListInfoVo;
+import com.central.backend.vo.UserVipExpireVo;
 import com.central.common.constant.CommonConstant;
+import com.central.common.constant.PornConstants;
 import com.central.common.lock.DistributedLock;
 import com.central.common.model.*;
+import com.central.common.model.enums.UserRegTypeEnum;
 import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.backend.co.*;
@@ -489,7 +494,11 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             } else {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
+            String promotionCode = RandomUtil.randomString(PornConstants.Str.RANDOM_BASE_STR, 6);
+            user.setPromotionCode(promotionCode);
+            user.setNickname(user.getUsername());
             user.setType(UserTypeEnum.APP.name());
+            user.setIsReg(UserRegTypeEnum.ADMIN_CREATE.getType());
             user.setEnabled(Boolean.TRUE);
             insert = super.save(user);
         }else {
@@ -510,6 +519,26 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
     }
 
 
+
+
+    @Override
+    public  Result<UserVipExpireVo> updateUserVipExpire(Long userId,Integer days) {
+        SysUser sysUser = baseMapper.selectById(userId);
+        if (sysUser!=null ){
+            Date vipExpire = sysUser.getVipExpire() == null ? new Date() : sysUser.getVipExpire();
+            Date date = DateUtil.getDate(vipExpire, days);
+            //当前时间 + vip天数
+            sysUser.setVipExpire(date);
+            sysUser.setVipExpire(sysUser.getVipExpire());
+            int i = baseMapper.updateById(sysUser);
+
+            UserVipExpireVo UserVipExpireVo=new UserVipExpireVo();
+            UserVipExpireVo.setBeforeExpire(vipExpire);
+            UserVipExpireVo.setAfterExpire(date);
+            return i>0 ? Result.succeed(UserVipExpireVo,"操作成功") :Result.failed("操作失败");
+        }
+        return Result.failed("操作失败");
+    }
 
     /**
      * 查询会员推广数据

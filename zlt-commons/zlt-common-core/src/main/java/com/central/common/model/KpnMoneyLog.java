@@ -1,5 +1,6 @@
 package com.central.common.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,6 +8,7 @@ import io.swagger.models.auth.In;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 
@@ -37,6 +39,12 @@ public class KpnMoneyLog extends SuperEntity {
 
     @ApiModelProperty(value = "账变类型")
     private Integer orderType;
+
+
+
+    @ApiModelProperty(value = "账变类型名称")
+    @TableField(exist = false)
+    private String orderTypeName;
 
     @ApiModelProperty(value = "币种")
     private String currency;

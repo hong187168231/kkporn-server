@@ -56,5 +56,26 @@
 		GROUP BY u.user_id
 	</select>
 
+	<select id="findKpnSiteOrderInfo" resultType="com.central.common.model.KpnSiteUserVipLog">
+		SELECT
+			o.user_id as userId,
+			o.user_name as userName,
+			o.site_id as siteId,
+			o.site_code as siteCode,
+			o.site_name as siteName,
+			o.product_price as amount,
+			s.currency_code as currencyCode,
+			p.valid_days as days
+		FROM
+			kpn_site_order o
+				LEFT JOIN kpn_site s on s.id=o.site_id
+				LEFT JOIN kpn_site_product p on p.id=o.product_id
+		<where>
+			<if test="id != null ">
+				AND  o.id = #{id}
+			</if>
+		</where>
+
+	</select>
 
 </mapper>

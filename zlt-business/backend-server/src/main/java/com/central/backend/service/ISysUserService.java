@@ -3,6 +3,7 @@ package com.central.backend.service;
 import com.central.backend.vo.SysUserInfoMoneyVo;
 import com.central.backend.vo.UserExtensionListInfoVo;
 import com.central.backend.vo.UserListInfoVo;
+import com.central.backend.vo.UserVipExpireVo;
 import com.central.common.model.*;
 import com.central.common.service.ISuperService;
 import org.apache.ibatis.annotations.Param;
@@ -151,6 +152,13 @@ public interface ISysUserService extends ISuperService<SysUser> {
 
 	Result saveOrUpdateUserInfo( SysUser user);
 
+
+	/**
+	 * 修改会员vip到期时间
+	 * @param userId
+	 * @Author: Lulu
+	 */
+	 Result updateUserVipExpire(Long userId,Integer days) ;
 
 	PageResult<UserExtensionListInfoVo> findUserExtensionList(SysUserExtensionCo params) ;
 
