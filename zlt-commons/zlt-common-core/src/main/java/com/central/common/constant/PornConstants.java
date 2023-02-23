@@ -199,6 +199,9 @@ public final class PornConstants {
         //站点签到配置 siteId
         public static final String KPN_SITE_SIGN_CONFIG = "KPN:SITE:SIGN:CONFIG:{}";
 
+        //站点vip过期key USERID
+        public static final String KPN_SITE_VIP_EXPIRE_PREFIX = "KPN:SITE:VIP:EXPIRE:";
+        public static final String KPN_SITE_VIP_EXPIRE = KPN_SITE_VIP_EXPIRE_PREFIX + "{}";
 
         //缓存后台管理员ip
         public static final String BACKEND_WHITELIST_KEY = "Whitelist";
@@ -223,7 +226,7 @@ public final class PornConstants {
     //lock
     public static final class Lock {
         public static final Integer WAIT_TIME = 120;//等待 120s
-        public static final Integer LEASE_TIME = 30;//自动释放 30s\
+        public static final Integer LEASE_TIME = 30;//自动释放 30s
 
         public static final String USER_SIGN_LOCK = "Lock:sign:userId:{}";
         public static final String USER_SAVE_INVITE_CODE_LOCK = "Lock:save:inviteCode:userId:{}";

@@ -3,27 +3,30 @@ package com.central.porn.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSite;
 import com.central.common.model.KpnSitePromotion;
-import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.model.enums.UserRegTypeEnum;
 import com.central.common.model.enums.UserTypeEnum;
+import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.mapper.SysUserMapper;
 import com.central.porn.service.IKpnSitePromotionService;
 import com.central.porn.service.IKpnSiteService;
 import com.central.porn.service.ISysUserService;
-import com.central.user.feign.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * year
@@ -31,6 +34,16 @@ import java.util.Date;
 @Slf4j
 @Service
 public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
+
+    @Autowired
+    private IKpnSiteService siteService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    @Lazy
+    private IKpnSitePromotionService promotionConfigService;
 
     @Override
     public SysUser getByInviteCode(String inviteCode) {
@@ -42,10 +55,15 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
 
     @Override
     public void addRewardVipDays(SysUser sysUser, Integer vipDays) {
+        Date vipExpire = sysUser.getVipExpire() == null ? DateUtil.offsetDay(new Date(), vipDays) : DateUtil.offsetDay(sysUser.getVipExpire(), vipDays);
         this.lambdaUpdate().eq(SysUser::getId, sysUser.getId())
-                .set(SysUser::getVipExpire, sysUser.getVipExpire() == null ? DateUtil.offsetDay(new Date(), vipDays) : DateUtil.offsetDay(sysUser.getVipExpire(), vipDays))
+                .set(SysUser::getVipExpire, vipExpire)
                 .set(SysUser::getVip, true)
                 .update();
+
+        long expireInSeconds = (vipExpire.getTime() - new Date().getTime()) / 1000;
+        String vipExpireKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_EXPIRE, sysUser.getId());
+        RedisRepository.setExpire(vipExpireKey, DateUtil.formatDateTime(vipExpire), expireInSeconds, TimeUnit.SECONDS);
     }
 
     @Override
@@ -60,19 +78,6 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
 
         return this.lambdaQuery().eq(SysUser::getInviteCode, promotionCode).count();
     }
-
-    @Autowired
-    private IKpnSiteService siteService;
-
-    @Autowired
-    private ISysUserService sysUserService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private IKpnSitePromotionService promotionConfigService;
-
 
     @Override
     @Transactional
@@ -101,7 +106,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             String promotionCode = RandomUtil.randomString(PornConstants.Str.RANDOM_BASE_STR, PornConstants.Numeric.INVITE_CODE_LENGTH);
             try {
                 newAppUser.setPromotionCode(promotionCode);
-                succeed = sysUserService.save(newAppUser);
+                succeed = save(newAppUser);
             } catch (Exception e) {
                 log.error(promotionCode + " : " + e.getMessage(), e);
                 if (tryTimes++ >= 3) {
@@ -110,11 +115,40 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             }
         } while (!succeed);
 
+        //站点推广活动配置
         KpnSitePromotion sitePromotionConfig = promotionConfigService.getBySiteId(sid);
         if (ObjectUtil.isEmpty(sitePromotionConfig)) {
-            return ;
+            return;
         }
         promotionConfigService.addPromotionDatas(sitePromotionConfig, newAppUser, promoteUser, promoteUser.getPromotionCode());
+    }
+
+    @Override
+    @Transactional
+    public void saveInviteCode(Long sid, Long userId, SysUser promoteUser, String inviteCode) {
+        SysUser sysUser = getById(userId);
+        sysUser.setInviteCode(inviteCode);
+        sysUser.setParentId(promoteUser.getId());
+        sysUser.setParentName(promoteUser.getUsername());
+        saveOrUpdate(sysUser);
+
+        //推广活动
+        KpnSitePromotion sitePromotionConfig = promotionConfigService.getBySiteId(sid);
+        if (ObjectUtil.isEmpty(sitePromotionConfig)) {
+            return;
+        }
+
+        promotionConfigService.addPromotionDatas(sitePromotionConfig, sysUser, promoteUser, inviteCode);
+    }
+
+    @Async
+    @Override
+    public void updateVipExpire(Long userId) {
+        this.lambdaUpdate()
+                .eq(SysUser::getId, userId)
+                .set(SysUser::getVip, false)
+                .set(SysUser::getVipExpire, null)
+                .update();
     }
 }
 

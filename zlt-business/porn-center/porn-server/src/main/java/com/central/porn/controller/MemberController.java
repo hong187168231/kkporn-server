@@ -285,19 +285,7 @@ public class MemberController {
                 return Result.failed("邀请码错误");
             }
 
-            SysUser sysUser = userService.getById(user.getId());
-            sysUser.setInviteCode(inviteCode);
-            sysUser.setParentId(promoteUser.getId());
-            sysUser.setParentName(promoteUser.getUsername());
-            userService.saveOrUpdate(sysUser);
-
-            //推广活动
-            KpnSitePromotion sitePromotionConfig = promotionConfigService.getBySiteId(user.getSiteId());
-            if (ObjectUtil.isEmpty(sitePromotionConfig)) {
-                return Result.succeed("succeed");
-            }
-
-            promotionConfigService.addPromotionDatas(sitePromotionConfig, sysUser, promoteUser, inviteCode);
+            userService.saveInviteCode(user.getSiteId(), user.getId(), promoteUser, inviteCode);
             return Result.succeed("succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);

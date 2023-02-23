@@ -48,11 +48,27 @@ public interface ISysUserService extends ISuperService<SysUser> {
     /**
      * 注册
      *
-     * @param sid        站点id
+     * @param sid         站点id
      * @param promoteUser 推广人
-     * @param username   账号
-     * @param password   密码
+     * @param username    账号
+     * @param password    密码
      */
-    void register(Long sid, SysUser promoteUser,String nickName, String username, String password);
+    void register(Long sid, SysUser promoteUser, String nickName, String username, String password);
 
+    /**
+     * 填写邀请码
+     *
+     * @param sid         站点id
+     * @param userId      会员id
+     * @param promoteUser 推广会员
+     * @param inviteCode  邀请码
+     */
+    void saveInviteCode(Long sid, Long userId, SysUser promoteUser, String inviteCode);
+
+    /**
+     * 更新vip过期状态
+     *
+     * @param userId 会员id
+     */
+    void updateVipExpire(Long userId);
 }

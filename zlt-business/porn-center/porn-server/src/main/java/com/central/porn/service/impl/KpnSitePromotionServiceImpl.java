@@ -14,6 +14,7 @@ import com.central.porn.service.ISysUserService;
 import com.central.porn.utils.PornUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,7 +30,8 @@ public class KpnSitePromotionServiceImpl extends SuperServiceImpl<KpnSitePromoti
     private IKpnSiteUserVipLogService siteUserVipLogService;
 
     @Autowired
-    private ISysUserService userService;
+    @Lazy
+    private ISysUserService sysUserService;
 
     @Autowired
     private IKpnMoneyLogService moneyLogService;
@@ -48,13 +50,15 @@ public class KpnSitePromotionServiceImpl extends SuperServiceImpl<KpnSitePromoti
             Map<String, Object> params = new HashMap<>();
             params.put("inviteCode", inviteCode);
             siteUserVipLogService.addVipDaysChangeLog(sysUser, VipChangeTypeEnum.FILL_INVITE_CODE.getCode(), beInvitedVip, null, null, params);
-            userService.addRewardVipDays(sysUser, beInvitedVip);
+            sysUserService.addRewardVipDays(sysUser, beInvitedVip);
         }
         //被邀请人 K币数
         BigDecimal beInvitedKb = sitePromotionConfig.getBeInvitedKb();
         if (ObjectUtil.isNotEmpty(beInvitedKb) && PornUtil.isDecimalBigThanZero(beInvitedKb)) {
-            userService.addRewardKb(sysUser, beInvitedKb);
-            moneyLogService.addKbChangeLog(sysUser, KbChangeTypeEnum.FILL_INVITE_CODE.getType(), beInvitedKb, null);
+            sysUserService.addRewardKb(sysUser, beInvitedKb);
+            Map<String, Object> params = new HashMap<>();
+            params.put("inviteCode", inviteCode);
+            moneyLogService.addKbChangeLog(sysUser, KbChangeTypeEnum.FILL_INVITE_CODE.getType(), beInvitedKb, params);
         }
 
         //推广人vip天数
@@ -63,7 +67,7 @@ public class KpnSitePromotionServiceImpl extends SuperServiceImpl<KpnSitePromoti
             Map<String, Object> params = new HashMap<>();
             params.put("userId", sysUser.getId());
             siteUserVipLogService.addVipDaysChangeLog(promoteUser, VipChangeTypeEnum.PROMOTION.getCode(), inviteVip, null, null, params);
-            userService.addRewardVipDays(promoteUser, beInvitedVip);
+            sysUserService.addRewardVipDays(promoteUser, inviteVip);
         }
 
         //推广人K币
@@ -71,7 +75,7 @@ public class KpnSitePromotionServiceImpl extends SuperServiceImpl<KpnSitePromoti
         BigDecimal kbDayLimit = sitePromotionConfig.getKbDayLimit();
         BigDecimal userPromoteTotalKbs = moneyLogService.getUserTodayPromoteTotalKbs(promoteUser.getId());
         if (!PornUtil.isDecimalGeThan(userPromoteTotalKbs, kbDayLimit)) {
-            userService.addRewardKb(promoteUser, inviteKb);
+            sysUserService.addRewardKb(promoteUser, inviteKb);
 
             Map<String, Object> params = new HashMap<>();
             params.put("userId", sysUser.getId());

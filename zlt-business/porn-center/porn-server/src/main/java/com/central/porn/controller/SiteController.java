@@ -88,16 +88,10 @@ public class SiteController {
     private ISysUserService sysUserService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private IKpnSiteService kpnSiteService;
 
     @Value("${porn.business.authorization:Basic d2ViQXBwOndlYkFwcA==}")
     private String authorization;
-
-    @Autowired
-    private IKpnSitePromotionService promotionConfigService;
 
     public static final String AUTHENTICATION_MODE = "password_code";
 
