@@ -51,6 +51,11 @@ public class KpnSiteUserVipLogServiceImpl extends SuperServiceImpl<KpnSiteUserVi
             String remark = StrUtil.format(VipChangeTypeEnum.getLogFormatByCode(changeTypeCode), params.get("userId"), days);
             siteUserVipLog.setRemark(remark);
         }
+        //K币兑换
+        else if (changeTypeCode.equals(VipChangeTypeEnum.KB.getCode())) {
+            String remark = StrUtil.format(VipChangeTypeEnum.getLogFormatByCode(changeTypeCode), params.get("kbs"), days);
+            siteUserVipLog.setRemark(remark);
+        }
 
         save(siteUserVipLog);
     }

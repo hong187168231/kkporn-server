@@ -7,6 +7,8 @@ import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.*;
+import com.central.common.model.enums.CodeEnum;
+import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.oss.model.ObjectInfo;
 import com.central.oss.template.MinioTemplate;
@@ -14,6 +16,7 @@ import com.central.porn.core.language.LanguageUtil;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.*;
 import com.central.porn.service.*;
+import com.central.porn.utils.PornUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -76,9 +79,6 @@ public class MemberController {
     @Autowired
     private IKpnMoneyLogService moneyLogService;
 
-    @Autowired
-    private IKpnSitePromotionService promotionConfigService;
-
     /**
      * 上传头像
      *
@@ -114,6 +114,30 @@ public class MemberController {
                     .kBalance(userInfo.getKBalance().setScale(2, RoundingMode.FLOOR))
                     .build();
             return Result.succeed(sysUserVo, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    @Autowired
+    private IKpnSiteProductService siteProductService;
+
+
+    @ApiOperation("使用K币开通/续费VIP")
+    @PostMapping("/buy/kb")
+    public Result<String> getSiteProducts(@ApiIgnore @LoginUser SysUser user, @ApiParam(value = "产品id", required = true) Long productId) {
+        try {
+            SysUser sysUser = userService.getById(user.getId());
+            KpnSiteProduct product = siteProductService.getById(productId);
+            BigDecimal userKBalance = sysUser.getKBalance();
+            BigDecimal productPrice = product.getPrice();
+            //K币
+            if (!PornUtil.isDecimalGeThan(userKBalance, productPrice)) {
+                return Result.of("余额不足", CodeEnum.KB_NOT_ENOUGH.getCode(), "failed");
+            }
+            siteProductService.buyUseKb(sysUser, product);
+            return Result.succeed("开通/续期成功");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

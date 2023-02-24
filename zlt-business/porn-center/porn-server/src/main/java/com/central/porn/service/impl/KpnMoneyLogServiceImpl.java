@@ -38,11 +38,15 @@ public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, 
         }
         //填入邀请码获取奖励
         else if (type.equals(KbChangeTypeEnum.FILL_INVITE_CODE.getType())) {
-            kpnMoneyLog.setRemark(StrUtil.format("填写邀请码:{},获取奖励kb:{}", params.get("inviteCode"), rewardKb.toPlainString()));
+            kpnMoneyLog.setRemark(StrUtil.format("填写邀请码:{},获取奖励K币:{}", params.get("inviteCode"), rewardKb.toPlainString()));
         }
         //推广获取奖励
         else if (type.equals(KbChangeTypeEnum.PROMOTION.getType())) {
-            kpnMoneyLog.setRemark(StrUtil.format("推广会员id:{},获取奖励kb: {}", params.get("userId"), rewardKb.toPlainString()));
+            kpnMoneyLog.setRemark(StrUtil.format("推广会员id:{},获取奖励K币: {}", params.get("userId"), rewardKb.toPlainString()));
+        }
+        //购买vip
+        else if (type.equals(KbChangeTypeEnum.OPEN_VIP.getType())) {
+            kpnMoneyLog.setRemark(StrUtil.format("购买vip产品id:{},消费K币: {}", params.get("productId"), rewardKb.toPlainString()));
         }
 
         save(kpnMoneyLog);

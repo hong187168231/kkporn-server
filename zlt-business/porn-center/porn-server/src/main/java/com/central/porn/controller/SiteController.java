@@ -92,6 +92,9 @@ public class SiteController {
     @Value("${porn.business.authorization:Basic d2ViQXBwOndlYkFwcA==}")
     private String authorization;
 
+    @Autowired
+    private IKpnSiteProductService siteProductService;
+
     public static final String AUTHENTICATION_MODE = "password_code";
 
     /**
@@ -472,7 +475,7 @@ public class SiteController {
     }
 
     @ApiOperation("注册")
-    @GetMapping("/register")
+    @PostMapping("/register")
     public Result<String> register(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid,
                                    @ApiParam(value = "邀请码") String inviteCode,
                                    @ApiParam(value = "登录账号", required = true) String username,
@@ -527,21 +530,17 @@ public class SiteController {
         }
     }
 
-    @Autowired
-    private IKpnSiteProductService siteProductService;
-
-//    @ApiOperation("获取平台支付产品")
-//    @GetMapping("/products")
-//    public Result<> getSiteProducts(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid) {
-//        try {
-//
-//
-//        } catch (Exception e) {
-//            log.error(e.getMessage(), e);
-//            return Result.failed("failed");
-//        }
-//    }
-
+    @ApiOperation("获取站点支付产品")
+    @GetMapping("/products")
+    public Result<List<KpnSiteProductVo>> getSiteProducts(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid) {
+        try {
+            List<KpnSiteProductVo> siteProductVos = siteProductService.getSiteProducts(sid);
+            return Result.succeed(siteProductVos,"succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
 
     /**
      * token续期

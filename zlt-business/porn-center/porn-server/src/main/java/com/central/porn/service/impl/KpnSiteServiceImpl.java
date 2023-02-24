@@ -44,8 +44,9 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
         KpnSite kpnSite = (KpnSite) RedisRepository.get(siteKey);
         if (ObjectUtil.isEmpty(kpnSite)) {
             kpnSite = getById(sid);
-
-            RedisRepository.setExpire(siteKey, kpnSite, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+            if (ObjectUtil.isNotEmpty(kpnSite)) {
+                RedisRepository.setExpire(siteKey, kpnSite, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+            }
         }
         return kpnSite;
     }
