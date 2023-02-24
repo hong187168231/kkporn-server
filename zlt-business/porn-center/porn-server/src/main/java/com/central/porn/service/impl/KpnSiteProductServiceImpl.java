@@ -54,7 +54,7 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
             KpnSiteProductVo siteProductVo = new KpnSiteProductVo();
             BeanUtil.copyProperties(product, siteProductVo);
             siteProductVo.setName(LanguageUtil.getLanguageName(siteProductVo));
-            siteProductVo.setRealPrice(siteProductVo.getPrice().divide(exchange, RoundingMode.CEILING));
+            siteProductVo.setRealPrice(siteProductVo.getPrice().divide(exchange, 2, RoundingMode.CEILING));
             siteProductVo.setCurrency(kpnSite.getCurrencyCode());
             resultVos.add(siteProductVo);
         }

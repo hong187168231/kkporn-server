@@ -8,6 +8,7 @@ import com.central.common.annotation.LoginUser;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.*;
 import com.central.common.model.enums.CodeEnum;
+import com.central.common.model.pay.KpnSiteBankCard;
 import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.oss.model.ObjectInfo;
@@ -32,6 +33,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,6 +81,15 @@ public class MemberController {
     @Autowired
     private IKpnMoneyLogService moneyLogService;
 
+    @Autowired
+    private IKpnSiteProductService siteProductService;
+
+    @Autowired
+    private IKpnSiteBankCardService siteBankCardService;
+
+    @Autowired
+    private IKpnSiteService siteService;
+
     /**
      * 上传头像
      *
@@ -120,13 +131,9 @@ public class MemberController {
         }
     }
 
-    @Autowired
-    private IKpnSiteProductService siteProductService;
-
-
     @ApiOperation("使用K币开通/续费VIP")
     @PostMapping("/buy/kb")
-    public Result<String> getSiteProducts(@ApiIgnore @LoginUser SysUser user, @ApiParam(value = "产品id", required = true) Long productId) {
+    public Result<String> buyVipUseKb(@ApiIgnore @LoginUser SysUser user, @ApiParam(value = "产品id", required = true) Long productId) {
         try {
             SysUser sysUser = userService.getById(user.getId());
             KpnSiteProduct product = siteProductService.getById(productId);
@@ -143,6 +150,56 @@ public class MemberController {
             return Result.failed("failed");
         }
     }
+
+    @Autowired
+    private IKpnSitePlatformService sitePlatformService;
+
+    @ApiOperation("获取站点支付银行卡")
+    @GetMapping("/bank/cards")
+    public Result<List<KpnSiteBankCardPayVo>> getSiteBankCards(@ApiIgnore @LoginUser SysUser user,
+                                                               @ApiParam("产品id") Long productId) {
+        try {
+            SysUser sysUser = userService.getById(user.getId());
+            KpnSiteProduct product = siteProductService.getById(productId);
+            KpnSite siteInfo = siteService.getInfoById(sysUser.getSiteId());
+            KpnSitePlatform sitePlatform = sitePlatformService.getBySiteId(sysUser.getSiteId());
+
+            List<KpnSiteBankCard> siteBankCards = siteBankCardService.getBySiteId(sysUser.getSiteId());
+            List<KpnSiteBankCardPayVo> bankCardPayVos = new ArrayList<>();
+            for (KpnSiteBankCard siteBankCard : siteBankCards) {
+                KpnSiteBankCardPayVo bankCardPayVo = new KpnSiteBankCardPayVo();
+                BeanUtil.copyProperties(siteBankCard, bankCardPayVo);
+                bankCardPayVo.setAmount(product.getPrice().divide(sitePlatform.getExchange(), 2, RoundingMode.CEILING));
+                bankCardPayVo.setCurrency(siteInfo.getCurrencyCode());
+                bankCardPayVos.add(bankCardPayVo);
+            }
+            return Result.succeed(bankCardPayVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    @ApiOperation("使用现金开通/续费VIP")
+    @PostMapping("/buy/cash")
+    public Result<String> buyVipUseCash(@ApiIgnore @LoginUser SysUser user, @ApiParam(value = "产品id", required = true) Long productId) {
+        try {
+            SysUser sysUser = userService.getById(user.getId());
+            KpnSiteProduct product = siteProductService.getById(productId);
+            BigDecimal userKBalance = sysUser.getKBalance();
+            BigDecimal productPrice = product.getPrice();
+            //K币
+            if (!PornUtil.isDecimalGeThan(userKBalance, productPrice)) {
+                return Result.of("余额不足", CodeEnum.KB_NOT_ENOUGH.getCode(), "failed");
+            }
+            siteProductService.buyUseKb(sysUser, product);
+            return Result.succeed("开通/续期成功");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
 
     /**
      * 保存意见反馈
