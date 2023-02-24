@@ -27,7 +27,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -472,8 +471,6 @@ public class SiteController {
         return Result.succeed(accessToken, "succeed");
     }
 
-
-
     @ApiOperation("注册")
     @GetMapping("/register")
     public Result<String> register(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid,
@@ -529,6 +526,21 @@ public class SiteController {
             return Result.failed("注册失败");
         }
     }
+
+    @Autowired
+    private IKpnSiteProductService siteProductService;
+
+//    @ApiOperation("获取平台支付产品")
+//    @GetMapping("/products")
+//    public Result<> getSiteProducts(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid) {
+//        try {
+//
+//
+//        } catch (Exception e) {
+//            log.error(e.getMessage(), e);
+//            return Result.failed("failed");
+//        }
+//    }
 
 
     /**

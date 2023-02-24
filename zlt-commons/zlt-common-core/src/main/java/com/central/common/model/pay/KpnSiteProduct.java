@@ -27,8 +27,12 @@ public class KpnSiteProduct extends SuperEntity {
     private String siteCode;
     @ApiModelProperty(value = "站点名称")
     private String siteName;
-    @ApiModelProperty(value = "产品名称")
-    private String name;
+    @ApiModelProperty(value = "产品名称(中文)")
+    private String nameZh;
+    @ApiModelProperty(value = "产品名称(英文)")
+    private String nameEn;
+    @ApiModelProperty(value = "产品名称(柬文)")
+    private String nameKh;
     @ApiModelProperty(value = "价格(K币)")
     private BigDecimal price;
     @ApiModelProperty(value = "实际价格(K币)")
