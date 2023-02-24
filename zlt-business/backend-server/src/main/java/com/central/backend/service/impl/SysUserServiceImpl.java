@@ -5,9 +5,10 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.central.backend.co.SysRoleUser;
+import com.central.backend.co.*;
 import com.central.backend.mapper.SysRoleMenuMapper;
 import com.central.backend.mapper.SysUserMapper;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.ISysRoleUserService;
 import com.central.backend.service.ISysUserService;
 import com.central.backend.util.DateUtil;
@@ -23,7 +24,6 @@ import com.central.common.model.*;
 import com.central.common.model.enums.UserRegTypeEnum;
 import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.service.impl.SuperServiceImpl;
-import com.central.backend.co.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,6 +56,9 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
 
     @Resource
     private SysRoleMenuMapper roleMenuMapper;
+
+    @Autowired
+    private IAsyncService asyncService;
 
     @Autowired
     private DistributedLock lock;
@@ -510,21 +513,18 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             userInfo.setUpdateBy(user.getUpdateBy());
             userInfo.setSex(user.getSex());
             int i = baseMapper.updateById(userInfo);
-            insert=i>0 ? true:false;
+            insert = i > 0 ? true : false;
         }
-        if(insert){
-            return  Result.succeed(user, "操作成功");
+        if (insert) {
+            return Result.succeed(user, "操作成功");
         }
         return Result.failed("操作失败");
     }
 
-
-
-
     @Override
-    public  Result<UserVipExpireVo> updateUserVipExpire(Long userId,Integer days) {
+    public Result<UserVipExpireVo> updateUserVipExpire(Long userId, Integer days) {
         SysUser sysUser = baseMapper.selectById(userId);
-        if (sysUser!=null ){
+        if (sysUser != null) {
             Date vipExpire = sysUser.getVipExpire() == null ? new Date() : sysUser.getVipExpire();
             Date date = DateUtil.getDate(vipExpire, days);
             //当前时间 + vip天数
@@ -535,6 +535,8 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             UserVipExpireVo UserVipExpireVo=new UserVipExpireVo();
             UserVipExpireVo.setBeforeExpire(vipExpire);
             UserVipExpireVo.setAfterExpire(date);
+            //记录VIP最新过期时间 add by year
+            asyncService.setVipExpire(date, sysUser.getId());
             return i>0 ? Result.succeed(UserVipExpireVo,"操作成功") :Result.failed("操作失败");
         }
         return Result.failed("操作失败");

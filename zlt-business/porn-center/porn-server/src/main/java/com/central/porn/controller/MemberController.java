@@ -3,6 +3,7 @@ package com.central.porn.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
 import com.central.common.constant.PornConstants;
@@ -90,6 +91,9 @@ public class MemberController {
     @Autowired
     private IKpnSiteService siteService;
 
+    @Autowired
+    private IKpnSitePlatformService sitePlatformService;
+
     /**
      * 上传头像
      *
@@ -151,13 +155,10 @@ public class MemberController {
         }
     }
 
-    @Autowired
-    private IKpnSitePlatformService sitePlatformService;
-
     @ApiOperation("获取站点支付银行卡")
     @GetMapping("/bank/cards")
-    public Result<List<KpnSiteBankCardPayVo>> getSiteBankCards(@ApiIgnore @LoginUser SysUser user,
-                                                               @ApiParam("产品id") Long productId) {
+    public Result<KpnSitePayResultVo> getSiteBankCards(@ApiIgnore @LoginUser SysUser user,
+                                                       @ApiParam("产品id") Long productId) {
         try {
             SysUser sysUser = userService.getById(user.getId());
             KpnSiteProduct product = siteProductService.getById(productId);
@@ -173,30 +174,91 @@ public class MemberController {
                 bankCardPayVo.setCurrency(siteInfo.getCurrencyCode());
                 bankCardPayVos.add(bankCardPayVo);
             }
-            return Result.succeed(bankCardPayVos, "succeed");
+
+            String orderNo = PornConstants.Str.ORDER_NO_PREFIX + RandomUtil.randomNumbers(PornConstants.Numeric.ORDER_NO_LENGTH);
+            KpnSitePayResultVo result = KpnSitePayResultVo.builder().orderNo(orderNo).bankCardPayVos(bankCardPayVos).build();
+            return Result.succeed(result, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
         }
     }
 
-    @ApiOperation("使用现金开通/续费VIP")
+    @Autowired
+    private IKpnSiteOrderService siteOrderService;
+
+    @ApiOperation("使用现金开通/续费VIP,提交订单")
     @PostMapping("/buy/cash")
-    public Result<String> buyVipUseCash(@ApiIgnore @LoginUser SysUser user, @ApiParam(value = "产品id", required = true) Long productId) {
+    public Result<String> buyVipUseCash(@ApiIgnore @LoginUser SysUser user,
+                                        @ApiParam(value = "订单号", required = true) String orderNo,
+                                        @ApiParam(value = "汇款人姓名", required = true) String remitterName,
+                                        @ApiParam(value = "交易号后6位", required = true) String certificate,
+                                        @ApiParam(value = "手机号") String mobile,
+                                        @ApiParam(value = "银行卡id", required = true) Long bankCardId,
+                                        @ApiParam(value = "产品id", required = true) Long productId) {
+
+        String lockKey = StrUtil.format(PornConstants.Lock.USER_SITEID_SUBMIT_ORDERNO_LOCK, user.getSiteId(), orderNo);
         try {
+            boolean lockedSuccess = RedissLockUtil.tryLock(lockKey, PornConstants.Lock.WAIT_TIME, PornConstants.Lock.LEASE_TIME);
+            if (!lockedSuccess) {
+                throw new RuntimeException("加锁失败");
+            }
+            if (StrUtil.isBlank(orderNo)) {
+                return Result.failed("订单号不能为空");
+            }
+            if (StrUtil.isBlank(remitterName)) {
+                return Result.failed("汇款人姓名不能为空");
+            }
+            if (StrUtil.isBlank(certificate)) {
+                return Result.failed("交易号不能为空");
+            }
+            if (ObjectUtil.isEmpty(bankCardId)) {
+                return Result.failed("无法获取银行卡信息");
+            }
+            if (ObjectUtil.isEmpty(productId)) {
+                return Result.failed("无法获取产品信息");
+            }
+
+            boolean isOrderNoExists = siteOrderService.isOrderNoExists(user.getSiteId(), orderNo);
+            if (isOrderNoExists) {
+                return Result.failed("订单已经存在,不可重复提交");
+            }
+
             SysUser sysUser = userService.getById(user.getId());
             KpnSiteProduct product = siteProductService.getById(productId);
-            BigDecimal userKBalance = sysUser.getKBalance();
-            BigDecimal productPrice = product.getPrice();
-            //K币
-            if (!PornUtil.isDecimalGeThan(userKBalance, productPrice)) {
-                return Result.of("余额不足", CodeEnum.KB_NOT_ENOUGH.getCode(), "failed");
+            KpnSite siteInfo = siteService.getInfoById(sysUser.getSiteId());
+            KpnSiteBankCard bankCard = siteBankCardService.getById(bankCardId);
+            KpnSitePlatform sitePlatform = sitePlatformService.getBySiteId(sysUser.getSiteId());
+
+            KpnSiteOrder siteOrder = new KpnSiteOrder();
+            siteOrder.setSiteId(siteInfo.getId());
+            siteOrder.setSiteCode(siteInfo.getCode());
+            siteOrder.setSiteName(siteInfo.getName());
+            siteOrder.setOrderNo(orderNo);
+            siteOrder.setUserId(sysUser.getId());
+            siteOrder.setUserName(sysUser.getUsername());
+            siteOrder.setRemitterName(remitterName);
+            siteOrder.setBankId(bankCard.getBankId());
+            siteOrder.setBankName(bankCard.getBankName());
+            siteOrder.setBankCardId(bankCard.getId());
+            siteOrder.setBankCard(bankCard.getCard());
+            siteOrder.setBankCardAccount(bankCard.getAccount());
+            siteOrder.setProductId(productId);
+            siteOrder.setProductName(product.getNameZh());
+            if (StrUtil.isNotBlank(mobile)) {
+                siteOrder.setMobile(mobile);
             }
-            siteProductService.buyUseKb(sysUser, product);
-            return Result.succeed("开通/续期成功");
+            siteOrder.setProductPrice(product.getPrice().divide(sitePlatform.getExchange(), 2, RoundingMode.CEILING));
+            siteOrder.setCertificate(certificate);
+
+            //K币
+            siteOrderService.save(siteOrder);
+            return Result.succeed("订单已经提交,正在审核中");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
+        } finally {
+            RedissLockUtil.unlock(lockKey);
         }
     }
 
@@ -402,7 +464,6 @@ public class MemberController {
             return Result.failed("failed");
         }
     }
-
 
     /**
      * 获取会员自定义频道

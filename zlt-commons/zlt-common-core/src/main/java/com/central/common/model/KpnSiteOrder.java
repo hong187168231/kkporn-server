@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class KpnSiteOrder extends SuperEntity {
 
     @ApiModelProperty(value = "站点id")
-    private int siteId;
+    private Long siteId;
 
     @ApiModelProperty(value = "站点编码")
     private String siteCode;
@@ -34,6 +34,9 @@ public class KpnSiteOrder extends SuperEntity {
 
     @ApiModelProperty(value = "用户名")
     private String userName;
+
+    @ApiModelProperty(value = "汇款人姓名")
+    private String remitterName;
 
     @ApiModelProperty(value = "收款银行id")
     private Long bankId;

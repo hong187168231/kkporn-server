@@ -44,7 +44,7 @@ public final class PornConstants {
         // 30分钟的秒数
         public static final long MINUTE_30_IN_SECONDS = 30 * 60;
         // 订单号长度
-        public static final int LEN_DETAIL_ORDER = 20;
+        public static final int ORDER_NO_LENGTH = 18;
         // 默认排序sort
         public static final long DEFAULT_SORT_VALUE = 0L;
     }
@@ -66,6 +66,7 @@ public final class PornConstants {
         public static final String SPACE = " ";
         public static final String ALL = "ALL";
         public static final String RANDOM_BASE_STR = RandomUtil.BASE_CHAR_NUMBER+"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        public static final String ORDER_NO_PREFIX = "CE";
         public static final String VERIFY_CODE_ID = "VerifyCodeId";
         public static final String VERIFY_CODE_SECONDS = "VerifyCodeSeconds";
         public static final String USER_AGENT = "User-Agent";
@@ -230,6 +231,8 @@ public final class PornConstants {
 
         public static final String USER_SIGN_LOCK = "Lock:sign:userId:{}";
         public static final String USER_SAVE_INVITE_CODE_LOCK = "Lock:save:inviteCode:userId:{}";
+        // siteid rderNo
+        public static final String USER_SITEID_SUBMIT_ORDERNO_LOCK = "Lock:siteId:submit:orderNo:{}:{}";
     }
 
     //多语言key
