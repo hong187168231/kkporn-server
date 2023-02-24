@@ -34,6 +34,8 @@ public class KpnSiteBankCard extends SuperEntity {
     private String account;
     @ApiModelProperty(value = "卡号")
     private String card;
+    @ApiModelProperty(value = "排序(越大越靠前)")
+    private Integer sort;
     @ApiModelProperty(value = "状态 0下架,1上架")
     private Integer status;
     @ApiModelProperty(value = "创建时间")
