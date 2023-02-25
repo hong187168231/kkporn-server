@@ -2,6 +2,8 @@ package com.central.porn.service;
 
 import com.central.common.model.SysUser;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.PornPageResult;
+import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 
 import java.math.BigDecimal;
 
@@ -71,4 +73,5 @@ public interface ISysUserService extends ISuperService<SysUser> {
      * @param userId 会员id
      */
     void updateVipExpire(Long userId);
+
 }

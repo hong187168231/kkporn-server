@@ -4,17 +4,20 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.constant.PornConstants;
-import com.central.common.model.KpnSite;
-import com.central.common.model.KpnSitePromotion;
-import com.central.common.model.SysUser;
+import com.central.common.model.*;
 import com.central.common.model.enums.UserRegTypeEnum;
 import com.central.common.model.enums.UserTypeEnum;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
+import com.central.porn.entity.PornPageResult;
+import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.mapper.SysUserMapper;
 import com.central.porn.service.IKpnSitePromotionService;
 import com.central.porn.service.IKpnSiteService;
+import com.central.porn.service.IKpnSiteUserMovieHistoryService;
 import com.central.porn.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * year
@@ -150,6 +155,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
                 .set(SysUser::getVipExpire, null)
                 .update();
     }
+
 }
 
 

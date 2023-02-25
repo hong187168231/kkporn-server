@@ -15,6 +15,7 @@ import com.central.common.redis.lock.RedissLockUtil;
 import com.central.oss.model.ObjectInfo;
 import com.central.oss.template.MinioTemplate;
 import com.central.porn.core.language.LanguageUtil;
+import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.*;
 import com.central.porn.service.*;
@@ -93,6 +94,12 @@ public class MemberController {
 
     @Autowired
     private IKpnSitePlatformService sitePlatformService;
+
+    @Autowired
+    private IKpnSiteOrderService siteOrderService;
+
+    @Autowired
+    private IKpnSiteUserMovieHistoryService userMovieHistoryService;
 
     /**
      * 上传头像
@@ -184,9 +191,6 @@ public class MemberController {
         }
     }
 
-    @Autowired
-    private IKpnSiteOrderService siteOrderService;
-
     @ApiOperation("使用现金开通/续费VIP,提交订单")
     @PostMapping("/buy/cash")
     public Result<String> buyVipUseCash(@ApiIgnore @LoginUser SysUser user,
@@ -262,6 +266,19 @@ public class MemberController {
         }
     }
 
+    @ApiOperation(value = "浏览历史")
+    @GetMapping("/watch/history")
+    public Result<PornPageResult<KpnSiteMovieBaseVo>> watchHistory(@ApiIgnore @LoginUser SysUser user,
+                                                                   @ApiParam("当前页") Integer currPage,
+                                                                   @ApiParam("每页条数") Integer pageSize) {
+        try {
+            PornPageResult<KpnSiteMovieBaseVo> watchHistoryPageResult = userMovieHistoryService.getWatchHistoryByPage(user.getSiteId(), user.getId(), currPage, pageSize);
+            return Result.succeed(watchHistoryPageResult, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
 
     /**
      * 保存意见反馈
