@@ -28,7 +28,6 @@ public class KpnSiteSignServiceImpl extends SuperServiceImpl<KpnSiteSignMapper, 
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Boolean saveOrUpdateSign(List<KpnSiteSign> list) {
         return super.saveOrUpdateBatch(list);
     }

@@ -524,22 +524,21 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
     @Override
     public Result<UserVipExpireVo> updateUserVipExpire(Long userId, Integer days) {
         SysUser sysUser = baseMapper.selectById(userId);
-        if (sysUser != null) {
-            Date vipExpire = sysUser.getVipExpire() == null ? new Date() : sysUser.getVipExpire();
-            Date date = DateUtil.getDate(vipExpire, days);
-            //当前时间 + vip天数
-            sysUser.setVipExpire(date);
-            sysUser.setVipExpire(sysUser.getVipExpire());
-            int i = baseMapper.updateById(sysUser);
-
-            UserVipExpireVo UserVipExpireVo=new UserVipExpireVo();
-            UserVipExpireVo.setBeforeExpire(vipExpire);
-            UserVipExpireVo.setAfterExpire(date);
-            //记录VIP最新过期时间 add by year
-            asyncService.setVipExpire(date, sysUser.getId());
-            return i>0 ? Result.succeed(UserVipExpireVo,"操作成功") :Result.failed("操作失败");
+        if (sysUser == null) {
+            return Result.failed("数据不存在");
         }
-        return Result.failed("操作失败");
+        Date vipExpire = sysUser.getVipExpire() == null ? new Date() : sysUser.getVipExpire();
+        Date date = DateUtil.getDate(vipExpire, days == null ? 0 : days);
+        //当前时间/vip到期时间 + vip天数
+        sysUser.setVipExpire(date);
+        int i = baseMapper.updateById(sysUser);
+
+        UserVipExpireVo UserVipExpireVo=new UserVipExpireVo();
+        UserVipExpireVo.setBeforeExpire(vipExpire);
+        UserVipExpireVo.setAfterExpire(date);
+        //记录VIP最新过期时间 add by year
+        asyncService.setVipExpire(date, sysUser.getId());
+        return i>0 ? Result.succeed(UserVipExpireVo,"操作成功") :Result.failed("操作失败");
     }
 
     /**

@@ -81,7 +81,6 @@ public class KpnSiteAnnouncementServiceImpl extends SuperServiceImpl<KpnSiteAnno
         return baseMapper.selectById(id);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean delAnnouncementId(Long id) {
         return baseMapper.deleteById(id) > 0;
