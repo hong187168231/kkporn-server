@@ -38,12 +38,4 @@ public class KpnSiteBankCard extends SuperEntity {
     private Integer sort;
     @ApiModelProperty(value = "状态 0下架,1上架")
     private Integer status;
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
-    @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
-    @ApiModelProperty(value = "创建人")
-    private String createBy;
-    @ApiModelProperty(value = "更新人")
-    private String updateBy;
     }

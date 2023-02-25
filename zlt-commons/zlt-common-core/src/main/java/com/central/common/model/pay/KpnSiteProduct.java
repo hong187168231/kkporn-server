@@ -45,12 +45,4 @@ public class KpnSiteProduct extends SuperEntity {
     private String discountRemark;
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Integer sort;
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
-    @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
-    @ApiModelProperty(value = "创建人")
-    private String createBy;
-    @ApiModelProperty(value = "更新人")
-    private String updateBy;
     }
