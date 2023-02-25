@@ -1,10 +1,13 @@
 package com.central.porn.jobs;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSite;
+import com.central.common.model.KpnSiteMovie;
 import com.central.common.redis.template.RedisRepository;
+import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.service.IKpnSiteMovieService;
 import com.central.porn.service.IKpnSiteService;
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +48,15 @@ public class RefreshSiteMovieVvFavoritesRptJob implements SimpleJob, CommandLine
                 Long sid = kpnSite.getId();
                 List<Long> movieIds = siteMovieService.getSiteMovieIds(sid);
                 for (Long movieId : movieIds) {
-                    String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_MOVIEID_VO_KEY, movieId);
-                    RedisRepository.delete(redisKey);
-                    siteMovieService.getSiteMovieByIds(sid, Collections.singletonList(movieId), false);
+                    String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITEID_MOVIEID_VO_KEY, sid, movieId);
+                    KpnSiteMovieBaseVo movieBaseVo = (KpnSiteMovieBaseVo) RedisRepository.get(redisKey);
+                    if (ObjectUtil.isEmpty(movieBaseVo)) {
+                        movieBaseVo = siteMovieService.getSiteMovieByIds(sid, Collections.singletonList(movieId), false).get(0);
+                    }
+                    KpnSiteMovie siteMovieVvFavorites = siteMovieService.getSiteMovieVvFavorites(sid, movieId);
+                    movieBaseVo.setVv(siteMovieVvFavorites.getVv());
+                    movieBaseVo.setFavorites(siteMovieVvFavorites.getFavorites());
+                    RedisRepository.setExpire(redisKey, movieBaseVo, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
                 }
 
                 //刷新站点最热
@@ -72,6 +81,8 @@ public class RefreshSiteMovieVvFavoritesRptJob implements SimpleJob, CommandLine
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        } finally {
+            System.gc();
         }
     }
 

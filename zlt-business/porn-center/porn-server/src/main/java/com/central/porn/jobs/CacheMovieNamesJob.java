@@ -46,9 +46,6 @@ public class CacheMovieNamesJob implements CommandLineRunner {
                 cacheData();
                 reCacheSiteData(sid);
                 log.info("sid:{},数据同步完成!", sid);
-
-                //暗示
-                System.gc();
                 sleep();
             }
             RedisRepository.set(redisFlagKey, PornConstants.Numeric.CLOSE);
@@ -75,9 +72,6 @@ public class CacheMovieNamesJob implements CommandLineRunner {
             String redisFlagKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_CHANGE_FLAG, sid);
             RedisRepository.set(redisFlagKey, PornConstants.Numeric.CLOSE);
         }
-
-        //暗示
-        System.gc();
     }
 
     private void cacheData() {

@@ -8,6 +8,7 @@ import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.model.KpnSiteUserMovieFavorites;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
+import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
@@ -15,6 +16,7 @@ import com.central.porn.enums.*;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -146,12 +147,12 @@ public class MovieController {
      */
     @GetMapping("/actor/movies")
     @ApiOperation(value = "获取演员影片列表信息")
-    public Result<List<KpnSiteMovieBaseVo>> getActorMovies(@RequestHeader(value = "sid") Long sid,
-                                                           Long actorId,
-                                                           String sortType,
-                                                           Integer sortOrder,
-                                                           Integer currPage,
-                                                           Integer pageSize) {
+    public Result<PornPageResult<KpnSiteMovieBaseVo>> getActorMovies(@ApiParam("站点id") @RequestHeader(value = "sid") Long sid,
+                                                                     @ApiParam("演员id") Long actorId,
+                                                                     @ApiParam("排序字段 HOT:收藏量,LATEST:上架时间,DURATION:影片时长") String sortType,
+                                                                     @ApiParam("排序顺序 0:正序,1倒序") Integer sortOrder,
+                                                                     @ApiParam("当前页数") Integer currPage,
+                                                                     @ApiParam("每页条数") Integer pageSize) {
         try {
             //排序字段
             if (StrUtil.isBlank(sortType) || !KpnMovieSortTypeEnum.isLegalType(sortType)) {
@@ -162,8 +163,8 @@ public class MovieController {
             if (ObjectUtil.isNull(sortOrder) || !KpnSortOrderEnum.isLegalCode(sortOrder)) {
                 sortOrder = KpnSortOrderEnum.DESC.getCode();
             }
-            List<KpnSiteMovieBaseVo> siteMovieBaseVoList = siteMovieService.getSiteMovieByActor(sid, actorId, sortType, sortOrder, currPage, pageSize);
-            return Result.succeed(siteMovieBaseVoList, "succeed");
+            PornPageResult<KpnSiteMovieBaseVo> siteMovieBaseVoPage = siteMovieService.getSiteMovieByActor(sid, actorId, sortType, sortOrder, currPage, pageSize);
+            return Result.succeed(siteMovieBaseVoPage, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

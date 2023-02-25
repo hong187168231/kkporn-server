@@ -245,7 +245,7 @@ public class SiteController {
     @ApiOperation(value = "热门演员表Top10")
     public Result<List<KpnActorVo>> getActorList(@RequestHeader("sid") Long sid) {
         try {
-            List<KpnActorVo> actorListByFavorites = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.DESC.name(), 1, 10);
+            List<KpnActorVo> actorListByFavorites = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.DESC.name(), 1, 10).getData();
             return Result.succeed(actorListByFavorites, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -371,15 +371,19 @@ public class SiteController {
     /**
      * 演员列表查询
      *
-     * @param sid           站点id
-     * @param sortType      排序列
-     * @param sortOrderCode 排序顺序
-     * @param currPage      当前页数
-     * @param pageSize      每页条数
+     * @param sid       站点id
+     * @param sortType  排序列
+     * @param sortOrder 排序顺序
+     * @param currPage  当前页数
+     * @param pageSize  每页条数
      */
     @GetMapping("/actor/list")
     @ApiOperation(value = "演员列表")
-    public Result<List<KpnActorVo>> getActorList(@RequestHeader("sid") Long sid, String sortType, Integer sortOrderCode, Integer currPage, Integer pageSize) {
+    public Result<PornPageResult<KpnActorVo>> getActorList(@ApiParam("站点id") @RequestHeader(value = "sid") Long sid,
+                                                           @ApiParam("排序字段 HOT:收藏量,LATEST:最新") String sortType,
+                                                           @ApiParam("排序顺序 0:正序,1倒序") Integer sortOrder,
+                                                           @ApiParam("当前页数") Integer currPage,
+                                                           @ApiParam("每页条数") Integer pageSize) {
         try {
             //排序字段
             if (StrUtil.isBlank(sortType) || !KpnActorSortTypeEnum.isLegalType(sortType)) {
@@ -387,21 +391,21 @@ public class SiteController {
             }
 
             //排序顺序
-            if (ObjectUtil.isNull(sortOrderCode) || !KpnSortOrderEnum.isLegalCode(sortOrderCode)) {
-                sortOrderCode = KpnSortOrderEnum.DESC.getCode();
+            if (ObjectUtil.isNull(sortOrder) || !KpnSortOrderEnum.isLegalCode(sortOrder)) {
+                sortOrder = KpnSortOrderEnum.DESC.getCode();
             }
 
-            List<KpnActorVo> actorVos = new ArrayList<>();
+            PornPageResult<KpnActorVo> actorPageVos = null;
             //按收藏量查询
             if (sortType.equalsIgnoreCase(KpnActorSortTypeEnum.HOT.getType())) {
-                actorVos = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.getByCode(sortOrderCode).name(), currPage, pageSize);
+                actorPageVos = siteActorService.getActorListByFavorites(sid, KpnSortOrderEnum.getByCode(sortOrder).name(), currPage, pageSize);
             }
             //按创建时间
             else if (sortType.equalsIgnoreCase(KpnActorSortTypeEnum.LATEST.getType())) {
-                actorVos = siteActorService.getActorListByCreateTime(sid, KpnSortOrderEnum.getByCode(sortOrderCode).name(), currPage, pageSize);
+                actorPageVos = siteActorService.getActorListByCreateTime(sid, KpnSortOrderEnum.getByCode(sortOrder).name(), currPage, pageSize);
             }
 
-            return Result.succeed(actorVos, "succeed");
+            return Result.succeed(actorPageVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

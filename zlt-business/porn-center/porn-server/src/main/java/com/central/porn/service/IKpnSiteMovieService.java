@@ -87,7 +87,7 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * @param pageSize  每页条数
      * @return
      */
-    List<KpnSiteMovieBaseVo> getSiteMovieByActor(Long sid, Long actorId, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
+    PornPageResult<KpnSiteMovieBaseVo> getSiteMovieByActor(Long sid, Long actorId, String sortType, Integer sortOrder, Integer currPage, Integer pageSize);
 
     /**
      * 补足 1.月播放量排行榜 2.

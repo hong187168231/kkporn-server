@@ -1,5 +1,6 @@
 package com.central.porn.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
@@ -23,6 +24,10 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
 
     @Override
     public List<KpnActor> getActorByIds(List<Long> actorIds) {
+        if (CollectionUtil.isEmpty(actorIds)) {
+            return new ArrayList<>();
+        }
+
         List<String> redisKeyList = actorIds.stream().map(actorId -> StrUtil.format(PornConstants.RedisKey.KPN_ACTOR_KEY, actorId)).collect(Collectors.toList());
         List<KpnActor> cachedKpnActors = (ArrayList) RedisRepository.mget(redisKeyList);
         boolean hasNullElem = cachedKpnActors.stream().anyMatch(Objects::isNull);
@@ -33,6 +38,7 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
                 KpnActor actor = (KpnActor) RedisRepository.get(redisActorKey);
                 if (ObjectUtil.isEmpty(actor)) {
                     actor = getById(actorId);
+                    actor.setFavorites(null);
                     if (ObjectUtil.isNotEmpty(actor)) {
                         RedisRepository.setExpire(redisActorKey, actor, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
                     }

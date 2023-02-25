@@ -101,6 +101,12 @@ public class MemberController {
     @Autowired
     private IKpnSiteUserMovieHistoryService userMovieHistoryService;
 
+    @Autowired
+    private IKpnSiteUserMovieFavoritesService userMovieFavoritesService;
+
+    @Autowired
+    private IKpnSiteUserActorFavoritesService userActorFavoritesService;
+
     /**
      * 上传头像
      *
@@ -266,14 +272,42 @@ public class MemberController {
         }
     }
 
-    @ApiOperation(value = "浏览历史")
-    @GetMapping("/watch/history")
+    @ApiOperation(value = "查询我的浏览历史")
+    @GetMapping("/history/movie")
     public Result<PornPageResult<KpnSiteMovieBaseVo>> watchHistory(@ApiIgnore @LoginUser SysUser user,
                                                                    @ApiParam("当前页") Integer currPage,
                                                                    @ApiParam("每页条数") Integer pageSize) {
         try {
             PornPageResult<KpnSiteMovieBaseVo> watchHistoryPageResult = userMovieHistoryService.getWatchHistoryByPage(user.getSiteId(), user.getId(), currPage, pageSize);
             return Result.succeed(watchHistoryPageResult, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    @ApiOperation(value = "查询我的收藏影片")
+    @GetMapping("/favorites/movie")
+    public Result<PornPageResult<KpnSiteMovieBaseVo>> favoritesHistory(@ApiIgnore @LoginUser SysUser user,
+                                                                       @ApiParam("当前页") Integer currPage,
+                                                                       @ApiParam("每页条数") Integer pageSize) {
+        try {
+            PornPageResult<KpnSiteMovieBaseVo> watchHistoryPageResult = userMovieFavoritesService.getFavoritesMoviesByPage(user.getSiteId(), user.getId(), currPage, pageSize);
+            return Result.succeed(watchHistoryPageResult, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    @ApiOperation(value = "查询我的收藏演员")
+    @GetMapping("/favorites/actor")
+    public Result<PornPageResult<KpnActorVo>> actorHistory(@ApiIgnore @LoginUser SysUser user,
+                                                                       @ApiParam("当前页") Integer currPage,
+                                                                       @ApiParam("每页条数") Integer pageSize) {
+        try {
+            PornPageResult<KpnActorVo> actorPageResult = userActorFavoritesService.getFavoritesActorsByPage(user.getSiteId(), user.getId(), currPage, pageSize);
+            return Result.succeed(actorPageResult, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

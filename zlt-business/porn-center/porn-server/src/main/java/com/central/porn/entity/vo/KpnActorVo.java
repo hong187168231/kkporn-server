@@ -66,5 +66,5 @@ public class KpnActorVo extends LanguageNameMulti implements Serializable {
     private Long favorites;
 
     @ApiModelProperty("演员收藏状态 false未收藏,true已收藏")
-    private Boolean hasFavor = false;
+    private Boolean hasFavor ;
 }

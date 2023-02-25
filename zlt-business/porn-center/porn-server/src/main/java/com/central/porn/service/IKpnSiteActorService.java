@@ -2,6 +2,7 @@ package com.central.porn.service;
 
 import com.central.common.model.KpnSiteActor;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.KpnActorVo;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public interface IKpnSiteActorService extends ISuperService<KpnSiteActor> {
      * @param pageSize  每页条数
      * @return 演员列表
      */
-    List<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder, Integer currPage, Integer pageSize);
+    PornPageResult<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder, Integer currPage, Integer pageSize);
 
     /**
      * 获取演员列表-创建时间
@@ -67,5 +68,5 @@ public interface IKpnSiteActorService extends ISuperService<KpnSiteActor> {
      * @param pageSize  每页条数
      * @return 演员列表
      */
-    List<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder, Integer currPage, Integer pageSize);
+    PornPageResult<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder, Integer currPage, Integer pageSize);
 }
