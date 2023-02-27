@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
@@ -498,7 +498,6 @@ public class MemberController {
      */
     @ApiOperation(value = "会员填写邀请码")
     @PostMapping("/inviteCode/save")
-    @Transactional
     public Result<String> saveInviteCode(@ApiIgnore @LoginUser SysUser user,
                                          @ApiParam(value = "邀请码", required = true) String inviteCode) {
         String lockKey = StrUtil.format(PornConstants.Lock.USER_SAVE_INVITE_CODE_LOCK, user.getId());
@@ -547,6 +546,50 @@ public class MemberController {
 
             KpnPromotionInfoVo promotionInfoVo = KpnPromotionInfoVo.builder().promotionCode(promotionCode).members(members).vipDays(vipDays).kbs(kbs).build();
             return Result.succeed(promotionInfoVo, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ISysUserService sysUserService;
+
+    /**
+     * 会员修改密码
+     */
+    @ApiOperation(value = "会员修改密码")
+    @PostMapping("/modify/password")
+    public Result<String> modifyPassword(@ApiIgnore @LoginUser SysUser user,
+                                         @ApiParam("旧密码") String oldPassword,
+                                         @ApiParam("新密码") String newPassword,
+                                         @ApiParam("新密码2") String newPassword2) {
+        try {
+            if (StrUtil.isBlank(newPassword)) {
+                return Result.failed("新密码不能为空");
+            }
+
+            newPassword = StrUtil.trim(newPassword);
+            if (newPassword.length() > 20 || newPassword.length() < 6) {
+                return Result.failed("密码应为6到20之间的数字与字母组合");
+            }
+
+            if (!StrUtil.trim(newPassword2).equals(StrUtil.trim(newPassword))) {
+                return Result.failed("新密码不一致");
+            }
+
+            SysUser sysUser = sysUserService.getById(user.getId());
+            boolean matches = passwordEncoder.matches(oldPassword, sysUser.getPassword());
+            if (!matches) {
+                return Result.failed("原密码错误");
+            }
+
+            sysUser.setPassword(passwordEncoder.encode(newPassword));
+            sysUserService.saveOrUpdate(sysUser);
+            return Result.succeed("succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
