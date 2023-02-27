@@ -31,7 +31,7 @@ public class KpnMovieTagServiceImpl extends SuperServiceImpl<KpnMovieTagMapper, 
 
         List<Long> tagIds = this.lambdaQuery().eq(KpnMovieTag::getMovieId, movieId).list()
                 .stream()
-                .map(KpnMovieTag::getId)
+                .map(KpnMovieTag::getTagId)
                 .collect(Collectors.toList());
 
         result.addAll(tagService.getByTagIds(tagIds));

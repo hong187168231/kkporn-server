@@ -168,6 +168,28 @@ public class MemberController {
         }
     }
 
+    /**
+     * 会员K币账变记录
+     *
+     * @param user     登录会员
+     * @param currPage 当前页数
+     * @param pageSize 每页条数
+     * @return
+     */
+    @GetMapping("/kb/change/records")
+    @ApiOperation(value = "会员K币账变记录")
+    public Result<PornPageResult<KbChangeRecordVo>> removeChannel(@ApiIgnore @LoginUser SysUser user,
+                                                                  @ApiParam("当前页数") Integer currPage,
+                                                                  @ApiParam("每页条数") Integer pageSize) {
+        try {
+            PornPageResult<KbChangeRecordVo> changeRecordVos = moneyLogService.getByUserId(user.getId(), currPage, pageSize);
+            return Result.succeed(changeRecordVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
     @ApiOperation("获取站点支付银行卡")
     @GetMapping("/bank/cards")
     public Result<KpnSitePayResultVo> getSiteBankCards(@ApiIgnore @LoginUser SysUser user,
@@ -388,6 +410,7 @@ public class MemberController {
     public Result<List<KpnSiteUserSignHistoryVo>> getSignHistory(@ApiIgnore @LoginUser SysUser user,
                                                                  @ApiParam("当前年月(yyyy-MM),为空时返回当前月份签到数据") String month) {
         try {
+            //todo 获取上月后7天签到数据
             SysUser sysUser = userService.getById(user.getId());
             if (StrUtil.isBlank(month)) {
                 month = DateUtil.format(new Date(), PornConstants.Format.YYYY_MM);
@@ -632,7 +655,6 @@ public class MemberController {
             return Result.failed("failed");
         }
     }
-
 
     /**
      * 会员添加演员收藏

@@ -51,7 +51,7 @@ public class RefreshSiteMovieVvFavoritesRptJob implements SimpleJob, CommandLine
                     String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITEID_MOVIEID_VO_KEY, sid, movieId);
                     KpnSiteMovieBaseVo movieBaseVo = (KpnSiteMovieBaseVo) RedisRepository.get(redisKey);
                     if (ObjectUtil.isEmpty(movieBaseVo)) {
-                        movieBaseVo = siteMovieService.getSiteMovieByIds(sid, Collections.singletonList(movieId), false).get(0);
+                        movieBaseVo = siteMovieService.getSiteMovieByIds(sid, Collections.singletonList(movieId), true).get(0);
                     }
                     KpnSiteMovie siteMovieVvFavorites = siteMovieService.getSiteMovieVvFavorites(sid, movieId);
                     movieBaseVo.setVv(siteMovieVvFavorites.getVv());

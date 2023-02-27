@@ -36,9 +36,7 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
 
     @Override
     public List<KpnSiteProductVo> getSiteProducts(Long sid) {
-
         KpnSite kpnSite = siteService.getInfoById(sid);
-
         List<KpnSiteProduct> products = this.lambdaQuery()
                 .eq(KpnSiteProduct::getSiteId, sid)
                 .eq(KpnSiteProduct::getStatus, true)

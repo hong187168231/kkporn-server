@@ -95,11 +95,9 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                     kpnMovieVo.setPayType(kpnSiteMovie.getPayType());
                     kpnMovieVo.setStatus(kpnSiteMovie.getStatus());
 
-                    //获取标签信息
                     List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
                     kpnMovieVo.setTagVos(kpnTagVos);
 
-                    //获取播放量/收藏量
                     KpnSiteMovie siteMovie = siteMovieService.getSiteMovieVvFavorites(sid, kpnMovie.getId());
                     kpnMovieVo.setVv(siteMovie.getVv());
                     kpnMovieVo.setFavorites(siteMovie.getFavorites());
@@ -134,16 +132,13 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
     @Override
     public KpnMovieVo getSiteMovieDetail(Long sid, Long movieId) {
-        //从缓存中查询影片信息
         String movieRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITEID_MOVIEID_VO_KEY, sid, movieId);
         KpnMovieVo kpnMovieVo = (KpnMovieVo) RedisRepository.get(movieRedisKey);
 
-        //缓存影片信息
         if (ObjectUtil.isEmpty(kpnMovieVo)) {
             kpnMovieVo = (KpnMovieVo)this.getSiteMovieByIds(sid, Collections.singletonList(movieId), true).get(0);
         }
 
-        //处理多语言
         kpnMovieVo.setName(LanguageUtil.getLanguageName(kpnMovieVo));
         for (KpnTagVo tagVo : kpnMovieVo.getTagVos()) {
             tagVo.setName(LanguageUtil.getLanguageName(tagVo));
@@ -172,14 +167,10 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
     @Override
     public Long addSiteMovieVv(Long sid, Long movieId) {
-        //先缓存
         String siteMovieVvKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_VV_KEY, sid, movieId);
         cacheSiteMovieVv(siteMovieVvKey, sid, movieId);
 
-        //异步增加站点影片播放量
         asyncService.addSiteMovieVv(sid, movieId);
-
-        // 异步增加影片总播放量
         movieService.addMovieVv(movieId);
 
         return RedisRepository.incr(siteMovieVvKey);
@@ -195,15 +186,9 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         String siteMovieFavoritesKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_FAVORITES_KEY, sid, movieId);
         cacheSiteMovieFavorites(siteMovieFavoritesKey, sid, movieId);
 
-        //增加站点影片收藏量
         asyncService.addSiteMovieFavorites(sid, movieId);
-
-        //增加影片总收藏量
         movieService.addMovieFavorites(movieId);
-
-        //增加会员收藏影片
         siteUserMovieFavoritesService.add(userId, movieId);
-
         return RedisRepository.incr(siteMovieFavoritesKey);
     }
 
@@ -217,13 +202,8 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         String siteMovieFavoritesKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_FAVORITES_KEY, sid, movieId);
         cacheSiteMovieFavorites(siteMovieFavoritesKey, sid, movieId);
 
-        //删除站点影片收藏量
         asyncService.removeSiteMovieFavorites(sid, movieId);
-
-        //删除影片总收藏量
         movieService.removeMovieFavorites(movieId);
-
-        //移除会员收藏影片
         siteUserMovieFavoritesService.remove(userId, movieId);
 
         return RedisRepository.decr(siteMovieFavoritesKey);

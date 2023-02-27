@@ -3,11 +3,11 @@ package com.central.common.model.pay;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.central.common.model.SuperEntity;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
+
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * vip产品

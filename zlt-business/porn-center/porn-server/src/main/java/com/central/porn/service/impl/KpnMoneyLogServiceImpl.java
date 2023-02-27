@@ -1,25 +1,41 @@
 package com.central.porn.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.model.KpnMoneyLog;
 import com.central.common.model.SysUser;
 import com.central.common.model.enums.KbChangeTypeEnum;
+import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.service.impl.SuperServiceImpl;
+import com.central.porn.core.language.LanguageUtil;
+import com.central.porn.entity.PornPageResult;
+import com.central.porn.entity.vo.KbChangeRecordVo;
+import com.central.porn.entity.vo.KpnSiteProductVo;
+import com.central.porn.enums.KbChangeTypeExtendEnum;
 import com.central.porn.mapper.KpnMoneyLogMapper;
 import com.central.porn.service.IKpnMoneyLogService;
+import com.central.porn.service.IKpnSiteProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
 @Slf4j
 @Service
 public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, KpnMoneyLog> implements IKpnMoneyLogService {
+
+    @Autowired
+    private IKpnSiteProductService productService;
 
     @Override
     public void addKbChangeLog(SysUser sysUser, Integer type, BigDecimal rewardKb, Map<String, Object> params) {
@@ -46,7 +62,9 @@ public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, 
         }
         //购买vip
         else if (type.equals(KbChangeTypeEnum.OPEN_VIP.getType())) {
-            kpnMoneyLog.setRemark(StrUtil.format("购买vip产品id:{},消费K币: {}", params.get("productId"), rewardKb.toPlainString()));
+            Long productId = (Long) params.get("productId");
+            kpnMoneyLog.setProductId(productId);
+            kpnMoneyLog.setRemark(StrUtil.format("购买vip产品id:{},消费K币: {}", productId, rewardKb.toPlainString()));
         }
 
         save(kpnMoneyLog);
@@ -62,6 +80,46 @@ public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, 
         String today = DateUtil.formatDate(new Date());
         Integer kbChangeTypeCode = KbChangeTypeEnum.PROMOTION.getType();
         return this.baseMapper.getUserTodayPromoteTotalKb(userId, today, kbChangeTypeCode);
+    }
+
+    @Override
+    public PornPageResult<KbChangeRecordVo> getByUserId(Long userId, Integer currPage, Integer pageSize) {
+        Page<KpnMoneyLog> page = new Page<>(currPage, pageSize);
+        LambdaQueryWrapper<KpnMoneyLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(KpnMoneyLog::getUserId, KpnMoneyLog::getOrderType, KpnMoneyLog::getProductId, KpnMoneyLog::getCreateTime, KpnMoneyLog::getMoney);
+        wrapper.eq(KpnMoneyLog::getUserId, userId);
+        wrapper.orderByDesc(KpnMoneyLog::getCreateTime);
+
+        Page<KpnMoneyLog> moneyLogPage = this.baseMapper.selectPage(page, wrapper);
+        List<KpnMoneyLog> moneyLogPageRecords = moneyLogPage.getRecords();
+        List<KbChangeRecordVo> changeRecordVos = new ArrayList<>();
+        for (KpnMoneyLog moneyLogPageRecord : moneyLogPageRecords) {
+            KbChangeRecordVo changeRecordVo = new KbChangeRecordVo();
+            changeRecordVo.setDateTime(moneyLogPageRecord.getCreateTime());
+            changeRecordVo.setKbs(moneyLogPageRecord.getMoney());
+            changeRecordVo.setAddOrSubType(KbChangeTypeExtendEnum.getLanguageAddOrSubNameByType(moneyLogPageRecord.getOrderType()));
+            if (KbChangeTypeExtendEnum.isSub(moneyLogPageRecord.getOrderType())) {
+                changeRecordVo.setItemName(KbChangeTypeExtendEnum.getLanguageNameByType(moneyLogPageRecord.getOrderType()));
+            } else {
+                KpnSiteProduct siteProduct = productService.getById(moneyLogPageRecord.getProductId());
+                KpnSiteProductVo siteProductVo = new KpnSiteProductVo();
+                BeanUtil.copyProperties(siteProduct, siteProductVo);
+                changeRecordVo.setItemName(LanguageUtil.getLanguageName(siteProductVo));
+            }
+
+            changeRecordVos.add(changeRecordVo);
+        }
+
+        Long total = page.getTotal();
+        Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);
+
+        return PornPageResult.<KbChangeRecordVo>builder()
+                .data(changeRecordVos)
+                .currPage(currPage)
+                .pageSize(pageSize)
+                .count(total)
+                .totalPage(totalPage)
+                .build();
     }
 }
 

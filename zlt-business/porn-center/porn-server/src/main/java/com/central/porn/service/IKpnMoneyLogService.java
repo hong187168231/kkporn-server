@@ -3,8 +3,11 @@ package com.central.porn.service;
 import com.central.common.model.KpnMoneyLog;
 import com.central.common.model.SysUser;
 import com.central.common.service.ISuperService;
+import com.central.porn.entity.PornPageResult;
+import com.central.porn.entity.vo.KbChangeRecordVo;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 public interface IKpnMoneyLogService extends ISuperService<KpnMoneyLog> {
@@ -34,4 +37,14 @@ public interface IKpnMoneyLogService extends ISuperService<KpnMoneyLog> {
      * @return
      */
     BigDecimal getUserTodayPromoteTotalKbs(Long userId);
+
+    /**
+     * 获取会员账变记录
+     *
+     * @param userId   会员id
+     * @param currPage 当前页数
+     * @param pageSize 每页条数
+     * @return
+     */
+    PornPageResult<KbChangeRecordVo> getByUserId(Long userId, Integer currPage, Integer pageSize);
 }

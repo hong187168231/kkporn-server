@@ -4,11 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 
@@ -36,6 +34,9 @@ public class KpnMoneyLog extends SuperEntity {
     private BigDecimal afterMoney;
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    @ApiModelProperty(value = "产品id")
+    private Long productId;
 
     @ApiModelProperty(value = "账变类型")
     private Integer orderType;
