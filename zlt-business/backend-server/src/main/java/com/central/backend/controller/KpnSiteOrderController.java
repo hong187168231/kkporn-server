@@ -1,13 +1,8 @@
 package com.central.backend.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.central.backend.co.*;
 import com.central.backend.service.IKpnSiteOrderService;
-import com.central.backend.service.IKpnSiteUserVipLogService;
-import com.central.backend.service.ISysUserService;
-import com.central.backend.vo.UserVipExpireVo;
 import com.central.common.model.*;
-import com.central.common.model.enums.VipChangeTypeEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +29,8 @@ public class KpnSiteOrderController {
     @ApiOperation("查询订单列表列表")
     @ResponseBody
     @GetMapping("/findOrderList")
-    public Result<PageResult<KpnSiteOrder>> findOrderList(@ModelAttribute KpnSiteOrderCo params) {
-        PageResult<KpnSiteOrder> siteOrderList = orderService.findOrderList(params);
+    public Result<PageResult<KpnSiteUserOrder>> findOrderList(@ModelAttribute KpnSiteOrderCo params) {
+        PageResult<KpnSiteUserOrder> siteOrderList = orderService.findOrderList(params);
         return Result.succeed(siteOrderList);
     }
 

@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
-@TableName("kpn_site_order")
+@TableName("kpn_site_user_order")
 @ApiModel("站点充值订单")
-public class KpnSiteOrder extends SuperEntity {
+public class KpnSiteUserOrder extends SuperEntity {
 
     @ApiModelProperty(value = "站点id")
     private Long siteId;

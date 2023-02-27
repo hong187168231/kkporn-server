@@ -242,7 +242,7 @@ public class MemberController {
                 return Result.failed("汇款人姓名不能为空");
             }
             if (StrUtil.isBlank(certificate)) {
-                return Result.failed("交易号不能为空");
+                return Result.failed("交易号尾号不能为空");
             }
             if (ObjectUtil.isEmpty(bankCardId)) {
                 return Result.failed("无法获取银行卡信息");
@@ -253,7 +253,7 @@ public class MemberController {
 
             boolean isOrderNoExists = siteOrderService.isOrderNoExists(user.getSiteId(), orderNo);
             if (isOrderNoExists) {
-                return Result.failed("订单已经存在,不可重复提交");
+                return Result.failed("订单已提交,不可重复操作");
             }
 
             SysUser sysUser = userService.getById(user.getId());
@@ -262,7 +262,7 @@ public class MemberController {
             KpnSiteBankCard bankCard = siteBankCardService.getById(bankCardId);
             KpnSitePlatform sitePlatform = sitePlatformService.getBySiteId(sysUser.getSiteId());
 
-            KpnSiteOrder siteOrder = new KpnSiteOrder();
+            KpnSiteUserOrder siteOrder = new KpnSiteUserOrder();
             siteOrder.setSiteId(siteInfo.getId());
             siteOrder.setSiteCode(siteInfo.getCode());
             siteOrder.setSiteName(siteInfo.getName());
@@ -291,6 +291,20 @@ public class MemberController {
             return Result.failed("failed");
         } finally {
             RedissLockUtil.unlock(lockKey);
+        }
+    }
+
+    @ApiOperation(value = "查询订单记录")
+    @GetMapping("/order/records")
+    public Result<PornPageResult<KpnSiteUserOrderVo>> orderRecords(@ApiIgnore @LoginUser SysUser user,
+                                                                   @ApiParam("当前页") Integer currPage,
+                                                                   @ApiParam("每页条数") Integer pageSize) {
+        try {
+            PornPageResult<KpnSiteUserOrderVo> userOrderRecordsPage = siteOrderService.getUserOrderRecords(user.getSiteId(), user.getId(), currPage, pageSize);
+            return Result.succeed(userOrderRecordsPage, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
         }
     }
 

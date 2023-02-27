@@ -25,7 +25,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper, KpnSiteOrder> implements IKpnSiteOrderService {
+public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper, KpnSiteUserOrder> implements IKpnSiteOrderService {
     @Autowired
     private IKpnSiteUserVipLogService siteUserVipLogService;
 
@@ -35,33 +35,33 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
 
 
     @Override
-    public PageResult<KpnSiteOrder> findOrderList(KpnSiteOrderCo params) {
-        Page<KpnSiteOrder> page = new Page<>(params.getPage(), params.getLimit());
-        LambdaQueryWrapper<KpnSiteOrder> wrapper=new LambdaQueryWrapper<>();
+    public PageResult<KpnSiteUserOrder> findOrderList(KpnSiteOrderCo params) {
+        Page<KpnSiteUserOrder> page = new Page<>(params.getPage(), params.getLimit());
+        LambdaQueryWrapper<KpnSiteUserOrder> wrapper=new LambdaQueryWrapper<>();
         if (params.getSiteId()!=null){
-            wrapper.eq(KpnSiteOrder::getSiteId, params.getSiteId());
+            wrapper.eq(KpnSiteUserOrder::getSiteId, params.getSiteId());
         }
         if (StringUtils.isNotBlank(params.getUserName())){
-            wrapper.eq(KpnSiteOrder::getUserName, params.getUserName());
+            wrapper.eq(KpnSiteUserOrder::getUserName, params.getUserName());
         }
         if (StringUtils.isNotBlank(params.getOrderNo())){
-            wrapper.eq(KpnSiteOrder::getOrderNo, params.getOrderNo());
+            wrapper.eq(KpnSiteUserOrder::getOrderNo, params.getOrderNo());
         }
 
         if (StringUtils.isNotBlank(params.getStartTime())) {
-            wrapper.ge(KpnSiteOrder::getCreateTime, params.getStartTime());
+            wrapper.ge(KpnSiteUserOrder::getCreateTime, params.getStartTime());
         }
         if (StringUtils.isNotBlank(params.getEndTime())) {
-            wrapper.le(KpnSiteOrder::getCreateTime, params.getEndTime());
+            wrapper.le(KpnSiteUserOrder::getCreateTime, params.getEndTime());
         }
 
         if (params.getStatus()!=null){
-            wrapper.eq(KpnSiteOrder::getStatus, params.getStatus());
+            wrapper.eq(KpnSiteUserOrder::getStatus, params.getStatus());
         }
-        wrapper.orderByDesc(KpnSiteOrder::getCreateTime);
-        Page<KpnSiteOrder> list = baseMapper.selectPage(page, wrapper);
+        wrapper.orderByDesc(KpnSiteUserOrder::getCreateTime);
+        Page<KpnSiteUserOrder> list = baseMapper.selectPage(page, wrapper);
         long total = page.getTotal();
-        return PageResult.<KpnSiteOrder>builder().data(list.getRecords()).count(total).build();
+        return PageResult.<KpnSiteUserOrder>builder().data(list.getRecords()).count(total).build();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
     public Result updateStatus(KpnSiteOrderUpdateCo params) {
         Long id = params.getId();
         Integer state = params.getStatus();
-        KpnSiteOrder siteOrder = baseMapper.selectById(id);
+        KpnSiteUserOrder siteOrder = baseMapper.selectById(id);
         if (siteOrder == null) {
             return Result.failed("数据不存在");
         }
@@ -113,7 +113,7 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
     }
 
     @Override
-    public  List<KpnSiteOrder> findOrderMobileList(List<Long> userIds) {
+    public  List<KpnSiteUserOrder> findOrderMobileList(List<Long> userIds) {
         return baseMapper.findOrderMobileList(userIds);
     }
 }

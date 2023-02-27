@@ -35,7 +35,7 @@
 	</select>
 
 
-	<select id="findOrderMobileList" resultType="com.central.common.model.KpnSiteOrder">
+	<select id="findOrderMobileList" resultType="com.central.common.model.KpnSiteUserOrder">
 		select u.user_id,u.mobile from (
 		SELECT
 		o.user_id,

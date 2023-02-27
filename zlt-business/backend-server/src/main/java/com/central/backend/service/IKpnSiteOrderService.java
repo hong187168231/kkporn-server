@@ -3,7 +3,7 @@ package com.central.backend.service;
 import com.central.backend.co.KpnSiteOrderCo;
 import com.central.backend.co.KpnSiteOrderTotalCo;
 import com.central.backend.co.KpnSiteOrderUpdateCo;
-import com.central.common.model.KpnSiteOrder;
+import com.central.common.model.KpnSiteUserOrder;
 import com.central.common.model.KpnSiteUserVipLog;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
@@ -17,15 +17,15 @@ import java.util.List;
  * @Author: Lulu
  * @Date: 2023/2/8
  */
-public interface IKpnSiteOrderService extends ISuperService<KpnSiteOrder> {
+public interface IKpnSiteOrderService extends ISuperService<KpnSiteUserOrder> {
 
-    PageResult<KpnSiteOrder> findOrderList( KpnSiteOrderCo params) ;
+    PageResult<KpnSiteUserOrder> findOrderList(KpnSiteOrderCo params) ;
 
     BigDecimal findOrderTotal(KpnSiteOrderTotalCo params);
 
     Result updateStatus(KpnSiteOrderUpdateCo params);
 
-    List<KpnSiteOrder> findOrderMobileList(List<Long> userIds) ;
+    List<KpnSiteUserOrder> findOrderMobileList(List<Long> userIds) ;
 
     KpnSiteUserVipLog findKpnSiteOrderInfo(Long id) ;
 }

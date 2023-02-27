@@ -45,11 +45,11 @@ public class UserController {
         if (userList!=null && userList.getData().size() > 0){
             List<Long> userIds = userList.getData().stream().map(SysUser::getId).collect(Collectors.toList());
             //查询充值订单数据
-            List<KpnSiteOrder> orderMobileList = orderService.findOrderMobileList(userIds);
+            List<KpnSiteUserOrder> orderMobileList = orderService.findOrderMobileList(userIds);
             if (orderMobileList!=null && orderMobileList.size()>0){
-                Map<Long, KpnSiteOrder> map = orderMobileList.stream().collect(Collectors.toMap(KpnSiteOrder::getUserId, (p) -> p));
+                Map<Long, KpnSiteUserOrder> map = orderMobileList.stream().collect(Collectors.toMap(KpnSiteUserOrder::getUserId, (p) -> p));
                 userList.getData().stream().forEach(info ->{
-                    KpnSiteOrder siteOrderInfo = map.get(info.getId());
+                    KpnSiteUserOrder siteOrderInfo = map.get(info.getId());
                     if (siteOrderInfo!=null){
                         info.setMobile(siteOrderInfo.getMobile());
                     }
