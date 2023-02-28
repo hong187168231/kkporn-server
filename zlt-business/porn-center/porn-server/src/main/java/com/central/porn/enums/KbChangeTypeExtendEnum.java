@@ -3,15 +3,13 @@ package com.central.porn.enums;
 import com.central.porn.core.language.LanguageEnum;
 import com.central.porn.core.language.LanguageThreadLocal;
 
-import java.util.Objects;
-
 /**
  * K币账变记录相关枚举
  */
 public enum KbChangeTypeExtendEnum {
     OPEN_VIP(1, "开通vip", null, null, -1, "支出", "expenses", "ការចំណាយ"),
     SIGN_REWARD(2, "签到", "check in", "កត់\u200Bឈ្មោះ\u200Bចូល", 1, "收入", "income", "ប្រាក់ចំណូល"),
-    FILL_INVITE_CODE(3, "被推广", "be promoted", "ដែលត្រូវបានលើកកម្ពស់", 1, "收入", "income", "ប្រាក់ចំណូល"),
+    FILL_INVITE_CODE(3, "填写邀请码", "fill invite code", "បំពេញលេខកូដអញ្ជើញ", 1, "收入", "income", "ប្រាក់ចំណូល"),
     PROMOTION(4, "推广", "to promote", "ដើម្បីលើកកម្ពស់", 1, "收入", "income", "ប្រាក់ចំណូល"),
     ;
 

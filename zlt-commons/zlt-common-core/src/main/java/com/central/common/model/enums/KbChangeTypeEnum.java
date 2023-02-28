@@ -4,9 +4,9 @@ package com.central.common.model.enums;
  * K币账变记录相关枚举
  */
 public enum KbChangeTypeEnum {
-    OPEN_VIP(1, "开通vip", -1),
+    OPEN_VIP(1, "开i通vp", -1),
     SIGN_REWARD(2, "签到", 1),
-    FILL_INVITE_CODE(3, "被推广", 1),
+    FILL_INVITE_CODE(3, "填写邀请码", 1),
     PROMOTION(4, "推广", 1),
     ;
 
