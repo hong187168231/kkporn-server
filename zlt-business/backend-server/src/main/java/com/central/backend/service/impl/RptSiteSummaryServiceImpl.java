@@ -1,5 +1,6 @@
 package com.central.backend.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.RptSiteSummaryCo;
@@ -11,6 +12,8 @@ import com.central.common.service.impl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 
 @Slf4j
@@ -39,5 +42,17 @@ public class RptSiteSummaryServiceImpl extends SuperServiceImpl<RptSiteSummaryMa
     @Override
     public RptSiteSummaryVo findSummaryTotal(RptSiteSummaryCo params) {
         return baseMapper.findSummaryTotal(params);
+    }
+
+    @Override
+    public void addSummaryNum(KpnSiteUserVipLog KpnSiteUserVipLogInfo ) {
+        String date =DateUtil.formatDate(new Date());
+        baseMapper.addSummaryNum(KpnSiteUserVipLogInfo.getSiteId(),KpnSiteUserVipLogInfo.getSiteCode(),KpnSiteUserVipLogInfo.getSiteName(),date,KpnSiteUserVipLogInfo.getAmount());
+    }
+
+    @Override
+    public void addSummaryNewUserNum( Long siteId,  String siteCode,String siteName) {
+        String date =DateUtil.formatDate(new Date());
+        baseMapper.addSummaryNewUserNum(siteId,siteCode,siteName,date);
     }
 }

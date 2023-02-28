@@ -9,6 +9,7 @@ import com.central.backend.co.*;
 import com.central.backend.mapper.SysRoleMenuMapper;
 import com.central.backend.mapper.SysUserMapper;
 import com.central.backend.service.IAsyncService;
+import com.central.backend.service.IRptSiteSummaryService;
 import com.central.backend.service.ISysRoleUserService;
 import com.central.backend.service.ISysUserService;
 import com.central.backend.util.DateUtil;
@@ -62,6 +63,12 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
 
     @Autowired
     private DistributedLock lock;
+
+
+    @Autowired
+    private IRptSiteSummaryService summaryService;
+
+
 
     @Override
     public PageResult<SysUser> findList(Map<String, Object> params, SysUser user){
@@ -504,6 +511,8 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
             user.setIsReg(UserRegTypeEnum.ADMIN_CREATE.getType());
             user.setEnabled(Boolean.TRUE);
             insert = super.save(user);
+            //添加运营报表
+            summaryService.addSummaryNewUserNum(user.getSiteId(),user.getSiteCode(),user.getSiteName());
         }else {
             SysUser userInfo = baseMapper.selectById(user.getId());
             if (userInfo == null) {

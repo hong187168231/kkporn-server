@@ -10,6 +10,7 @@ import com.central.backend.co.KpnSiteOrderUpdateCo;
 import com.central.backend.mapper.KpnSiteOrderMapper;
 import com.central.backend.service.IKpnSiteOrderService;
 import com.central.backend.service.IKpnSiteUserVipLogService;
+import com.central.backend.service.IRptSiteSummaryService;
 import com.central.backend.service.ISysUserService;
 import com.central.backend.vo.UserVipExpireVo;
 import com.central.common.model.*;
@@ -32,6 +33,11 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
 
     @Autowired
     private ISysUserService userService;
+
+
+    @Autowired
+    private IRptSiteSummaryService summaryService;
+
 
 
     @Override
@@ -83,6 +89,10 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
         if (siteOrder == null) {
             return Result.failed("数据不存在");
         }
+        if(state==siteOrder.getStatus()){
+            return Result.failed("不可重复修改状态!");
+        }
+
         siteOrder.setStatus(state);
         if (StringUtils.isNotBlank(params.getRemark())) {
             siteOrder.setRemark(params.getRemark());
@@ -106,6 +116,9 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
         KpnSiteUserVipLogInfo.setType(VipChangeTypeEnum.CASH.getCode());
         // KpnSiteUserVipLogInfo.setCreateBy(sysUser.getUsername());
         siteUserVipLogService.save(KpnSiteUserVipLogInfo);
+
+        //添加运营报表数据
+        summaryService.addSummaryNum(KpnSiteUserVipLogInfo);
         //修改订单状态
         boolean b  = super.updateById(siteOrder);
 

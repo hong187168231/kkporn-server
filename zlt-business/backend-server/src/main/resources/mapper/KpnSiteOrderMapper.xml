@@ -9,7 +9,7 @@
 		SELECT
 		IFNULL(SUM(o.product_price),0)
 		FROM
-		kpn_site_order o
+		kpn_site_user_order o
 		<where>
 			<if test="r.userName != null and r.userName != ''">
 				and o.user_name = #{r.userName}
@@ -43,7 +43,7 @@
 		o.mobile,
 		o.create_time
 		FROM
-		kpn_site_order o
+		kpn_site_user_order o
 		<where>
 			and  o.user_id  in
 			<foreach collection="userIds" index="index" item="item" open="(" separator="," close=")">
@@ -67,7 +67,7 @@
 			s.currency_code as currencyCode,
 			p.valid_days as days
 		FROM
-			kpn_site_order o
+		kpn_site_user_order o
 				LEFT JOIN kpn_site s on s.id=o.site_id
 				LEFT JOIN kpn_site_product p on p.id=o.product_id
 		<where>

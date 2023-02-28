@@ -32,4 +32,21 @@
 	</select>
 
 
+
+	<insert id="addSummaryNum">
+		insert into rpt_site_summary (site_id, site_code, site_name, `date`, new_vip_num,recharge_number,recharge)
+		values (#{siteId}, #{siteCode}, #{siteName}, #{date}, 1,1,#{recharge}) ON DUPLICATE KEY
+		UPDATE new_vip_num = new_vip_num + 1,
+			recharge_number = recharge_number + 1,
+			recharge = recharge + #{recharge}
+	</insert>
+
+
+	<insert id="addSummaryNewUserNum">
+		insert into rpt_site_summary (site_id, site_code, site_name,`date`,new_user_num)
+		values (#{siteId}, #{siteCode}, #{siteName}, #{date}, 1) ON DUPLICATE KEY
+		UPDATE new_user_num = new_user_num + 1
+	</insert>
+
+
 </mapper>
