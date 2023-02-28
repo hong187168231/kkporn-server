@@ -20,7 +20,6 @@ public interface IKpnSitePromotionService extends ISuperService<KpnSitePromotion
      * @param sitePromotionConfig 站点配置
      * @param sysUser             当前会员
      * @param promoteUser         推广会员
-     * @param inviteCode          邀请码
      */
-    void addPromotionDatas(KpnSitePromotion sitePromotionConfig, SysUser sysUser, SysUser promoteUser, String inviteCode);
+    void addPromotionDatas(KpnSitePromotion sitePromotionConfig, SysUser sysUser, SysUser promoteUser);
 }

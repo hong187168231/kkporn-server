@@ -166,8 +166,10 @@ public class MemberController {
             if (!PornUtil.isDecimalGeThan(userKBalance, productPrice)) {
                 return Result.of("余额不足", CodeEnum.KB_NOT_ENOUGH.getCode(), "failed");
             }
+
+            Boolean isVip = sysUser.getVip();
             siteProductService.buyUseKb(sysUser, product);
-            return Result.succeed("开通/续期成功");
+            return Result.succeed(isVip?"续期成功":"开通成功");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

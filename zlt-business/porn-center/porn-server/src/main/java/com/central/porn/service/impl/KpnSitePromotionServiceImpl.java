@@ -42,44 +42,47 @@ public class KpnSitePromotionServiceImpl extends SuperServiceImpl<KpnSitePromoti
     }
 
     @Override
-    public void addPromotionDatas(KpnSitePromotion sitePromotionConfig, SysUser sysUser, SysUser promoteUser, String inviteCode) {
+    public void addPromotionDatas(KpnSitePromotion sitePromotionConfig, SysUser sysUser, SysUser promoteUser) {
 
-        //被邀请人 vip天数
-        Integer beInvitedVip = sitePromotionConfig.getBeInvitedVip();
-        if (ObjectUtil.isNotEmpty(beInvitedVip) && beInvitedVip > 0) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("inviteCode", inviteCode);
-            siteUserVipLogService.addVipDaysChangeLog(sysUser, VipChangeTypeEnum.FILL_INVITE_CODE.getCode(), beInvitedVip, null, null, params);
-            sysUserService.addRewardVipDays(sysUser, beInvitedVip);
-        }
-        //被邀请人 K币数
-        BigDecimal beInvitedKb = sitePromotionConfig.getBeInvitedKb();
-        if (ObjectUtil.isNotEmpty(beInvitedKb) && PornUtil.isDecimalBigThanZero(beInvitedKb)) {
-            sysUserService.addRewardKb(sysUser, beInvitedKb);
-            Map<String, Object> params = new HashMap<>();
-            params.put("inviteCode", inviteCode);
-            moneyLogService.addKbChangeLog(sysUser, KbChangeTypeEnum.FILL_INVITE_CODE.getType(), beInvitedKb, params);
-        }
+        if (ObjectUtil.isNotEmpty(promoteUser)) {
+            String inviteCode = promoteUser.getPromotionCode();
+            //被邀请人 vip天数
+            Integer beInvitedVip = sitePromotionConfig.getBeInvitedVip();
+            if (ObjectUtil.isNotEmpty(beInvitedVip) && beInvitedVip > 0) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("inviteCode", inviteCode);
+                siteUserVipLogService.addVipDaysChangeLog(sysUser, VipChangeTypeEnum.FILL_INVITE_CODE.getCode(), beInvitedVip, null, null, params);
+                sysUserService.addRewardVipDays(sysUser, beInvitedVip);
+            }
+            //被邀请人 K币数
+            BigDecimal beInvitedKb = sitePromotionConfig.getBeInvitedKb();
+            if (ObjectUtil.isNotEmpty(beInvitedKb) && PornUtil.isDecimalBigThanZero(beInvitedKb)) {
+                sysUserService.addRewardKb(sysUser, beInvitedKb);
+                Map<String, Object> params = new HashMap<>();
+                params.put("inviteCode", inviteCode);
+                moneyLogService.addKbChangeLog(sysUser, KbChangeTypeEnum.FILL_INVITE_CODE.getType(), beInvitedKb, params);
+            }
 
-        //推广人vip天数
-        Integer inviteVip = sitePromotionConfig.getInviteVip();
-        if (ObjectUtil.isNotEmpty(inviteVip) && inviteVip > 0) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("userId", sysUser.getId());
-            siteUserVipLogService.addVipDaysChangeLog(promoteUser, VipChangeTypeEnum.PROMOTION.getCode(), inviteVip, null, null, params);
-            sysUserService.addRewardVipDays(promoteUser, inviteVip);
-        }
+            //推广人vip天数
+            Integer inviteVip = sitePromotionConfig.getInviteVip();
+            if (ObjectUtil.isNotEmpty(inviteVip) && inviteVip > 0) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("userId", sysUser.getId());
+                siteUserVipLogService.addVipDaysChangeLog(promoteUser, VipChangeTypeEnum.PROMOTION.getCode(), inviteVip, null, null, params);
+                sysUserService.addRewardVipDays(promoteUser, inviteVip);
+            }
 
-        //推广人K币
-        BigDecimal inviteKb = sitePromotionConfig.getInviteKb();
-        BigDecimal kbDayLimit = sitePromotionConfig.getKbDayLimit();
-        BigDecimal userPromoteTotalKbs = moneyLogService.getUserTodayPromoteTotalKbs(promoteUser.getId());
-        if (!PornUtil.isDecimalGeThan(userPromoteTotalKbs, kbDayLimit)) {
-            sysUserService.addRewardKb(promoteUser, inviteKb);
+            //推广人K币
+            BigDecimal inviteKb = sitePromotionConfig.getInviteKb();
+            BigDecimal kbDayLimit = sitePromotionConfig.getKbDayLimit();
+            BigDecimal userPromoteTotalKbs = moneyLogService.getUserTodayPromoteTotalKbs(promoteUser.getId());
+            if (!PornUtil.isDecimalGeThan(userPromoteTotalKbs, kbDayLimit)) {
+                sysUserService.addRewardKb(promoteUser, inviteKb);
 
-            Map<String, Object> params = new HashMap<>();
-            params.put("userId", sysUser.getId());
-            moneyLogService.addKbChangeLog(promoteUser, KbChangeTypeEnum.PROMOTION.getType(), inviteKb, params);
+                Map<String, Object> params = new HashMap<>();
+                params.put("userId", sysUser.getId());
+                moneyLogService.addKbChangeLog(promoteUser, KbChangeTypeEnum.PROMOTION.getType(), inviteKb, params);
+            }
         }
     }
 }

@@ -69,6 +69,9 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
     @Autowired
     private IKpnSiteUserVipLogService siteUserVipLogService;
 
+    @Autowired
+    private IRptSiteSummaryService siteSummaryService;
+
     @Override
     @Transactional
     public void buyUseKb(SysUser sysUser, KpnSiteProduct siteProduct) {
@@ -85,5 +88,10 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
         params = new HashMap<>();
         params.put("kbs", siteProduct.getPrice());
         siteUserVipLogService.addVipDaysChangeLog(sysUser, VipChangeTypeEnum.KB.getCode(), vipDays, null, null, params);
+
+        if (!sysUser.getVip()) {
+            //记录站点新增vip数
+            siteSummaryService.addNewVipNum(sysUser.getSiteId(), sysUser.getSiteCode(), sysUser.getSiteName());
+        }
     }
 }
