@@ -11,6 +11,7 @@ import com.central.porn.service.IKpnSiteMovieService;
 import com.central.porn.service.IKpnSiteUserMovieFavoritesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class KpnSiteUserMovieFavoritesServiceImpl extends SuperServiceImpl<KpnSiteUserMovieFavoritesMapper, KpnSiteUserMovieFavorites> implements IKpnSiteUserMovieFavoritesService {
 
     @Autowired
+    @Lazy
     private IKpnSiteMovieService siteMovieService;
 
     @Override

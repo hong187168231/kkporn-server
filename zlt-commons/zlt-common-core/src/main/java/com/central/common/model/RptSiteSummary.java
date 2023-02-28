@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class RptSiteSummary extends SuperEntity{
 
     @ApiModelProperty(value = "站点id")
-    private int siteId;
+    private Long siteId;
 
     @ApiModelProperty(value = "站点编码")
     private String siteCode;

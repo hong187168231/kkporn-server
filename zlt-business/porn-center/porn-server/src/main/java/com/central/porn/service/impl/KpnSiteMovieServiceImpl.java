@@ -53,12 +53,6 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     private IKpnMovieTagService movieTagService;
 
     @Autowired
-    private IKpnSiteMovieService siteMovieService;
-
-    @Autowired
-    private IRptSiteMovieDateService rptSiteMovieDateService;
-
-    @Autowired
     private IKpnSiteUserMovieFavoritesService siteUserMovieFavoritesService;
 
     @Autowired
@@ -98,7 +92,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                     List<KpnTagVo> kpnTagVos = movieTagService.getTagByMovieId(kpnMovie.getId());
                     kpnMovieVo.setTagVos(kpnTagVos);
 
-                    KpnSiteMovie siteMovie = siteMovieService.getSiteMovieVvFavorites(sid, kpnMovie.getId());
+                    KpnSiteMovie siteMovie = getSiteMovieVvFavorites(sid, kpnMovie.getId());
                     kpnMovieVo.setVv(siteMovie.getVv());
                     kpnMovieVo.setFavorites(siteMovie.getFavorites());
 
