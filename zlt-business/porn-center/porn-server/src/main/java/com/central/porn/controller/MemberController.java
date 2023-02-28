@@ -107,6 +107,12 @@ public class MemberController {
     @Autowired
     private IKpnSiteUserActorFavoritesService userActorFavoritesService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ISysUserService sysUserService;
+
     /**
      * 上传头像
      *
@@ -552,21 +558,15 @@ public class MemberController {
         }
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private ISysUserService sysUserService;
-
     /**
      * 会员修改密码
      */
     @ApiOperation(value = "会员修改密码")
     @PostMapping("/modify/password")
     public Result<String> modifyPassword(@ApiIgnore @LoginUser SysUser user,
-                                         @ApiParam("旧密码") String oldPassword,
-                                         @ApiParam("新密码") String newPassword,
-                                         @ApiParam("新密码2") String newPassword2) {
+                                         @ApiParam(value = "旧密码",required = true) String oldPassword,
+                                         @ApiParam(value="新密码",required = true) String newPassword,
+                                         @ApiParam(value="新密码2",required = true) String newPassword2) {
         try {
             if (StrUtil.isBlank(newPassword)) {
                 return Result.failed("新密码不能为空");

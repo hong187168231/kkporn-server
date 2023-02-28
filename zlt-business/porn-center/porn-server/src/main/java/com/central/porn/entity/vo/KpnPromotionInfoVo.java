@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("推广数据")
+@ApiModel("我的累计推广数据")
 public class KpnPromotionInfoVo implements Serializable {
     @ApiModelProperty("推广码")
     private String promotionCode;

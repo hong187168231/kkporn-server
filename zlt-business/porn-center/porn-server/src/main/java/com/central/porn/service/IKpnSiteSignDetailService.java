@@ -38,7 +38,7 @@ public interface IKpnSiteSignDetailService extends ISuperService<KpnSiteSignDeta
     List<KpnSiteUserSignHistoryVo> getSignHistory(SysUser sysUser, String month);
 
     /**
-     * 获取连续签到天数
+     * 获取累计签到天数
      * @param userId 会员id
      * @return
      */

@@ -17,10 +17,10 @@ import java.math.BigDecimal;
 @ApiModel("签到结果")
 public class KpnSiteUserSignResultVo implements Serializable {
 
-    @ApiModelProperty("连续签到天数")
+    @ApiModelProperty("累计签到天数")
     private Integer days;
 
-    @ApiModelProperty("是否中奖")
+    @ApiModelProperty("是否获得奖励")
     private Boolean isReward = Boolean.FALSE;
 
     @ApiModelProperty("奖励天数")

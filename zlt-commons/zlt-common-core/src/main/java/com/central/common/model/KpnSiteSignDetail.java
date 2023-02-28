@@ -27,7 +27,7 @@ public class KpnSiteSignDetail implements Serializable {
     private Long userId;
     @ApiModelProperty("会员账号")
     private String username;
-    @ApiModelProperty("连续签到天数")
+    @ApiModelProperty("累计签到天数")
     private Integer days;
     @ApiModelProperty("签到月份")
     private String signMonth;
