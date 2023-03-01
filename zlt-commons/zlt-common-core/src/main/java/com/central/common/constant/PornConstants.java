@@ -114,6 +114,8 @@ public final class PornConstants {
     public static final class RedisKey {
         //缓存时间 1分钟
         public static final Long EXPIRE_TIME_1_MINUTE = 1 * 60L;
+        //在线最大过期时间
+        public static final Long EXPIRE_TIME_90_SECONDS = 1 * 90L;
         //缓存时间 30天
         public static final Long EXPIRE_TIME_30_DAYS = 30 * 24 * 60 * 60L;
         //缓存时间 30天
@@ -201,6 +203,12 @@ public final class PornConstants {
         //站点vip过期key USERID
         public static final String KPN_SITE_VIP_EXPIRE_PREFIX = "KPN:SITE:VIP:EXPIRE:";
         public static final String KPN_SITE_VIP_EXPIRE = KPN_SITE_VIP_EXPIRE_PREFIX + "{}";
+
+        //站点在线用户数 SITEID
+        public static final String KPN_SITE_ONLINE_COUNT = "KPN:SITE:ONLINE:COUNT:{}";
+        //站点在线用户标识 SITEID uniqueId
+        public static final String KPN_SITE_ONLINE_UNIQUE_ID_PREFIX = "KPN:SITE:ONLINE:uniqueId:";
+        public static final String KPN_SITE_ONLINE_UNIQUE_ID = KPN_SITE_ONLINE_UNIQUE_ID_PREFIX + "{}:{}";
 
         //缓存后台管理员ip
         public static final String BACKEND_WHITELIST_KEY = "Whitelist";

@@ -33,7 +33,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -124,9 +127,10 @@ public class SiteController {
 
             // TODO 异常统一处理
             if (ObjectUtil.isEmpty(site)) {
-                throw new RuntimeException("站点不存在");
-            }
+//                throw new RuntimeException("站点不存在");
 
+                return Result.failed("站点不存在");
+            }
             //站点信息
             KpnSiteVo kpnSiteVo = new KpnSiteVo();
             kpnSiteVo.setSid(site.getId());
@@ -136,6 +140,25 @@ public class SiteController {
 //            kpnSiteVo.setTopics(topicVos);
 
             return Result.succeed(kpnSiteVo, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    @GetMapping("/heartbeat")
+    @ApiOperation(value = "心跳,1分钟一次")
+    public Result<String> heartbeat(@ApiParam("站点id") @RequestHeader(value = "sid") Long sid,
+                                    @ApiParam("在线唯一标识 已登录的使用username,未登录的用uuid") String uniqueOnlineId) {
+        try {
+            String uniqueOnlineIdRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ONLINE_UNIQUE_ID, sid, uniqueOnlineId);
+            String redisUniqueOnlineId = (String) RedisRepository.get(uniqueOnlineIdRedisKey);
+
+            if (StrUtil.isBlank(redisUniqueOnlineId)) {
+                RedisRepository.incr(StrUtil.format(PornConstants.RedisKey.KPN_SITE_ONLINE_COUNT, sid));
+            }
+            RedisRepository.setExpire(uniqueOnlineIdRedisKey, sid + PornConstants.Symbol.SHARP + uniqueOnlineId, PornConstants.RedisKey.EXPIRE_TIME_90_SECONDS);
+            return Result.succeed("succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
