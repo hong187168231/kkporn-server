@@ -26,7 +26,7 @@
                    and exists(
                          select id from kpn_site_movie a where site_id = #{sid} and a.movie_id = t1.movie_id
                      )) x
-                 left join (select `movie_id`, `vv`, `create_time`, `duration` from kpn_site_movie b where site_id = #{sid} and status = 1) y on y.movie_id = x.movie_id
+                 join (select `movie_id`, `vv`, `create_time`, `duration` from kpn_site_movie b where site_id = #{sid} and status = 1) y on y.movie_id = x.movie_id
 
         order by ${column} asc, y.movie_id asc
     </select>

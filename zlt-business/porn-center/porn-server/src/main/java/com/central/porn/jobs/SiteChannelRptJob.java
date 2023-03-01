@@ -30,7 +30,7 @@ public class SiteChannelRptJob implements SimpleJob, CommandLineRunner {
 
     @Override
     public void execute(ShardingContext shardingContext) {
-        log.info("SiteTopicRptJob -> params:{}, time:{}", shardingContext.getJobParameter(), LocalDateTime.now());
+        log.info("SiteChannelRptJob -> params:{}, time:{}", shardingContext.getJobParameter(), LocalDateTime.now());
 
         cache();
     }
