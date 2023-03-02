@@ -10,6 +10,6 @@
                 and t.site_id = #{p.siteId}
             </if>
         </where>
-        ORDER BY t.sort DESC
+        ORDER BY t.sort ASC
     </select>
 </mapper>

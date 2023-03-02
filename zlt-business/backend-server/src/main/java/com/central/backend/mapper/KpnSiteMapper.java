@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /*
  * @Author: Lulu
@@ -19,6 +20,8 @@ import java.util.List;
 public interface KpnSiteMapper extends SuperMapper<KpnSite> {
 
     List<KpnSite> findList(Page<KpnSite> page, @Param("r") KpnSiteCo params);
+
+    List<KpnSite> findKpnSiteList(@Param("p") Map<String, Object> params);
 
 
     KpnSiteVo findSiteTotal();

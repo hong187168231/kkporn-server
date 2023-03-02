@@ -32,7 +32,6 @@ public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, 
         if(user.getSiteId()!=null && user.getSiteId()!=0){
             params.put("siteId",user.getSiteId());
         }
-        params.put("transferStatus","1");
         KpnMoneyLogVO kpnMoneyLogVO =  baseMapper.totalNumber(params);
 
         return kpnMoneyLogVO;

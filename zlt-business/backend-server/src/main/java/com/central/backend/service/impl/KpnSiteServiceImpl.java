@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -36,6 +37,10 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
         Page<KpnSite> page = new Page<>(params.getPage(), params.getLimit());
         List<KpnSite> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSite>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public List<KpnSite> findKpnSiteList(Map<String, Object> params) {
+        return baseMapper.findKpnSiteList(params);
     }
 
     @Override

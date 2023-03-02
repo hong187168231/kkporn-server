@@ -11,6 +11,7 @@ import com.central.common.service.ISuperService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 
 /*
@@ -20,6 +21,8 @@ import java.util.List;
 public interface IKpnSiteService extends ISuperService<KpnSite> {
 
     PageResult<KpnSite> findSiteList( KpnSiteCo params);
+
+    List<KpnSite> findKpnSiteList(Map<String, Object> params);
 
     KpnSiteVo findSiteTotal();
 
