@@ -61,6 +61,9 @@ public class KpnBlackIpController {
      */
     @ApiOperation(value = "IP黑名单检查")
     @GetMapping("/ipcheck")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ip", value = "IP地址", required = true, dataType = "String")
+    })
     public Boolean ipcheck(@RequestParam String ip) {
         return kpnBlackIpService.ipcheck(ip);
     }

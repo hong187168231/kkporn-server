@@ -51,6 +51,9 @@ public class SysWhiteIpController {
      */
     @ApiOperation(value = "IP白名单检查")
     @GetMapping("/ipcheck")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ip", value = "IP地址", required = true, dataType = "String")
+    })
     public Boolean ipcheck(@RequestParam String ip) {
         return sysWhiteIpService.ipcheck(ip);
     }
