@@ -33,8 +33,10 @@ public class SuperEntity<T extends Model<?>> extends Model<T> {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
+    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建人")
     private String createBy;
+    @TableField(fill = FieldFill.UPDATE)
     @ApiModelProperty(value = "更新人")
     private String updateBy;
 

@@ -5,6 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.central.backend.service.ipmanage.IKpnBlackIpService;
+import com.central.common.annotation.LoginUser;
+import com.central.common.model.SysUser;
 import com.central.common.model.ipmanage.KpnBlackIp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -73,20 +75,8 @@ public class KpnBlackIpController {
      */
     @ApiOperation(value = "保存")
     @PostMapping
-    public Result save(@RequestBody KpnBlackIp kpnBlackIp) {
-        String ip = kpnBlackIp.getIpSection();
-        if(null==ip || "".equals(ip)){
-            Result.failed("黑名单IP不能为空");
-        }
-        //1.创建匹配模式
-        Pattern pattern = Pattern.compile("(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");//匹配一个或多个数字字符
-        //2.选择匹配对象
-        Matcher matcher = pattern.matcher(ip);
-        if(!matcher.matches()){
-            Result.failed("黑名单IP格式错误");
-        }
-        kpnBlackIpService.saveOrUpdate(kpnBlackIp);
-        return Result.succeed("保存成功");
+    public Result saveKpnBlackIp(@RequestBody KpnBlackIp kpnBlackIp, @LoginUser SysUser user) {
+        return kpnBlackIpService.saveKpnBlackIp(kpnBlackIp, user);
     }
 
     /**

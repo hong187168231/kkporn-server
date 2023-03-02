@@ -1,6 +1,8 @@
 package com.central.backend.service.ipmanage;
 
 import com.central.common.model.PageResult;
+import com.central.common.model.Result;
+import com.central.common.model.SysUser;
 import com.central.common.model.ipmanage.KpnBlackIp;
 import com.central.common.service.ISuperService;
 
@@ -26,5 +28,7 @@ public interface IKpnBlackIpService extends ISuperService<KpnBlackIp> {
      * @return
      */
     public Boolean ipcheck(String ip);
+
+    Result saveKpnBlackIp(KpnBlackIp kpnBlackIp, SysUser user);
 }
 
