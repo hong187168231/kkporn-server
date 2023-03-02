@@ -41,6 +41,8 @@ public class KpnTagController {
             @ApiImplicitParam(name = "nameKh", value = "标签名称(柬文)", required = false, dataType = "String"),
             @ApiImplicitParam(name = "id", value = "标签ID", required = false, dataType = "Long"),
             @ApiImplicitParam(name = "categoryId", value = "分类ID", required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "orderByParms", value = "排序字段：1影片数量、2播放数量，3收藏数，默认标签创建时间", required = false, dataType = "Integer"),
+            @ApiImplicitParam(name = "sortBy", value = "排序方式：1正序、2倒叙(默认)", required = false, dataType = "Integer"),
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
@@ -75,7 +77,6 @@ public class KpnTagController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        kpnTagService.removeById(id);
-        return Result.succeed("删除成功");
+        return kpnTagService.removeKpnTag(id);
     }
 }

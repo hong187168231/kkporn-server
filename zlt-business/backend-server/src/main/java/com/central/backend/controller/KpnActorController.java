@@ -2,6 +2,7 @@ package com.central.backend.controller;
 
 import java.util.Map;
 
+import com.central.backend.model.vo.KpnActorVO;
 import com.central.backend.service.IKpnActorService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnActor;
@@ -42,11 +43,13 @@ public class KpnActorController {
             @ApiImplicitParam(name = "nameKh", value = "柬文名", required = false, dataType = "String"),
             @ApiImplicitParam(name = "startTime", value = "起始时间查询", required = false),
             @ApiImplicitParam(name = "endTime", value = "结束时间查询", required = false),
+            @ApiImplicitParam(name = "orderByParms", value = "排序字段：1影片数量、2播放数量，3收藏数，默认演员创建时间", required = false, dataType = "Integer"),
+            @ApiImplicitParam(name = "sortBy", value = "排序方式：1正序、2倒叙(默认)", required = false, dataType = "Integer"),
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result<PageResult<KpnActorVO>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
         return Result.succeed(kpnActorService.findList(params,user));
     }
 
@@ -76,7 +79,6 @@ public class KpnActorController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        kpnActorService.removeById(id);
-        return Result.succeed("删除成功");
+        return kpnActorService.deleteKpnActor(id);
     }
 }

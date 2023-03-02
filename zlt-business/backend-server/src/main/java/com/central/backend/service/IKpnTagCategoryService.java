@@ -4,6 +4,7 @@ package com.central.backend.service;
 import com.central.backend.model.vo.KpnTagCategoryVO;
 import com.central.common.model.KpnTagCategory;
 import com.central.common.model.PageResult;
+import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.service.ISuperService;
 
@@ -24,6 +25,7 @@ public interface IKpnTagCategoryService extends ISuperService<KpnTagCategory> {
      */
     PageResult<KpnTagCategoryVO> findList(Map<String, Object> params, SysUser user);
 
-    public List<KpnTagCategory> findList();
+    List<KpnTagCategory> findList();
+    Result deleteKpnTagCategory(Long id);
 }
 

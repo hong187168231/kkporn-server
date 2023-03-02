@@ -82,7 +82,6 @@ public class KpnTagCategoryController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        kpnTagCategoryService.removeById(id);
-        return Result.succeed("删除成功");
+        return kpnTagCategoryService.deleteKpnTagCategory(id);
     }
 }

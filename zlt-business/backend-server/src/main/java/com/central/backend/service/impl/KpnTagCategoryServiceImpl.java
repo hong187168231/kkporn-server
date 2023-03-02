@@ -2,14 +2,19 @@ package com.central.backend.service.impl;
 
 import com.central.backend.mapper.KpnTagCategoryMapper;
 import com.central.backend.model.vo.KpnTagCategoryVO;
+import com.central.backend.service.IKpnMovieTagService;
 import com.central.backend.service.IKpnTagCategoryService;
+import com.central.common.KpnMovieTag;
 import com.central.common.model.KpnTagCategory;
+import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.service.impl.SuperServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.central.common.model.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
@@ -25,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMapper, KpnTagCategory> implements IKpnTagCategoryService {
+    @Autowired
+    private IKpnMovieTagService iKpnMovieTagService;
     /**
      * 列表
      * @param params
@@ -32,10 +39,7 @@ public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMa
      */
     @Override
     public PageResult<KpnTagCategoryVO> findList(Map<String, Object> params, SysUser user){
-        if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
-            params.put("headquarters","1");
-        }else {
-            params.put("headquarters","0");
+        if(null!=user && null!=user.getSiteId() && user.getSiteId()!=0){//
             params.put("siteId",user.getSiteId());
         }
         Page<KpnTagCategoryVO> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
@@ -46,5 +50,16 @@ public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMa
     public List<KpnTagCategory> findList(){
         List<KpnTagCategory> list  =  baseMapper.findListAll();
         return list;
+    }
+    @Override
+    public Result deleteKpnTagCategory(Long id){
+        Map<String, Object> params = new HashMap<>();
+        params.put("tagCategoryId",id);//标签类型ID
+        List<KpnMovieTag> kpnMovieTagList = iKpnMovieTagService.getKpnMovieTag(params);
+        if(null!=kpnMovieTagList && kpnMovieTagList.size()>0) {
+            return Result.failed("当前分类有关联影片，不可删除");
+        }
+        this.removeById(id);
+        return Result.succeed("删除成功");
     }
 }

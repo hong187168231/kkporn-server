@@ -32,5 +32,7 @@ public interface IKpnTagService extends ISuperService<KpnTag> {
     List<KpnTagVo> findTagList( Map<String, Object> params);
 
     List<CategoryVo> findTagCategoryList( ) ;
+
+    public Result removeKpnTag(Long id);
 }
 

@@ -3,6 +3,7 @@ package com.central.backend.service;
 import com.central.backend.model.vo.KpnActorVO;
 import com.central.common.model.KpnActor;
 import com.central.common.model.PageResult;
+import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.service.ISuperService;
 
@@ -21,5 +22,6 @@ public interface IKpnActorService extends ISuperService<KpnActor> {
      * @return
      */
     PageResult<KpnActorVO> findList(Map<String, Object> params, SysUser user);
+    Result deleteKpnActor(Long id);
 }
 
