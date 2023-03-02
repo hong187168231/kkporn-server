@@ -73,15 +73,14 @@ public class SysWhiteIpController {
     public Result save(@RequestBody SysWhiteIp sysWhiteIp) {
         String ip = sysWhiteIp.getIp();
         if(null==ip || "".equals(ip)){
-            Result.failed("白名单IP段不能为空");
+            Result.failed("白名单IP不能为空");
         }
         //1.创建匹配模式
-//        Pattern pattern = Pattern.compile("(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)(\\\\.(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)){3}-(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)(\\\\.(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)){3}");//匹配一个或多个数字字符
-        Pattern pattern = Pattern.compile("(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)(\\\\.(25[0-5]|2[0-4]\\\\d|1\\\\d{2}|[1-9]?\\\\d)){3}");//匹配一个或多个数字字符
+        Pattern pattern = Pattern.compile("(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");//匹配一个或多个数字字符
         //2.选择匹配对象
         Matcher matcher = pattern.matcher(ip);
         if(!matcher.matches()){
-            Result.failed("白名单IP段格式错误");
+            Result.failed("白名单IP格式错误");
         }
         sysWhiteIpService.saveOrUpdate(sysWhiteIp);
         return Result.succeed("保存成功");
