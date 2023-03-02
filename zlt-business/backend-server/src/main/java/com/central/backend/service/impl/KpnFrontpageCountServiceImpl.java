@@ -66,22 +66,21 @@ public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageC
             Map<String, Object> siteparams = new HashMap<>();
             List<KpnSite> kpnSiteList = iKpnSiteService.findKpnSiteList(siteparams);
             for (KpnSite kpnSite:kpnSiteList){
-                onlineUsers = onlineUsers + (Long) RedisRepository.get(StrUtil.format(onlineUsersKey , user.getSiteId()));//实时在线人数
+                onlineUsers = onlineUsers + (Long) RedisRepository.get(StrUtil.format(onlineUsersKey , kpnSite.getId()));//实时在线人数
             }
 
         }
         Map<String, Object> moneyparams = new HashMap<>();
         moneyparams.put("orderType", KbChangeTypeEnum.OPEN_VIP.getType());
         moneyparams.put("status",DateEnum.TODAY.getStatus());
-        params.put("transferStatus", KpnMoneyLogEnum.TRANSFER_STATUS_SUCCESS.getStatus());
+        moneyparams.put("transferStatus", KpnMoneyLogEnum.TRANSFER_STATUS_SUCCESS.getStatus());
         KpnMoneyLogVO moneyLogVO = moneyLogService.totalNumber(moneyparams,user);
         Long rechargeNumber = null!=moneyLogVO.getTotalNumber()?moneyLogVO.getTotalNumber():0L;//充值单数
         BigDecimal rechargeAmount = null!=moneyLogVO.getMoney()?moneyLogVO.getMoney():BigDecimal.ZERO;//充值金额
         Map<String, Object> userparams = new HashMap<>();
-        Map<String, Object> usernum = new HashMap<>();
-        usernum.put("startTime",new Date());
-        Integer addUsers = userService.findUserNum(usernum);//每日新增会员人数
-        if(DateEnum.TODAY.getStatus()==status){
+        userparams.put("startTime",new Date());
+        Integer addUsers = userService.findUserNum(userparams);//每日新增会员人数
+        if(DateEnum.TODAY.getStatus()==status){//今天
             kpnFrontpageCountVO = new KpnFrontpageCountVO();
 //            kpnFrontpageCountVO.setPvCount(pv);
 //            kpnFrontpageCountVO.setUvCount(uv);
@@ -92,7 +91,7 @@ public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageC
             return kpnFrontpageCountVO;
         }else{
             kpnFrontpageCountVO  =  baseMapper.findSummaryData(params);
-            if(DateEnum.YESTERDAY.getStatus()==status){
+            if(DateEnum.YESTERDAY.getStatus()==status){//昨天
                 return kpnFrontpageCountVO;
             }else {
                 //加上今日缓存数据

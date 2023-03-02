@@ -61,7 +61,7 @@ public class KpnBlackIpController {
      */
     @ApiOperation(value = "IP黑名单检查")
     @GetMapping("/ipcheck")
-    public Boolean ipcheck(@PathVariable String ip) {
+    public Boolean ipcheck(@RequestParam String ip) {
         return kpnBlackIpService.ipcheck(ip);
     }
 
