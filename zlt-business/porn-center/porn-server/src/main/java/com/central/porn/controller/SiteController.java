@@ -257,7 +257,6 @@ public class SiteController {
                 return adVo;
             }).collect(Collectors.toList());
 
-            //分组统计
             Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>> siteAdVoMap = siteAdVos.stream()
                     .collect(groupingBy(KpnSiteAdvertiseVo::getDevice, groupingBy(KpnSiteAdvertiseVo::getPosition)));
 

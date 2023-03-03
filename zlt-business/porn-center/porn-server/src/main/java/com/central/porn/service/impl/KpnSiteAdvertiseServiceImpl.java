@@ -1,5 +1,6 @@
 package com.central.porn.service.impl;
 
+import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSiteAdvertise;
 import com.central.common.model.enums.SiteAdDeviceEnum;
 import com.central.common.model.enums.SiteAdPositionEnum;
@@ -54,7 +55,7 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
                     .ge(KpnSiteAdvertise::getEndTime, new Date())
                     .orderByDesc(KpnSiteAdvertise::getSort)
                     .orderByDesc(KpnSiteAdvertise::getCreateTime)
-                    .last(" limit " + topicSize)
+                    .last(PornConstants.Sql.LIMIT_EMPTY + topicSize)
                     .list();
             if (deviceTopicAdvertises.size() == 0) {
                 continue;
