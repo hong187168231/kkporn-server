@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.MapUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -45,38 +46,14 @@ public class SysWhiteIpServiceImpl extends SuperServiceImpl<SysWhiteIpMapper, Sy
     public Boolean ipcheck(String ip){
         Boolean b = false;
         LambdaQueryWrapper<SysWhiteIp> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysWhiteIp::getIp,ip);
         List<SysWhiteIp> list  =  baseMapper.selectList(wrapper);
         if(null!=list&&list.size()>0){
-            for(SysWhiteIp sysWhiteIp:list){
-                if(ip.equals(sysWhiteIp.getIp())){
-                    return true;
-                }
-                //IP段验证注释掉
-//                String[] ipBytes = sysWhiteIp.getIp().split("-");
-//                //判断给定ip地址是否在指定范围内:
-//                long start = IP2Long( ipBytes[0] );
-//                long end = IP2Long( ipBytes[1] );
-//                long ipAddress = IP2Long( ip );
-//                Boolean inRange = (ipAddress >= start && ipAddress <= end);
-//                if (inRange){
-//                    //IP 地址在范围内！
-//                    return true;
-//                }
-            }
+            return true;
         }
         return b;
     }
-    public long IP2Long(String ip)
-    {
-        String[] ipBytes;
-        double num = 0;
-        ipBytes = ip.split(".");
-        for (int i = ipBytes.length - 1; i >= 0; i--)
-        {
-            num += ((Integer.parseInt(ipBytes[i]) % 256) * Math.pow(256, (3 - i)));
-        }
-        return (long)num;
-    }
+    @Override
     public Result saveOrUpdateSysWhiteIp(SysWhiteIp sysWhiteIp, SysUser user){
         String ip = sysWhiteIp.getIp();
         if(null==ip || "".equals(ip)){
@@ -102,5 +79,11 @@ public class SysWhiteIpServiceImpl extends SuperServiceImpl<SysWhiteIpMapper, Sy
         }
         this.saveOrUpdate(sysWhiteIp);
         return Result.succeed("保存成功");
+    }
+
+    @Override
+    public Result deleteSysWhiteIp(@PathVariable Long id){
+        this.removeById(id);
+        return Result.succeed("删除成功");
     }
 }

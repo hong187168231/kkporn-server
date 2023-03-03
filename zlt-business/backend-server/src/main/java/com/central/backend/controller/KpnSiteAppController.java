@@ -2,6 +2,7 @@ package com.central.backend.controller;
 
 import java.util.Map;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.service.IKpnSiteAppService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSiteApp;
@@ -41,6 +42,15 @@ public class KpnSiteAppController {
     })
     @GetMapping
     public Result<PageResult<KpnSiteApp>> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("page"))) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("limit"))) {
+            return Result.failed("分页结束位置不能为空");
+        }
         return Result.succeed(kpnSiteAppService.findList(params,user));
     }
 
@@ -50,6 +60,9 @@ public class KpnSiteAppController {
     @ApiOperation(value = "查询")
     @GetMapping("/{id}")
     public Result findUserById(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         KpnSiteApp model = kpnSiteAppService.getById(id);
         return Result.succeed(model, "查询成功");
     }
@@ -57,11 +70,33 @@ public class KpnSiteAppController {
     /**
      * 新增or更新
      */
-    @ApiOperation(value = "保存")
+    @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result save(@RequestBody KpnSiteApp kpnSiteApp) {
-        kpnSiteAppService.saveOrUpdate(kpnSiteApp);
-        return Result.succeed("保存成功");
+    public Result save(@RequestBody KpnSiteApp kpnSiteApp,@LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnSiteApp)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteApp.getVersionName())) {
+            return Result.failed("版本名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteApp.getVersionNum())) {
+            return Result.failed("版本号不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteApp.getDownloadUrl())) {
+            return Result.failed("下载地址不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteApp.getIsForce())) {
+            return Result.failed("是否强制更新不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteApp.getType())) {
+            return Result.failed("终端类型不能为空");
+        }
+        if (ObjectUtil.isNotNull(kpnSiteApp.getRemark())) {
+            if(kpnSiteApp.getRemark().length()>100){
+                return Result.failed("备注长度不能超过100");
+            }
+        }
+        return kpnSiteAppService.saveOrUpdateKpnSiteApp(kpnSiteApp,user);
     }
 
     /**
@@ -70,6 +105,9 @@ public class KpnSiteAppController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         kpnSiteAppService.removeById(id);
         return Result.succeed("删除成功");
     }

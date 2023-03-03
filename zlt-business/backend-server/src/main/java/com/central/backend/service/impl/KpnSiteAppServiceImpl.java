@@ -1,11 +1,10 @@
 package com.central.backend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.central.backend.mapper.KpnSiteAppMapper;
 import com.central.backend.service.IKpnSiteAppService;
-import com.central.common.model.KpnSiteApp;
-import com.central.common.model.SysUser;
+import com.central.common.model.*;
 import org.springframework.stereotype.Service;
-import com.central.common.model.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.service.impl.SuperServiceImpl;
 
@@ -37,5 +36,25 @@ public class KpnSiteAppServiceImpl extends SuperServiceImpl<KpnSiteAppMapper, Kp
         Page<KpnSiteApp> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnSiteApp> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSiteApp>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public Result saveOrUpdateKpnSiteApp(KpnSiteApp kpnSiteApp, SysUser user){
+        if(null!=kpnSiteApp.getId()){
+            kpnSiteApp.setUpdateBy(null!=user?user.getUsername():kpnSiteApp.getUpdateBy());
+        }else {
+            LambdaQueryWrapper<KpnSiteApp> wrapper = new LambdaQueryWrapper<>();
+            if (null!=user){
+                wrapper.eq(KpnSiteApp::getSiteId,user.getSiteId());
+            }
+            wrapper.eq(KpnSiteApp::getType,kpnSiteApp.getType());
+            wrapper.eq(KpnSiteApp::getVersionNum,kpnSiteApp.getVersionNum());
+            List<KpnSiteApp> list  =  baseMapper.selectList(wrapper);
+            if(null!=list&&list.size()>0){
+                return Result.failed("版本已存在");
+            }
+            kpnSiteApp.setCreateBy(null!=user?user.getUsername():kpnSiteApp.getCreateBy());
+        }
+        this.saveOrUpdate(kpnSiteApp);
+        return Result.succeed("保存成功");
     }
 }

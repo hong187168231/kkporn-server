@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.service.ipmanage.IKpnBlackIpService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.SysUser;
@@ -42,8 +43,17 @@ public class KpnBlackIpController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult> list(@RequestParam Map<String, Object> params) {
-        return Result.succeed(kpnBlackIpService.findList(params));
+    public Result<PageResult> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("page"))) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("limit"))) {
+            return Result.failed("分页结束位置不能为空");
+        }
+        return Result.succeed(kpnBlackIpService.findList(params,user));
     }
 
     /**
@@ -52,6 +62,9 @@ public class KpnBlackIpController {
     @ApiOperation(value = "查询")
     @GetMapping("/{id}")
     public Result findUserById(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         KpnBlackIp model = kpnBlackIpService.getById(id);
         return Result.succeed(model, "查询成功");
     }
@@ -66,8 +79,11 @@ public class KpnBlackIpController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ip", value = "IP地址", required = true, dataType = "String")
     })
-    public Boolean ipcheck(@RequestParam String ip) {
-        return kpnBlackIpService.ipcheck(ip);
+    public Result ipcheck(@RequestParam String ip, @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(ip)) {
+            return Result.failed("IP地址不能为空");
+        }
+        return Result.succeed(kpnBlackIpService.ipcheck(ip,user));
     }
 
     /**
@@ -76,6 +92,12 @@ public class KpnBlackIpController {
     @ApiOperation(value = "保存或修改")
     @PostMapping
     public Result saveOrUpdateKpnBlackIp(@RequestBody KpnBlackIp kpnBlackIp, @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnBlackIp)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnBlackIp.getIpSection())) {
+            return Result.failed("黑名单IP不能为空");
+        }
         return kpnBlackIpService.saveOrUpdateKpnBlackIp(kpnBlackIp, user);
     }
 
@@ -84,8 +106,10 @@ public class KpnBlackIpController {
      */
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
-    public Result delete(@PathVariable Long id) {
-        kpnBlackIpService.removeById(id);
-        return Result.succeed("删除成功");
+    public Result deleteKpnBlackIp(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
+        return kpnBlackIpService.deleteKpnBlackIp(id);
     }
 }

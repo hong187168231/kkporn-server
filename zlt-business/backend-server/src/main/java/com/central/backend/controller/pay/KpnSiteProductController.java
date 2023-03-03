@@ -2,6 +2,7 @@ package com.central.backend.controller.pay;
 
 import java.util.Map;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.service.pay.IKpnSiteProductService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.SysUser;
@@ -41,6 +42,15 @@ public class KpnSiteProductController {
     })
     @GetMapping
     public Result<PageResult> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("page"))) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("limit"))) {
+            return Result.failed("分页结束位置不能为空");
+        }
         return Result.succeed(kpnSiteProductService.findList(params,user));
     }
 
@@ -50,6 +60,9 @@ public class KpnSiteProductController {
     @ApiOperation(value = "查询")
     @GetMapping("/{id}")
     public Result findUserById(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         KpnSiteProduct model = kpnSiteProductService.getById(id);
         return Result.succeed(model, "查询成功");
     }
@@ -60,6 +73,35 @@ public class KpnSiteProductController {
     @ApiOperation(value = "新增or更新")
     @PostMapping
     public Result saveOrUpdateKpnSiteProduct(@RequestBody KpnSiteProduct kpnSiteProduct, @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnSiteProduct)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteProduct.getNameZh())) {
+            return Result.failed("中文名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteProduct.getNameEn())) {
+            return Result.failed("英文名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteProduct.getNameKh())) {
+            return Result.failed("柬文名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteProduct.getPrice())) {
+            return Result.failed("价格不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteProduct.getStatus())) {
+            return Result.failed("状态不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteProduct.getValidDays())) {
+            return Result.failed("天数不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSiteProduct.getSort())) {
+            return Result.failed("排序不能为空");
+        }
+        if (ObjectUtil.isNotNull(kpnSiteProduct.getDiscountRemark())) {
+            if(kpnSiteProduct.getDiscountRemark().length()>100){
+                return Result.failed("简介长度不能超过100");
+            }
+        }
         return kpnSiteProductService.saveOrUpdateKpnSiteProduct(kpnSiteProduct,user);
     }
 
@@ -69,7 +111,9 @@ public class KpnSiteProductController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        kpnSiteProductService.removeById(id);
-        return Result.succeed("删除成功");
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
+        return kpnSiteProductService.deleteKpnSiteProduct(id);
     }
 }

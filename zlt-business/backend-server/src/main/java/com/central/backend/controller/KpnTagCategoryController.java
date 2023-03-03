@@ -3,6 +3,7 @@ package com.central.backend.controller;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.service.IKpnTagCategoryService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnTagCategory;
@@ -44,6 +45,15 @@ public class KpnTagCategoryController {
     })
     @GetMapping
     public Result<PageResult> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("page"))) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("limit"))) {
+            return Result.failed("分页结束位置不能为空");
+        }
         return Result.succeed(kpnTagCategoryService.findList(params,user));
     }
 
@@ -62,6 +72,9 @@ public class KpnTagCategoryController {
     @ApiOperation(value = "查询")
     @GetMapping("/{id}")
     public Result findUserById(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         KpnTagCategory model = kpnTagCategoryService.getById(id);
         return Result.succeed(model, "查询成功");
     }
@@ -72,6 +85,17 @@ public class KpnTagCategoryController {
     @ApiOperation(value = "新增or更新")
     @PostMapping
     public Result saveOrUpdateKpnTagCategory(@RequestBody KpnTagCategory kpnTagCategory, @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnTagCategory)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnTagCategory.getName())) {
+            return Result.failed("分类名称不能为空");
+        }
+        if (ObjectUtil.isNotNull(kpnTagCategory.getRemark())) {
+            if(kpnTagCategory.getRemark().length()>100){
+                return Result.failed("分类描述长度不能超过100");
+            }
+        }
         return kpnTagCategoryService.saveOrUpdateKpnTagCategory(kpnTagCategory,user);
     }
 
@@ -81,6 +105,9 @@ public class KpnTagCategoryController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         return kpnTagCategoryService.deleteKpnTagCategory(id);
     }
 }

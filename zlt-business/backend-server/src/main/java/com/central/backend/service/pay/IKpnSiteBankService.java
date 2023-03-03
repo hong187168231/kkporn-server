@@ -5,7 +5,9 @@ import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.model.pay.KpnSiteBank;
 import com.central.common.service.ISuperService;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +22,9 @@ public interface IKpnSiteBankService extends ISuperService<KpnSiteBank> {
      * @param params
      * @return
      */
-    PageResult<KpnSiteBank> findList(Map<String, Object> params, SysUser user);
+    PageResult<KpnSiteBank> findListPage(Map<String, Object> params, SysUser user);
+    List<KpnSiteBank> findList(Map<String, Object> params, SysUser user);
     Result saveOrUpdateKpnSiteBank(KpnSiteBank kpnSiteBank, SysUser user);
+    Result deleteKpnSiteBank(@PathVariable Long id);
 }
 

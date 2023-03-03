@@ -24,4 +24,5 @@ public interface KpnSiteBankMapper extends SuperMapper<KpnSiteBank> {
      * @return
      */
     List<KpnSiteBank> findList(Page<KpnSiteBank> page, @Param("p") Map<String, Object> params);
+    List<KpnSiteBank> findList(@Param("p") Map<String, Object> params);
 }

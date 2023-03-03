@@ -24,4 +24,5 @@ public interface KpnSiteServeMapper extends SuperMapper<KpnSiteServe> {
      * @return
      */
     List<KpnSiteServe> findList(Page<KpnSiteServe> page, @Param("p") Map<String, Object> params);
+    List<KpnSiteServe> findList(@Param("p") Map<String, Object> params);
 }

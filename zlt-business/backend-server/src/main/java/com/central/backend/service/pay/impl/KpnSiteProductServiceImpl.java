@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -50,5 +51,10 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
         }
         this.saveOrUpdate(kpnSiteProduct);
         return Result.succeed("保存成功");
+    }
+    @Override
+    public Result deleteKpnSiteProduct(@PathVariable Long id){
+        this.removeById(id);
+        return Result.succeed("删除成功");
     }
 }

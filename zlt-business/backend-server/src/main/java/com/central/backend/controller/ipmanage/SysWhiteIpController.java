@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.service.ipmanage.ISysWhiteIpService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.SysUser;
@@ -43,6 +44,15 @@ public class SysWhiteIpController {
     })
     @GetMapping
     public Result<PageResult> list(@RequestParam Map<String, Object> params) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("page"))) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("limit"))) {
+            return Result.failed("分页结束位置不能为空");
+        }
         return Result.succeed(sysWhiteIpService.findList(params));
     }
 
@@ -56,8 +66,11 @@ public class SysWhiteIpController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ip", value = "IP地址", required = true, dataType = "String")
     })
-    public Boolean ipcheck(@RequestParam String ip) {
-        return sysWhiteIpService.ipcheck(ip);
+    public Result ipcheck(@RequestParam String ip) {
+        if (ObjectUtil.isEmpty(ip)) {
+            return Result.failed("IP地址不能为空");
+        }
+        return Result.succeed(sysWhiteIpService.ipcheck(ip));
     }
 
     /**
@@ -66,6 +79,9 @@ public class SysWhiteIpController {
     @ApiOperation(value = "查询")
     @GetMapping("/{id}")
     public Result findUserById(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         SysWhiteIp model = sysWhiteIpService.getById(id);
         return Result.succeed(model, "查询成功");
     }
@@ -76,6 +92,12 @@ public class SysWhiteIpController {
     @ApiOperation(value = "保存或修改")
     @PostMapping
     public Result saveOrUpdateSysWhiteIp(@RequestBody SysWhiteIp sysWhiteIp, @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(sysWhiteIp)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(sysWhiteIp.getIp())) {
+            return Result.failed("白名单IP不能为空");
+        }
         return sysWhiteIpService.saveOrUpdateSysWhiteIp(sysWhiteIp,user);
     }
 
@@ -85,7 +107,9 @@ public class SysWhiteIpController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        sysWhiteIpService.removeById(id);
-        return Result.succeed("删除成功");
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
+        return sysWhiteIpService.deleteSysWhiteIp(id);
     }
 }
