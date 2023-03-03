@@ -52,7 +52,6 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV, sid, PornConstants.Symbol.ASTERISK);
         Set<String> notStashChannelKeys = RedisRepository.keys(redisKey);
 
-        //todo 走库了
         List<Long> channelIds = notStashChannelKeys.stream().map(s -> Long.parseLong(s.substring(s.lastIndexOf(":") + 1))).collect(Collectors.toList());
         if(CollectionUtil.isNotEmpty(channelIds)){
             List<KpnSiteChannel> kpnSiteChannels = listByIds(channelIds);

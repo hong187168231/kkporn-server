@@ -28,6 +28,9 @@ public class KpnSiteTopicVo extends LanguageNameMulti implements Serializable {
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;
 
+    @ApiModelProperty(value = "排版id")
+    private Long composingId;
+
     @ApiModelProperty(value = "影片信息")
     private List<KpnSiteMovieBaseVo> movieBaseVos;
 }
