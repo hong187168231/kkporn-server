@@ -15,4 +15,10 @@ public interface IKpnSiteAdvertiseService extends ISuperService<KpnSiteAdvertise
      * @return
      */
     List<KpnSiteAdvertise> getSiteAdvertise(Long sid);
+
+    /**
+     * 增加广告点击量
+     * @param adId
+     */
+    void addHits(Long adId);
 }

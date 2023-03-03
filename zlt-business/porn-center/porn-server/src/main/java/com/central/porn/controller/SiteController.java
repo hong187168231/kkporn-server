@@ -269,6 +269,24 @@ public class SiteController {
     }
 
     /**
+     * 获取站点广告
+     *
+     * @return
+     */
+    @GetMapping("/ads/hits")
+    @ApiOperation(value = "统计广告点击量")
+    public Result<String> getSiteAdvertise(@RequestHeader(value = "sid") Long sid,
+                                           @ApiParam("广告id") Long adId) {
+        try {
+            siteAdvertiseService.addHits(adId);
+            return Result.succeed("succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
      * 热门演员表-收藏量取前10
      */
     @GetMapping("/actor/top10")

@@ -10,6 +10,8 @@ import java.util.Date;
 @Data
 @ApiModel("站点广告")
 public class KpnSiteAdvertiseVo extends LanguageNameMulti implements Serializable {
+    @ApiModelProperty(value = "广告Id")
+    private Long id;
 
     @ApiModelProperty(value = "广告名称")
     private String name;

@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +20,11 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
 
     @Autowired
     private IKpnSiteTopicService siteTopicService;
+
+    @Override
+    public void addHits(Long adId) {
+        this.lambdaUpdate().setSql(" `hits` = `hits` + 1 ").eq(KpnSiteAdvertise::getId, adId).update();
+    }
 
     @Override
     public List<KpnSiteAdvertise> getSiteAdvertise(Long sid) {
@@ -70,4 +74,6 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
 
         return kpnSiteAdvertises;
     }
+
+
 }
