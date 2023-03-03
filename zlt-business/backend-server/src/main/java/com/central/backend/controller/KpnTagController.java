@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 影片标签
@@ -49,7 +50,7 @@ public class KpnTagController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnTagVO>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+    public Result<PageResult<KpnTagVO>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
@@ -80,7 +81,7 @@ public class KpnTagController {
      */
     @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result saveOrUpdateKpnTag(@RequestBody KpnTag kpnTag, @LoginUser SysUser user) {
+    public Result saveOrUpdateKpnTag(@RequestBody KpnTag kpnTag, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnTag)) {
             return Result.failed("请求参数不能为空");
         }

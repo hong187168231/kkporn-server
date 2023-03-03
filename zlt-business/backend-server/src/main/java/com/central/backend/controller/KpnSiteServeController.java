@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 站点客服配置
@@ -42,7 +43,7 @@ public class KpnSiteServeController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnSiteServe>> listPage(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result<PageResult<KpnSiteServe>> listPage(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
@@ -56,7 +57,7 @@ public class KpnSiteServeController {
     }
     @ApiOperation(value = "查询列表")
     @GetMapping("/list")
-    public Result<List<KpnSiteServe>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+    public Result<List<KpnSiteServe>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
         return Result.succeed(kpnSiteServeService.findList(params,user));
     }
 
@@ -78,7 +79,7 @@ public class KpnSiteServeController {
      */
     @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result save(@RequestBody KpnSiteServe kpnSiteServe,@LoginUser SysUser user) {
+    public Result save(@RequestBody KpnSiteServe kpnSiteServe,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnSiteServe)) {
             return Result.failed("请求参数不能为空");
         }

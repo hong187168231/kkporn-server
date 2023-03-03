@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 
@@ -91,7 +92,7 @@ public class SysWhiteIpController {
      */
     @ApiOperation(value = "保存或修改")
     @PostMapping
-    public Result saveOrUpdateSysWhiteIp(@RequestBody SysWhiteIp sysWhiteIp, @LoginUser SysUser user) {
+    public Result saveOrUpdateSysWhiteIp(@RequestBody SysWhiteIp sysWhiteIp, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(sysWhiteIp)) {
             return Result.failed("请求参数不能为空");
         }

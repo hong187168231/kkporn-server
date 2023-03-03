@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 站点app更新配置
@@ -41,7 +42,7 @@ public class KpnSiteAppController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnSiteApp>> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result<PageResult<KpnSiteApp>> list(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
@@ -72,7 +73,7 @@ public class KpnSiteAppController {
      */
     @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result save(@RequestBody KpnSiteApp kpnSiteApp,@LoginUser SysUser user) {
+    public Result save(@RequestBody KpnSiteApp kpnSiteApp,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnSiteApp)) {
             return Result.failed("请求参数不能为空");
         }

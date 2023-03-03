@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * vip产品
@@ -41,7 +42,7 @@ public class KpnSiteProductController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnSiteProduct>> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result<PageResult<KpnSiteProduct>> list(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
@@ -72,7 +73,7 @@ public class KpnSiteProductController {
      */
     @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result saveOrUpdateKpnSiteProduct(@RequestBody KpnSiteProduct kpnSiteProduct, @LoginUser SysUser user) {
+    public Result saveOrUpdateKpnSiteProduct(@RequestBody KpnSiteProduct kpnSiteProduct, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnSiteProduct)) {
             return Result.failed("请求参数不能为空");
         }

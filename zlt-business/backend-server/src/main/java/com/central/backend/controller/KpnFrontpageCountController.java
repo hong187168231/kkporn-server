@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 首页访问量统计
@@ -39,7 +40,7 @@ public class KpnFrontpageCountController {
             @ApiImplicitParam(name = "status", value = "1：今日 2：昨日 3：本月 4：总计", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result list(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
         KpnFrontpageCountVO kpnFrontpageCountVO = kpnFrontpageCountService.findSummaryData(params,user);
         return Result.succeed(kpnFrontpageCountVO, "查询成功");
     }
@@ -53,7 +54,7 @@ public class KpnFrontpageCountController {
             @ApiImplicitParam(name = "status", value = "1：日 2：月", required = true, dataType = "Integer")
     })
     @GetMapping("/dataTrend")
-    public Result dataTrend(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result dataTrend(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
         List<KpnFrontpageCountVO> kpnFrontpageCountList = kpnFrontpageCountService.dataTrend(params,user);
         return Result.succeed(kpnFrontpageCountList, "查询成功");
     }

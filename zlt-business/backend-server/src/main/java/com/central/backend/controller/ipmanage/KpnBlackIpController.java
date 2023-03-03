@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 
@@ -43,7 +44,7 @@ public class KpnBlackIpController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnBlackIp>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+    public Result<PageResult<KpnBlackIp>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
@@ -79,7 +80,7 @@ public class KpnBlackIpController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ip", value = "IP地址", required = true, dataType = "String")
     })
-    public Result ipcheck(@RequestParam String ip, @LoginUser SysUser user) {
+    public Result ipcheck(@RequestParam String ip, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(ip)) {
             return Result.failed("IP地址不能为空");
         }
@@ -91,7 +92,7 @@ public class KpnBlackIpController {
      */
     @ApiOperation(value = "保存或修改")
     @PostMapping
-    public Result saveOrUpdateKpnBlackIp(@RequestBody KpnBlackIp kpnBlackIp, @LoginUser SysUser user) {
+    public Result saveOrUpdateKpnBlackIp(@RequestBody KpnBlackIp kpnBlackIp, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnBlackIp)) {
             return Result.failed("请求参数不能为空");
         }

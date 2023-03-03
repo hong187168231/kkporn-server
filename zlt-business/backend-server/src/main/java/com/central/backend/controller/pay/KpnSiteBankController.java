@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 收款银行渠道
@@ -42,7 +43,7 @@ public class KpnSiteBankController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnSiteBank>> listPage(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result<PageResult<KpnSiteBank>> listPage(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
@@ -56,7 +57,7 @@ public class KpnSiteBankController {
     }
     @ApiOperation(value = "查询列表")
     @GetMapping("/list")
-    public Result<List<KpnSiteBank>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+    public Result<List<KpnSiteBank>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
         return Result.succeed(kpnSiteBankService.findList(params,user));
     }
 
@@ -78,7 +79,7 @@ public class KpnSiteBankController {
      */
     @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result saveOrUpdateKpnSiteBank(@RequestBody KpnSiteBank kpnSiteBank, @LoginUser SysUser user) {
+    public Result saveOrUpdateKpnSiteBank(@RequestBody KpnSiteBank kpnSiteBank, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnSiteBank)) {
             return Result.failed("请求参数不能为空");
         }

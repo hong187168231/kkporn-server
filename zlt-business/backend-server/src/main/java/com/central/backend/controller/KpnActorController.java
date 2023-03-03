@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 演员列表
@@ -50,7 +51,7 @@ public class KpnActorController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnActorVO>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+    public Result<PageResult<KpnActorVO>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
@@ -81,7 +82,7 @@ public class KpnActorController {
      */
     @ApiOperation(value = "添加演员或修改演员")
     @PostMapping
-    public Result saveOrUpdateKpnActor(@RequestBody KpnActor kpnActor, @LoginUser SysUser user) {
+    public Result saveOrUpdateKpnActor(@RequestBody KpnActor kpnActor, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnActor)) {
             return Result.failed("请求参数不能为空");
         }
