@@ -27,6 +27,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -45,6 +46,7 @@ import static java.util.stream.Collectors.groupingBy;
  * 站点相关
  */
 @Slf4j
+@RefreshScope
 @RestController
 @RequestMapping("/v1/site")
 @Api(tags = "站点相关api接口")
@@ -97,6 +99,9 @@ public class SiteController {
 
     @Autowired
     private IKpnSiteProductService siteProductService;
+
+    @Value("${zlt.minio.externalEndpoint}")
+    private String externalEndpoint;
 
     public static final String AUTHENTICATION_MODE = "password_code";
 
@@ -199,12 +204,14 @@ public class SiteController {
                 KpnSiteChannelVo kpnSiteChannelVo = new KpnSiteChannelVo();
                 BeanUtil.copyProperties(kpnSiteChannel, kpnSiteChannelVo);
                 kpnSiteChannelVo.setName(LanguageUtil.getLanguageName(kpnSiteChannelVo));
-                if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.RECOMMEND.getSort().equals(kpnSiteChannelVo.getSort()) ) {
+                if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.RECOMMEND.getSort().equals(kpnSiteChannelVo.getSort())) {
                     kpnSiteChannelVo.setIsRecommend(true);
                 }
                 if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.SEARCH.getSort().equals(kpnSiteChannelVo.getSort())) {
                     kpnSiteChannelVo.setIsSearch(true);
                 }
+                kpnSiteChannelVo.setIcon(externalEndpoint + kpnSiteChannelVo.getIcon());
+
                 return kpnSiteChannelVo;
             }).collect(Collectors.toList());
 
@@ -455,7 +462,7 @@ public class SiteController {
     }
 
     //todo lk
-    @ApiOperation("登录-图形验证码")
+    @ApiOperation("登录")
     @GetMapping("/login")
     public Result<String> login(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid,
 //                                @ApiParam(value = "图形验证码id", required = true) String verifyCodeId,

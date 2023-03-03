@@ -35,6 +35,9 @@ public class KpnSiteTopic extends SuperEntity{
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;
 
+    @ApiModelProperty(value = "点击量")
+    private Long hits;
+
     @ApiModelProperty(value = "状态 0待发布,1上架,2下架")
     private Integer status;
 

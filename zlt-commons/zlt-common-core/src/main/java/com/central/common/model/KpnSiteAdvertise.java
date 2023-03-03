@@ -1,7 +1,6 @@
 package com.central.common.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
@@ -44,6 +43,9 @@ public class KpnSiteAdvertise extends SuperEntity {
 
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;
+
+    @ApiModelProperty(value = "点击量")
+    private Long hits;
 
     @ApiModelProperty(value = "状态 0/false下架,1/true上架")
     private Boolean status;
