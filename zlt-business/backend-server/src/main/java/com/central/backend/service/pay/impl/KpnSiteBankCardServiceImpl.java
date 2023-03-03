@@ -1,5 +1,6 @@
 package com.central.backend.service.pay.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.central.backend.mapper.pay.KpnSiteBankCardMapper;
 import com.central.backend.service.pay.IKpnSiteBankCardService;
 import com.central.common.model.Result;
@@ -42,12 +43,19 @@ public class KpnSiteBankCardServiceImpl extends SuperServiceImpl<KpnSiteBankCard
     }
     @Override
     public Result saveOrUpdateKpnSiteBankCard(KpnSiteBankCard kpnSiteBankCard, SysUser user){
-        if(null!=user) {
-            if(null!=kpnSiteBankCard.getId()){
-                kpnSiteBankCard.setUpdateBy(user.getUsername());
-            }else {
-                kpnSiteBankCard.setCreateBy(user.getUsername());
+        if(null!=kpnSiteBankCard.getId()){
+            kpnSiteBankCard.setUpdateBy(null!=user?user.getUsername():kpnSiteBankCard.getUpdateBy());
+        }else {
+            LambdaQueryWrapper<KpnSiteBankCard> wrapper = new LambdaQueryWrapper<>();
+            if (null!=user){
+                wrapper.eq(KpnSiteBankCard::getSiteId, user.getSiteId());
             }
+            wrapper.eq(KpnSiteBankCard::getCard,kpnSiteBankCard.getCard());
+            List<KpnSiteBankCard> list  =  baseMapper.selectList(wrapper);
+            if(null!=list&&list.size()>0){
+                return Result.failed("卡号已存在");
+            }
+            kpnSiteBankCard.setCreateBy(null!=user?user.getUsername():kpnSiteBankCard.getCreateBy());
         }
         this.saveOrUpdate(kpnSiteBankCard);
         return Result.succeed("保存成功");

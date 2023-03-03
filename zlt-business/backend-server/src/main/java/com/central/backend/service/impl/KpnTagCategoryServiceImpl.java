@@ -64,12 +64,10 @@ public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMa
     }
     @Override
     public Result saveOrUpdateKpnTagCategory(KpnTagCategory kpnTagCategory, SysUser user){
-        if(null!=user) {
-            if(null!=kpnTagCategory.getId()){
-                kpnTagCategory.setUpdateBy(user.getUsername());
-            }else {
-                kpnTagCategory.setCreateBy(user.getUsername());
-            }
+        if(null!=kpnTagCategory.getId()){
+            kpnTagCategory.setUpdateBy(null!=user?user.getUsername():kpnTagCategory.getUpdateBy());
+        }else {
+            kpnTagCategory.setCreateBy(null!=user?user.getUsername():kpnTagCategory.getCreateBy());
         }
         this.saveOrUpdate(kpnTagCategory);
         return Result.succeed("保存成功");
