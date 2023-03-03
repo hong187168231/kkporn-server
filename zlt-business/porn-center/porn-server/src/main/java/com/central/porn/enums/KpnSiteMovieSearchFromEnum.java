@@ -19,6 +19,15 @@ public enum KpnSiteMovieSearchFromEnum {
         this.remark = remark;
     }
 
+    public static boolean isTopic(Integer code) {
+        for (KpnSiteMovieSearchFromEnum e : values()) {
+            if (e.code.equals(code)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Integer getCode() {
         return code;
     }

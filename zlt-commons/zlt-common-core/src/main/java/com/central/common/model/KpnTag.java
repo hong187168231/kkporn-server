@@ -30,6 +30,8 @@ public class KpnTag extends SuperEntity {
     private String nameEn;
     @ApiModelProperty(value = "标签名称(柬文)")
     private String nameKh;
+    @ApiModelProperty(value = "标签总播放量")
+    private Long vv;
     @ApiModelProperty(value = "描述")
     private String remark;
 }
