@@ -40,8 +40,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
-
 /**
  * 站点相关
  */
@@ -247,9 +245,12 @@ public class SiteController {
      */
     @GetMapping("/ads")
     @ApiOperation(value = "获取站点广告")
-    public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid) {
+//    public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid,
+    public Result<List<KpnSiteAdvertiseVo>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid,
+                                                             @ApiParam("设备类型 H5/PC") String deviceType,
+                                                             @ApiParam("投放位置 1首页轮播图,2首页平台展示,3首页专题广告,4福利,5游戏轮播图,6游戏广告") Integer position) {
         try {
-            List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid);
+            List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid, deviceType, position);
             List<KpnSiteAdvertiseVo> siteAdVos = siteAds.stream().map(ad -> {
                 KpnSiteAdvertiseVo adVo = new KpnSiteAdvertiseVo();
                 BeanUtil.copyProperties(ad, adVo);
@@ -257,10 +258,10 @@ public class SiteController {
                 return adVo;
             }).collect(Collectors.toList());
 
-            Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>> siteAdVoMap = siteAdVos.stream()
-                    .collect(groupingBy(KpnSiteAdvertiseVo::getDevice, groupingBy(KpnSiteAdvertiseVo::getPosition)));
+//            Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>> siteAdVoMap = siteAdVos.stream()
+//                    .collect(groupingBy(KpnSiteAdvertiseVo::getDevice, groupingBy(KpnSiteAdvertiseVo::getPosition)));
 
-            return Result.succeed(siteAdVoMap, "succeed");
+            return Result.succeed(siteAdVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");

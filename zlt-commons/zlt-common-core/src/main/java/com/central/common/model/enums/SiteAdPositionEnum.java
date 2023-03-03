@@ -15,6 +15,10 @@ public enum SiteAdPositionEnum {
     private final Integer code;
     private final String remark;
 
+    public static boolean isTopicAd(Integer code) {
+        return TOPIC.getCode().equals(code);
+    }
+
     SiteAdPositionEnum(Integer code, String remark) {
         this.code = code;
         this.remark = remark;
