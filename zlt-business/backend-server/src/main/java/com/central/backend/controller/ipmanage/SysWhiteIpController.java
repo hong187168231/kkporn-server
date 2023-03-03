@@ -43,7 +43,7 @@ public class SysWhiteIpController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult> list(@RequestParam Map<String, Object> params) {
+    public Result<PageResult<SysWhiteIp>> list(@RequestParam Map<String, Object> params) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }

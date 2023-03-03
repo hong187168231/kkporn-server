@@ -3,6 +3,7 @@ package com.central.backend.controller;
 import java.util.Map;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.central.backend.model.vo.KpnTagVO;
 import com.central.backend.service.IKpnTagService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnTag;
@@ -48,7 +49,7 @@ public class KpnTagController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result<PageResult<KpnTagVO>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }

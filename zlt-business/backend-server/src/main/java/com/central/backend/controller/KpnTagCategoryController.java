@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.central.backend.model.vo.KpnTagCategoryVO;
 import com.central.backend.service.IKpnTagCategoryService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnTagCategory;
@@ -44,7 +45,7 @@ public class KpnTagCategoryController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result<PageResult<KpnTagCategoryVO>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
