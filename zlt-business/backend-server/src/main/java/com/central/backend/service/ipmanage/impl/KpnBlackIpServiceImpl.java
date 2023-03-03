@@ -53,18 +53,16 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
         if(!matcher.matches()){
             return Result.failed("黑名单IP格式错误");
         }
-        if(null!=user) {
-            if(null!=kpnBlackIp.getId()){
-                kpnBlackIp.setUpdateBy(user.getUsername());
-            }else {
-                LambdaQueryWrapper<KpnBlackIp> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(KpnBlackIp::getIpSection,ip);
-                List<KpnBlackIp> list  =  baseMapper.selectList(wrapper);
-                if(null!=list&&list.size()>0){
-                    return Result.failed("黑名单IP已存在");
-                }
-                kpnBlackIp.setCreateBy(user.getUsername());
+        if(null!=kpnBlackIp.getId()){
+            kpnBlackIp.setUpdateBy(null!=user?user.getUsername():kpnBlackIp.getUpdateBy());
+        }else {
+            LambdaQueryWrapper<KpnBlackIp> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(KpnBlackIp::getIpSection,ip);
+            List<KpnBlackIp> list  =  baseMapper.selectList(wrapper);
+            if(null!=list&&list.size()>0){
+                return Result.failed("黑名单IP已存在");
             }
+            kpnBlackIp.setCreateBy(null!=user?user.getUsername():kpnBlackIp.getCreateBy());
         }
         this.saveOrUpdate(kpnBlackIp);
         return Result.succeed("保存成功");

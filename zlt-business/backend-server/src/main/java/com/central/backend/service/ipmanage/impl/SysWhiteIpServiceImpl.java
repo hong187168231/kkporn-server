@@ -89,18 +89,16 @@ public class SysWhiteIpServiceImpl extends SuperServiceImpl<SysWhiteIpMapper, Sy
         if(!matcher.matches()){
             return Result.failed("白名单IP格式错误");
         }
-        if(null!=user) {
-            if(null!=sysWhiteIp.getId()){
-                sysWhiteIp.setUpdateBy(user.getUsername());
-            }else {
-                LambdaQueryWrapper<SysWhiteIp> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(SysWhiteIp::getIp,ip);
-                List<SysWhiteIp> list  =  baseMapper.selectList(wrapper);
-                if(null!=list&&list.size()>0){
-                    return Result.failed("黑名单IP已存在");
-                }
-                sysWhiteIp.setCreateBy(user.getUsername());
+        if(null!=sysWhiteIp.getId()){
+            sysWhiteIp.setUpdateBy(null!=user?user.getUsername():sysWhiteIp.getUpdateBy());
+        }else {
+            LambdaQueryWrapper<SysWhiteIp> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(SysWhiteIp::getIp,ip);
+            List<SysWhiteIp> list  =  baseMapper.selectList(wrapper);
+            if(null!=list&&list.size()>0){
+                return Result.failed("黑名单IP已存在");
             }
+            sysWhiteIp.setCreateBy(null!=user?user.getUsername():sysWhiteIp.getCreateBy());
         }
         this.saveOrUpdate(sysWhiteIp);
         return Result.succeed("保存成功");
