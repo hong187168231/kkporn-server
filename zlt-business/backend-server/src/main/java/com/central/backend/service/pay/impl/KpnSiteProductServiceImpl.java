@@ -2,6 +2,7 @@ package com.central.backend.service.pay.impl;
 
 import com.central.backend.mapper.pay.KpnSiteProductMapper;
 import com.central.backend.service.pay.IKpnSiteProductService;
+import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.service.impl.SuperServiceImpl;
@@ -39,5 +40,17 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
         Page<KpnSiteProduct> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnSiteProduct> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSiteProduct>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public Result saveOrUpdateKpnSiteProduct(KpnSiteProduct kpnSiteProduct, SysUser user){
+        if(null!=user) {
+            if(null!=kpnSiteProduct.getId()){
+                kpnSiteProduct.setUpdateBy(user.getUsername());
+            }else {
+                kpnSiteProduct.setCreateBy(user.getUsername());
+            }
+        }
+        this.saveOrUpdate(kpnSiteProduct);
+        return Result.succeed("保存成功");
     }
 }

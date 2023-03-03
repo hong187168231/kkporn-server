@@ -27,5 +27,6 @@ public interface IKpnTagCategoryService extends ISuperService<KpnTagCategory> {
 
     List<KpnTagCategory> findList();
     Result deleteKpnTagCategory(Long id);
+    Result saveOrUpdateKpnTagCategory(KpnTagCategory kpnTagCategory, SysUser user);
 }
 

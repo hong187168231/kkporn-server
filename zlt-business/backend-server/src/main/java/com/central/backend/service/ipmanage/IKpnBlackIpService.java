@@ -29,6 +29,6 @@ public interface IKpnBlackIpService extends ISuperService<KpnBlackIp> {
      */
     public Boolean ipcheck(String ip);
 
-    Result saveKpnBlackIp(KpnBlackIp kpnBlackIp, SysUser user);
+    Result saveOrUpdateKpnBlackIp(KpnBlackIp kpnBlackIp, SysUser user);
 }
 

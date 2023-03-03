@@ -62,4 +62,16 @@ public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMa
         this.removeById(id);
         return Result.succeed("删除成功");
     }
+    @Override
+    public Result saveOrUpdateKpnTagCategory(KpnTagCategory kpnTagCategory, SysUser user){
+        if(null!=user) {
+            if(null!=kpnTagCategory.getId()){
+                kpnTagCategory.setUpdateBy(user.getUsername());
+            }else {
+                kpnTagCategory.setCreateBy(user.getUsername());
+            }
+        }
+        this.saveOrUpdate(kpnTagCategory);
+        return Result.succeed("保存成功");
+    }
 }

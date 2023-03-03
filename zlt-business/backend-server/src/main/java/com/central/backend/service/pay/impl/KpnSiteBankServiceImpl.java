@@ -2,6 +2,7 @@ package com.central.backend.service.pay.impl;
 
 import com.central.backend.mapper.pay.KpnSiteBankMapper;
 import com.central.backend.service.pay.IKpnSiteBankService;
+import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.model.pay.KpnSiteBank;
 import com.central.common.service.impl.SuperServiceImpl;
@@ -39,5 +40,17 @@ public class KpnSiteBankServiceImpl extends SuperServiceImpl<KpnSiteBankMapper, 
         Page<KpnSiteBank> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnSiteBank> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSiteBank>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public Result saveOrUpdateKpnSiteBank(KpnSiteBank kpnSiteBank, SysUser user){
+        if(null!=user) {
+            if(null!=kpnSiteBank.getId()){
+                kpnSiteBank.setUpdateBy(user.getUsername());
+            }else {
+                kpnSiteBank.setCreateBy(user.getUsername());
+            }
+        }
+        this.saveOrUpdate(kpnSiteBank);
+        return Result.succeed("保存成功");
     }
 }

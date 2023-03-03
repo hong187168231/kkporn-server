@@ -68,9 +68,8 @@ public class KpnActorController {
      */
     @ApiOperation(value = "添加演员或修改演员")
     @PostMapping
-    public Result save(@RequestBody KpnActor kpnActor) {
-        kpnActorService.saveOrUpdate(kpnActor);
-        return Result.succeed("保存成功");
+    public Result saveOrUpdateKpnActor(@RequestBody KpnActor kpnActor, @LoginUser SysUser user) {
+        return kpnActorService.saveOrUpdateKpnActor(kpnActor,user);
     }
 
     /**

@@ -28,11 +28,11 @@ public interface IKpnTagService extends ISuperService<KpnTag> {
      */
     PageResult<KpnTagVO> findList(Map<String, Object> params, SysUser user);
 
-
     List<KpnTagVo> findTagList( Map<String, Object> params);
 
     List<CategoryVo> findTagCategoryList( ) ;
 
     public Result removeKpnTag(Long id);
+    Result saveOrUpdateKpnTag(KpnTag kpnTag, SysUser user);
 }
 

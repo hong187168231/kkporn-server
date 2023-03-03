@@ -1,5 +1,6 @@
 package com.central.backend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.central.backend.mapper.KpnActorMapper;
 import com.central.backend.model.vo.KpnActorVO;
 import com.central.backend.service.IKpnActorService;
@@ -52,5 +53,17 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
         }
         this.removeById(id);
         return Result.succeed("删除成功");
+    }
+    @Override
+    public Result saveOrUpdateKpnActor(KpnActor kpnActor,SysUser user){
+        if(null!=user) {
+            if(null!=kpnActor.getId()){
+                kpnActor.setUpdateBy(user.getUsername());
+            }else {
+                kpnActor.setCreateBy(user.getUsername());
+            }
+        }
+        this.saveOrUpdate(kpnActor);
+        return Result.succeed("保存成功");
     }
 }

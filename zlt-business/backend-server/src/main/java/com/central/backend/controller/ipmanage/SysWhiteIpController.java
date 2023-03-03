@@ -5,6 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.central.backend.service.ipmanage.ISysWhiteIpService;
+import com.central.common.annotation.LoginUser;
+import com.central.common.model.SysUser;
 import com.central.common.model.ipmanage.SysWhiteIp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -71,22 +73,10 @@ public class SysWhiteIpController {
     /**
      * 新增or更新
      */
-    @ApiOperation(value = "保存")
+    @ApiOperation(value = "保存或修改")
     @PostMapping
-    public Result save(@RequestBody SysWhiteIp sysWhiteIp) {
-        String ip = sysWhiteIp.getIp();
-        if(null==ip || "".equals(ip)){
-            Result.failed("白名单IP不能为空");
-        }
-        //1.创建匹配模式
-        Pattern pattern = Pattern.compile("(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");//匹配一个或多个数字字符
-        //2.选择匹配对象
-        Matcher matcher = pattern.matcher(ip);
-        if(!matcher.matches()){
-            Result.failed("白名单IP格式错误");
-        }
-        sysWhiteIpService.saveOrUpdate(sysWhiteIp);
-        return Result.succeed("保存成功");
+    public Result saveOrUpdateSysWhiteIp(@RequestBody SysWhiteIp sysWhiteIp, @LoginUser SysUser user) {
+        return sysWhiteIpService.saveOrUpdateSysWhiteIp(sysWhiteIp,user);
     }
 
     /**

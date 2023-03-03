@@ -56,11 +56,10 @@ public class KpnSiteBankCardController {
     /**
      * 新增or更新
      */
-    @ApiOperation(value = "保存")
+    @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result save(@RequestBody KpnSiteBankCard kpnSiteBankCard) {
-        kpnSiteBankCardService.saveOrUpdate(kpnSiteBankCard);
-        return Result.succeed("保存成功");
+    public Result saveOrUpdateKpnSiteBankCard(@RequestBody KpnSiteBankCard kpnSiteBankCard, @LoginUser SysUser user) {
+        return kpnSiteBankCardService.saveOrUpdateKpnSiteBankCard(kpnSiteBankCard,user);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.central.backend.service.pay.impl;
 
 import com.central.backend.mapper.pay.KpnSiteBankCardMapper;
 import com.central.backend.service.pay.IKpnSiteBankCardService;
+import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.service.impl.SuperServiceImpl;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,17 @@ public class KpnSiteBankCardServiceImpl extends SuperServiceImpl<KpnSiteBankCard
         Page<KpnSiteBankCard> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnSiteBankCard> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSiteBankCard>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public Result saveOrUpdateKpnSiteBankCard(KpnSiteBankCard kpnSiteBankCard, SysUser user){
+        if(null!=user) {
+            if(null!=kpnSiteBankCard.getId()){
+                kpnSiteBankCard.setUpdateBy(user.getUsername());
+            }else {
+                kpnSiteBankCard.setCreateBy(user.getUsername());
+            }
+        }
+        this.saveOrUpdate(kpnSiteBankCard);
+        return Result.succeed("保存成功");
     }
 }

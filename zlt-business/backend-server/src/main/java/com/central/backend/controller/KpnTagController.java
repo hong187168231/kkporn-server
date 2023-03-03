@@ -64,11 +64,10 @@ public class KpnTagController {
     /**
      * 新增or更新
      */
-    @ApiOperation(value = "保存")
+    @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result save(@RequestBody KpnTag kpnTag) {
-        kpnTagService.saveOrUpdate(kpnTag);
-        return Result.succeed("保存成功");
+    public Result saveOrUpdateKpnTag(@RequestBody KpnTag kpnTag, @LoginUser SysUser user) {
+        return kpnTagService.saveOrUpdateKpnTag(kpnTag,user);
     }
 
     /**

@@ -41,21 +41,30 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
         return PageResult.<KpnBlackIp>builder().data(list).count(page.getTotal()).build();
     }
     @Override
-    public Result saveKpnBlackIp(KpnBlackIp kpnBlackIp, SysUser user){
+    public Result saveOrUpdateKpnBlackIp(KpnBlackIp kpnBlackIp, SysUser user){
         String ip = kpnBlackIp.getIpSection();
         if(null==ip || "".equals(ip)){
-            Result.failed("黑名单IP不能为空");
+            return Result.failed("黑名单IP不能为空");
         }
         //1.创建匹配模式
         Pattern pattern = Pattern.compile("(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");//匹配一个或多个数字字符
         //2.选择匹配对象
         Matcher matcher = pattern.matcher(ip);
         if(!matcher.matches()){
-            Result.failed("黑名单IP格式错误");
+            return Result.failed("黑名单IP格式错误");
         }
         if(null!=user) {
-            kpnBlackIp.setCreateBy(user.getUsername());
-            kpnBlackIp.setUpdateBy(user.getUsername());
+            if(null!=kpnBlackIp.getId()){
+                kpnBlackIp.setUpdateBy(user.getUsername());
+            }else {
+                LambdaQueryWrapper<KpnBlackIp> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(KpnBlackIp::getIpSection,ip);
+                List<KpnBlackIp> list  =  baseMapper.selectList(wrapper);
+                if(null!=list&&list.size()>0){
+                    return Result.failed("黑名单IP已存在");
+                }
+                kpnBlackIp.setCreateBy(user.getUsername());
+            }
         }
         this.saveOrUpdate(kpnBlackIp);
         return Result.succeed("保存成功");

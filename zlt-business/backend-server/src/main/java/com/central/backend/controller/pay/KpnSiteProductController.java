@@ -57,11 +57,10 @@ public class KpnSiteProductController {
     /**
      * 新增or更新
      */
-    @ApiOperation(value = "保存")
+    @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result save(@RequestBody KpnSiteProduct kpnSiteProduct) {
-        kpnSiteProductService.saveOrUpdate(kpnSiteProduct);
-        return Result.succeed("保存成功");
+    public Result saveOrUpdateKpnSiteProduct(@RequestBody KpnSiteProduct kpnSiteProduct, @LoginUser SysUser user) {
+        return kpnSiteProductService.saveOrUpdateKpnSiteProduct(kpnSiteProduct,user);
     }
 
     /**

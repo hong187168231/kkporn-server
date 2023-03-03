@@ -69,11 +69,10 @@ public class KpnTagCategoryController {
     /**
      * 新增or更新
      */
-    @ApiOperation(value = "保存")
+    @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result save(@RequestBody KpnTagCategory kpnTagCategory) {
-        kpnTagCategoryService.saveOrUpdate(kpnTagCategory);
-        return Result.succeed("保存成功");
+    public Result saveOrUpdateKpnTagCategory(@RequestBody KpnTagCategory kpnTagCategory, @LoginUser SysUser user) {
+        return kpnTagCategoryService.saveOrUpdateKpnTagCategory(kpnTagCategory,user);
     }
 
     /**

@@ -23,5 +23,6 @@ public interface IKpnActorService extends ISuperService<KpnActor> {
      */
     PageResult<KpnActorVO> findList(Map<String, Object> params, SysUser user);
     Result deleteKpnActor(Long id);
+    Result saveOrUpdateKpnActor(KpnActor kpnActor,SysUser user);
 }
 

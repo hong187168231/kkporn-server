@@ -1,6 +1,8 @@
 package com.central.backend.service.ipmanage;
 
 import com.central.common.model.PageResult;
+import com.central.common.model.Result;
+import com.central.common.model.SysUser;
 import com.central.common.model.ipmanage.SysWhiteIp;
 import com.central.common.service.ISuperService;
 
@@ -20,5 +22,6 @@ public interface ISysWhiteIpService extends ISuperService<SysWhiteIp> {
      */
     PageResult<SysWhiteIp> findList(Map<String, Object> params);
     Boolean ipcheck(String ip);
+    Result saveOrUpdateSysWhiteIp(SysWhiteIp sysWhiteIp, SysUser user);
 }
 

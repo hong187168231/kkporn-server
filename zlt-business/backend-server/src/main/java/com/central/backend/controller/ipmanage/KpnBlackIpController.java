@@ -73,10 +73,10 @@ public class KpnBlackIpController {
     /**
      * 新增or更新
      */
-    @ApiOperation(value = "保存")
+    @ApiOperation(value = "保存或修改")
     @PostMapping
-    public Result saveKpnBlackIp(@RequestBody KpnBlackIp kpnBlackIp, @LoginUser SysUser user) {
-        return kpnBlackIpService.saveKpnBlackIp(kpnBlackIp, user);
+    public Result saveOrUpdateKpnBlackIp(@RequestBody KpnBlackIp kpnBlackIp, @LoginUser SysUser user) {
+        return kpnBlackIpService.saveOrUpdateKpnBlackIp(kpnBlackIp, user);
     }
 
     /**
