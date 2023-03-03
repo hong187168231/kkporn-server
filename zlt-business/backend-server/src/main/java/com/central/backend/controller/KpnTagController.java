@@ -2,6 +2,8 @@ package com.central.backend.controller;
 
 import java.util.Map;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.central.backend.model.vo.KpnTagVO;
 import com.central.backend.service.IKpnTagService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnTag;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 影片标签
@@ -47,7 +50,16 @@ public class KpnTagController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult> list(@RequestParam Map<String, Object> params,@LoginUser SysUser user) {
+    public Result<PageResult<KpnTagVO>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("page"))) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("limit"))) {
+            return Result.failed("分页结束位置不能为空");
+        }
         return Result.succeed(kpnTagService.findList(params,user));
     }
 
@@ -57,6 +69,9 @@ public class KpnTagController {
     @ApiOperation(value = "查询")
     @GetMapping("/{id}")
     public Result findUserById(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         KpnTag model = kpnTagService.getById(id);
         return Result.succeed(model, "查询成功");
     }
@@ -66,7 +81,25 @@ public class KpnTagController {
      */
     @ApiOperation(value = "新增or更新")
     @PostMapping
-    public Result saveOrUpdateKpnTag(@RequestBody KpnTag kpnTag, @LoginUser SysUser user) {
+    public Result saveOrUpdateKpnTag(@RequestBody KpnTag kpnTag, @ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnTag)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnTag.getNameZh())) {
+            return Result.failed("中文名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnTag.getNameKh())) {
+            return Result.failed("柬文名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnTag.getNameEn())) {
+            return Result.failed("英文名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnTag.getCategoryName())) {
+            return Result.failed("所属分类不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnTag.getCategoryId())) {
+            return Result.failed("所属分类ID不能为空");
+        }
         return kpnTagService.saveOrUpdateKpnTag(kpnTag,user);
     }
 
@@ -76,6 +109,9 @@ public class KpnTagController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         return kpnTagService.removeKpnTag(id);
     }
 }

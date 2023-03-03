@@ -5,6 +5,7 @@ import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.model.ipmanage.SysWhiteIp;
 import com.central.common.service.ISuperService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
@@ -23,5 +24,6 @@ public interface ISysWhiteIpService extends ISuperService<SysWhiteIp> {
     PageResult<SysWhiteIp> findList(Map<String, Object> params);
     Boolean ipcheck(String ip);
     Result saveOrUpdateSysWhiteIp(SysWhiteIp sysWhiteIp, SysUser user);
+    Result deleteSysWhiteIp(@PathVariable Long id);
 }
 

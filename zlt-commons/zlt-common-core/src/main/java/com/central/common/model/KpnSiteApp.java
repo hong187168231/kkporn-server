@@ -6,6 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 /**
@@ -36,6 +39,7 @@ public class KpnSiteApp extends SuperEntity {
     private String downloadUrl;
     @ApiModelProperty(value = "是否强制更新 0不强制,1强制")
     private Integer isForce;
+    @Max(value = 100,message = "备注最大长度不能超过100！")
     @ApiModelProperty(value = "备注")
     private String remark;
     }

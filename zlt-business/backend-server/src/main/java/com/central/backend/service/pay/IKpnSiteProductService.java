@@ -5,6 +5,7 @@ import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.service.ISuperService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
@@ -22,5 +23,6 @@ public interface IKpnSiteProductService extends ISuperService<KpnSiteProduct> {
      */
     PageResult<KpnSiteProduct> findList(Map<String, Object> params, SysUser user);
     Result saveOrUpdateKpnSiteProduct(KpnSiteProduct kpnSiteProduct, SysUser user);
+    Result deleteKpnSiteProduct(@PathVariable Long id);
 }
 

@@ -2,6 +2,7 @@ package com.central.backend.controller;
 
 import java.util.Map;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.model.vo.KpnActorVO;
 import com.central.backend.service.IKpnActorService;
 import com.central.common.annotation.LoginUser;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 演员列表
@@ -49,7 +51,16 @@ public class KpnActorController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnActorVO>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+    public Result<PageResult<KpnActorVO>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("page"))) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.get("limit"))) {
+            return Result.failed("分页结束位置不能为空");
+        }
         return Result.succeed(kpnActorService.findList(params,user));
     }
 
@@ -59,6 +70,9 @@ public class KpnActorController {
     @ApiOperation(value = "查询演员详情")
     @GetMapping("/{id}")
     public Result findUserById(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         KpnActor model = kpnActorService.getById(id);
         return Result.succeed(model, "查询成功");
     }
@@ -68,7 +82,44 @@ public class KpnActorController {
      */
     @ApiOperation(value = "添加演员或修改演员")
     @PostMapping
-    public Result saveOrUpdateKpnActor(@RequestBody KpnActor kpnActor, @LoginUser SysUser user) {
+    public Result saveOrUpdateKpnActor(@RequestBody KpnActor kpnActor, @ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnActor)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getNameZh())) {
+            return Result.failed("中文名不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getNameEn())) {
+            return Result.failed("英文名不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getNameKh())) {
+            return Result.failed("柬文名不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getSex())) {
+            return Result.failed("性别不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getBirthday())) {
+            return Result.failed("出生日期不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getCountry())) {
+            return Result.failed("国籍不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getAvatarUrl())) {
+            return Result.failed("头像不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getPortraitUrl())) {
+            return Result.failed("写真照片不能为空");
+        }
+        if (ObjectUtil.isNotNull(kpnActor.getRemark())) {
+            if(kpnActor.getRemark().length()>100){
+                return Result.failed("简介长度不能超过100");
+            }
+        }
+        if (ObjectUtil.isNotNull(kpnActor.getInterest())) {
+            if(kpnActor.getInterest().length()>100){
+                return Result.failed("兴趣长度不能超过100");
+            }
+        }
         return kpnActorService.saveOrUpdateKpnActor(kpnActor,user);
     }
 
@@ -78,6 +129,9 @@ public class KpnActorController {
     @ApiOperation(value = "删除")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        if (ObjectUtil.isEmpty(id)) {
+            return Result.failed("ID不能为空");
+        }
         return kpnActorService.deleteKpnActor(id);
     }
 }

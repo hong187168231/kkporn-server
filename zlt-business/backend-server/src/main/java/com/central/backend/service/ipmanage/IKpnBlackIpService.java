@@ -5,6 +5,7 @@ import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.model.ipmanage.KpnBlackIp;
 import com.central.common.service.ISuperService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
@@ -20,15 +21,17 @@ public interface IKpnBlackIpService extends ISuperService<KpnBlackIp> {
      * @param params
      * @return
      */
-    PageResult<KpnBlackIp> findList(Map<String, Object> params);
+    PageResult<KpnBlackIp> findList(Map<String, Object> params, SysUser user);
 
     /**
      * IP黑名单检查
      * @param ip
      * @return
      */
-    public Boolean ipcheck(String ip);
+    public Boolean ipcheck(String ip, SysUser user);
 
     Result saveOrUpdateKpnBlackIp(KpnBlackIp kpnBlackIp, SysUser user);
+
+    Result deleteKpnBlackIp(@PathVariable Long id);
 }
 

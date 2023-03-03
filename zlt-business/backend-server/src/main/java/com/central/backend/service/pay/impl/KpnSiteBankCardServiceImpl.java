@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -31,7 +32,7 @@ public class KpnSiteBankCardServiceImpl extends SuperServiceImpl<KpnSiteBankCard
      * @return
      */
     @Override
-    public PageResult<KpnSiteBankCard> findList(Map<String, Object> params, SysUser user){
+    public PageResult<KpnSiteBankCard> findListPage(Map<String, Object> params, SysUser user){
         if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
             params.put("siteId","");
         }else {
@@ -40,6 +41,15 @@ public class KpnSiteBankCardServiceImpl extends SuperServiceImpl<KpnSiteBankCard
         Page<KpnSiteBankCard> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnSiteBankCard> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSiteBankCard>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public List<KpnSiteBankCard> findList(Map<String, Object> params, SysUser user){
+        if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
+            params.put("siteId","");
+        }else {
+            params.put("siteId",user.getSiteId());
+        }
+        return baseMapper.findList(params);
     }
     @Override
     public Result saveOrUpdateKpnSiteBankCard(KpnSiteBankCard kpnSiteBankCard, SysUser user){
@@ -59,5 +69,10 @@ public class KpnSiteBankCardServiceImpl extends SuperServiceImpl<KpnSiteBankCard
         }
         this.saveOrUpdate(kpnSiteBankCard);
         return Result.succeed("保存成功");
+    }
+    @Override
+    public Result deleteKpnSiteBankCard(@PathVariable Long id){
+        this.removeById(id);
+        return Result.succeed("删除成功");
     }
 }

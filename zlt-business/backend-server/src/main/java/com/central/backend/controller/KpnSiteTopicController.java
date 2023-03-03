@@ -3,11 +3,13 @@ package com.central.backend.controller;
 import com.central.backend.co.KpnSiteTopicSaveCo;
 import com.central.backend.co.KpnSiteTopicUpdateCo;
 import com.central.backend.service.IKpnSiteMovieService;
+import com.central.backend.service.IKpnSiteTopicComposingService;
 import com.central.backend.service.IKpnSiteTopicMovieService;
 import com.central.backend.service.IKpnSiteTopicService;
 import com.central.backend.vo.KpnSiteTopicVo;
 import com.central.backend.vo.MovieVo;
 import com.central.backend.vo.SiteMovieListVo;
+import com.central.common.model.KpnSiteTopicComposing;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 import io.swagger.annotations.Api;
@@ -20,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -37,6 +40,18 @@ public class KpnSiteTopicController {
 
     @Autowired
     private IKpnSiteMovieService siteMovieService;
+
+    @Autowired
+    private IKpnSiteTopicComposingService siteTopicComposingService;
+
+    @ApiOperation("查询排版布局下拉框")
+    @ResponseBody
+    @GetMapping("/findTopicComposingList")
+    public Result findTopicComposingList() {
+        List<KpnSiteTopicComposing> list = siteTopicComposingService.findTopicComposingList();
+        return Result.succeed(list);
+    }
+
 
     @ApiOperation("查询推荐页专题列表")
     @ResponseBody

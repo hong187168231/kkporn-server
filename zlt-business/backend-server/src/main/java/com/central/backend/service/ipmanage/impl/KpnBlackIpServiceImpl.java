@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.MapUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -35,7 +36,10 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
      * @return
      */
     @Override
-    public PageResult<KpnBlackIp> findList(Map<String, Object> params){
+    public PageResult<KpnBlackIp> findList(Map<String, Object> params, SysUser user){
+        if(null!=user && null!=user.getSiteId() && user.getSiteId()!=0){//
+            params.put("siteId",user.getSiteId());
+        }
         Page<KpnBlackIp> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnBlackIp> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnBlackIp>builder().data(list).count(page.getTotal()).build();
@@ -58,6 +62,9 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
         }else {
             LambdaQueryWrapper<KpnBlackIp> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(KpnBlackIp::getIpSection,ip);
+            if(null!=user){
+                wrapper.eq(KpnBlackIp::getSiteId,user.getSiteId());
+            }
             List<KpnBlackIp> list  =  baseMapper.selectList(wrapper);
             if(null!=list&&list.size()>0){
                 return Result.failed("黑名单IP已存在");
@@ -67,41 +74,23 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
         this.saveOrUpdate(kpnBlackIp);
         return Result.succeed("保存成功");
     }
-
     @Override
-    public Boolean ipcheck(String ip){
+    public Result deleteKpnBlackIp(@PathVariable Long id){
+        this.removeById(id);
+        return Result.succeed("删除成功");
+    }
+    @Override
+    public Boolean ipcheck(String ip, SysUser user){
         Boolean b = false;
         LambdaQueryWrapper<KpnBlackIp> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(KpnBlackIp::getIpSection,ip);
+        if(null!=user){
+            wrapper.eq(KpnBlackIp::getSiteId,user.getSiteId());
+        }
         List<KpnBlackIp> list  =  baseMapper.selectList(wrapper);
         if(null!=list&&list.size()>0){
-            for(KpnBlackIp kpnBlackIp:list){
-                if(ip.equals(kpnBlackIp.getIpSection())){
-                    return true;
-                }
-//                String[] ipBytes = kpnBlackIp.getIpSection().split("-");
-//                //判断给定ip地址是否在指定范围内:
-//                long start = IP2Long( ipBytes[0] );
-//                long end = IP2Long( ipBytes[1] );
-//                long ipAddress = IP2Long( ip );
-//                Boolean inRange = (ipAddress >= start && ipAddress <= end);
-//                if (inRange){
-//                    //IP 地址在范围内！
-//                    return true;
-//                }
-            }
+            return true;
         }
         return b;
     }
-    public long IP2Long(String ip)
-    {
-        String[] ipBytes;
-        double num = 0;
-        ipBytes = ip.split(".");
-        for (int i = ipBytes.length - 1; i >= 0; i--)
-        {
-            num += ((Integer.parseInt(ipBytes[i]) % 256) * Math.pow(256, (3 - i)));
-        }
-        return (long)num;
-    }
-
 }

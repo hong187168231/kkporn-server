@@ -2,19 +2,24 @@ package com.central.backend.service.pay.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.central.backend.mapper.pay.KpnSiteBankMapper;
+import com.central.backend.service.pay.IKpnSiteBankCardService;
 import com.central.backend.service.pay.IKpnSiteBankService;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.model.pay.KpnSiteBank;
+import com.central.common.model.pay.KpnSiteBankCard;
 import com.central.common.service.impl.SuperServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.central.common.model.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -26,13 +31,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class KpnSiteBankServiceImpl extends SuperServiceImpl<KpnSiteBankMapper, KpnSiteBank> implements IKpnSiteBankService {
+    @Autowired
+    private IKpnSiteBankCardService iKpnSiteBankCardService;
     /**
      * 列表
      * @param params
      * @return
      */
     @Override
-    public PageResult<KpnSiteBank> findList(Map<String, Object> params, SysUser user){
+    public PageResult<KpnSiteBank> findListPage(Map<String, Object> params, SysUser user){
         if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
             params.put("siteId","");
         }else {
@@ -41,6 +48,15 @@ public class KpnSiteBankServiceImpl extends SuperServiceImpl<KpnSiteBankMapper, 
         Page<KpnSiteBank> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnSiteBank> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSiteBank>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public List<KpnSiteBank> findList(Map<String, Object> params, SysUser user){
+        if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
+            params.put("siteId","");
+        }else {
+            params.put("siteId",user.getSiteId());
+        }
+        return baseMapper.findList(params);
     }
     @Override
     public Result saveOrUpdateKpnSiteBank(KpnSiteBank kpnSiteBank, SysUser user){
@@ -60,5 +76,16 @@ public class KpnSiteBankServiceImpl extends SuperServiceImpl<KpnSiteBankMapper, 
         }
         this.saveOrUpdate(kpnSiteBank);
         return Result.succeed("保存成功");
+    }
+    @Override
+    public Result deleteKpnSiteBank(@PathVariable Long id){
+        Map<String, Object> params = new HashMap<>();
+        params.put("bankId",id);
+        List<KpnSiteBankCard> list = iKpnSiteBankCardService.findList(params,null);
+        if(null!=list && list.size()>0) {
+            return Result.failed("当前渠道有关联卡号，不可删除");
+        }
+        this.removeById(id);
+        return Result.succeed("删除成功");
     }
 }
