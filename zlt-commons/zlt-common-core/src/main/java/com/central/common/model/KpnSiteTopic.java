@@ -41,4 +41,7 @@ public class KpnSiteTopic extends SuperEntity{
     @ApiModelProperty(value = "状态 0待发布,1上架,2下架")
     private Integer status;
 
+    @ApiModelProperty(value = "排版id")
+    private Integer composingId;
+
 }
