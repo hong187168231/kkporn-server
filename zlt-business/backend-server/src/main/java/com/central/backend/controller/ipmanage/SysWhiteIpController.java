@@ -30,7 +30,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @RestController
 @RequestMapping("/syswhiteip")
-@Api(tags = "")
+@Api(tags = "白名单IP管理")
 public class SysWhiteIpController {
     @Autowired
     private ISysWhiteIpService sysWhiteIpService;

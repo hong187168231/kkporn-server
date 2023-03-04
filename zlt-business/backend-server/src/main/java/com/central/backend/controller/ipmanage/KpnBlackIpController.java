@@ -30,7 +30,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @RestController
 @RequestMapping("/kpnblackip")
-@Api(tags = "")
+@Api(tags = "黑名单IP管理")
 public class KpnBlackIpController {
     @Autowired
     private IKpnBlackIpService kpnBlackIpService;
