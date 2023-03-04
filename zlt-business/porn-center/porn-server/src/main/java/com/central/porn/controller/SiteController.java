@@ -480,7 +480,7 @@ public class SiteController {
 
     //todo lk
     @ApiOperation("登录")
-    @GetMapping("/login")
+    @PostMapping("/login")
     public Result<String> login(@ApiParam(value = "站点id", required = true) @RequestHeader("sid") Long sid,
 //                                @ApiParam(value = "图形验证码id", required = true) String verifyCodeId,
 //                                @ApiParam(value = "验证码", required = true) String verifyCode,
