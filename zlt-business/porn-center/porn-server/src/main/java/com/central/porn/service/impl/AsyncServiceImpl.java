@@ -27,48 +27,6 @@ public class AsyncServiceImpl implements IAsyncService {
     @Lazy
     private IKpnSiteActorService siteActorService;
 
-    @Autowired
-    private IRptSiteMovieDateService rptSiteMovieDateService;
-
-    @Async
-    @Override
-    public void addSiteMovieVv(Long sid, Long movieId) {
-        siteMovieService.lambdaUpdate()
-                .eq(KpnSiteMovie::getSiteId, sid)
-                .eq(KpnSiteMovie::getMovieId, movieId)
-                .setSql(" `vv` = `vv` + 1")
-                .update();
-
-        rptSiteMovieDateService.saveRptSiteMovieDateVv(sid, movieId, DateUtil.formatDate(new Date()));
-
-//        rptSiteMovieDateService.lambdaUpdate()
-//                .eq(RptSiteMovieDate::getSiteId, sid)
-//                .eq(RptSiteMovieDate::getMovieId, movieId)
-//                .eq(RptSiteMovieDate::getDate, DateUtil.formatDate(new Date()))
-//                .setSql(" `vv` = `vv` + 1")
-//                .update();
-    }
-
-    @Async
-    @Override
-    public void addSiteMovieFavorites(Long sid, Long movieId) {
-        siteMovieService.lambdaUpdate()
-                .eq(KpnSiteMovie::getSiteId, sid)
-                .eq(KpnSiteMovie::getMovieId, movieId)
-                .setSql(" `favorites` = `favorites` + 1")
-                .update();
-    }
-
-    @Async
-    @Override
-    public void removeSiteMovieFavorites(Long sid, Long movieId) {
-        siteMovieService.lambdaUpdate()
-                .eq(KpnSiteMovie::getSiteId, sid)
-                .eq(KpnSiteMovie::getMovieId, movieId)
-                .setSql(" `favorites` = `favorites` - 1")
-                .update();
-    }
-
     @Async
     @Override
     public void addSiteActorFavorites(Long sid, Long actorId) {

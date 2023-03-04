@@ -22,10 +22,20 @@ public interface IKpnSiteTopicMovieService extends ISuperService<KpnSiteTopicMov
 
     /**
      * 缓存站点专题影片
+     *
      * @param sid     站点id
      * @param topicId 专题id
      * @param column  排序字段
      * @return
      */
     List<Long> getTopicMovieIdsSortedByColumn(Long sid, Long topicId, String column);
+
+    /**
+     * 站点id
+     *
+     * @param sid     站点id
+     * @param topicId 专题id
+     * @param movieId 影片id
+     */
+    void addTopicMovieVv(Long sid, Long topicId, Long movieId);
 }

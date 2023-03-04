@@ -245,10 +245,9 @@ public class SiteController {
      */
     @GetMapping("/ads")
     @ApiOperation(value = "获取站点广告")
-//    public Result<Map<String, Map<Integer, List<KpnSiteAdvertiseVo>>>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid,
     public Result<List<KpnSiteAdvertiseVo>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid,
-                                                             @ApiParam("设备类型 H5/PC") String deviceType,
-                                                             @ApiParam("投放位置 1首页轮播图,2首页平台展示,3首页专题广告,4福利,5游戏轮播图,6游戏广告") Integer position) {
+                                                             @ApiParam(value = "设备类型 H5/PC", required = true) String deviceType,
+                                                             @ApiParam(value = "投放位置 1首页轮播图,2首页平台展示,3首页专题广告,4福利,5游戏轮播图,6游戏广告", required = true) Integer position) {
         try {
             List<KpnSiteAdvertise> siteAds = siteAdvertiseService.getSiteAdvertise(sid, deviceType, position);
             List<KpnSiteAdvertiseVo> siteAdVos = siteAds.stream().map(ad -> {

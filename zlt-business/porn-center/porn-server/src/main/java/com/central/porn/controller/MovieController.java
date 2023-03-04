@@ -59,10 +59,14 @@ public class MovieController {
      */
     @GetMapping("/detail/info")
     @ApiOperation(value = "播放页-获取影片详情")
-    public Result<KpnMovieVo> detailInfo(@RequestHeader("sid") Long sid, @ApiIgnore @LoginUser SysUser sysUser, Long movieId) {
+    public Result<KpnMovieVo> detailInfo(@RequestHeader("sid") Long sid,
+                                         @ApiIgnore @LoginUser SysUser sysUser,
+                                         @ApiParam("专题id(从专题进入影片详情需要带该参数记录专题访问次数,其他途径进入影片详情设置null)")
+                                                 Long topicId,
+                                         @ApiParam("影片id") Long movieId) {
         try {
-            //站点播放次数
-            Long siteMovieVv = siteMovieService.addSiteMovieVv(sid, movieId);
+            //站点影片播放次数
+            Long siteMovieVv = siteMovieService.addSiteMovieVv(sid, topicId, movieId);
 
             //获取影片详情
             KpnMovieVo kpnMovieVo = siteMovieService.getSiteMovieDetail(sid, movieId);

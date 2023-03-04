@@ -2,6 +2,7 @@ package com.central.porn.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -30,12 +31,10 @@ import com.central.porn.utils.PornUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -60,6 +59,12 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
     @Autowired
     private IRptSiteSearchTotalService siteSearchTotalService;
+
+    @Autowired
+    private IKpnSiteTopicMovieService siteTopicMovieService;
+
+    @Autowired
+    private IRptSiteMovieDateService rptSiteMovieDateService;
 
     @Autowired
     private TaskExecutor taskExecutor;
@@ -160,11 +165,12 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public Long addSiteMovieVv(Long sid, Long movieId) {
+    public Long addSiteMovieVv(Long sid, Long topicId, Long movieId) {
         String siteMovieVvKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_VV_KEY, sid, movieId);
         cacheSiteMovieVv(siteMovieVvKey, sid, movieId);
 
-        asyncService.addSiteMovieVv(sid, movieId);
+        addSiteMovieVv(sid, movieId);
+        siteTopicMovieService.addTopicMovieVv(sid, topicId, movieId);
         movieService.addMovieVv(movieId);
 
         return RedisRepository.incr(siteMovieVvKey);
@@ -180,7 +186,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         String siteMovieFavoritesKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_FAVORITES_KEY, sid, movieId);
         cacheSiteMovieFavorites(siteMovieFavoritesKey, sid, movieId);
 
-        asyncService.addSiteMovieFavorites(sid, movieId);
+        addSiteMovieFavorites(sid, movieId);
         movieService.addMovieFavorites(movieId);
         siteUserMovieFavoritesService.add(userId, movieId);
         return RedisRepository.incr(siteMovieFavoritesKey);
@@ -196,11 +202,40 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         String siteMovieFavoritesKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_FAVORITES_KEY, sid, movieId);
         cacheSiteMovieFavorites(siteMovieFavoritesKey, sid, movieId);
 
-        asyncService.removeSiteMovieFavorites(sid, movieId);
+        removeSiteMovieFavorites(sid, movieId);
         movieService.removeMovieFavorites(movieId);
         siteUserMovieFavoritesService.remove(userId, movieId);
 
         return RedisRepository.decr(siteMovieFavoritesKey);
+    }
+
+    @Override
+    public void addSiteMovieVv(Long sid, Long movieId) {
+        this.lambdaUpdate()
+                .eq(KpnSiteMovie::getSiteId, sid)
+                .eq(KpnSiteMovie::getMovieId, movieId)
+                .setSql(" `vv` = `vv` + 1")
+                .update();
+
+        rptSiteMovieDateService.saveRptSiteMovieDateVv(sid, movieId, DateUtil.formatDate(new Date()));
+    }
+
+    @Override
+    public void addSiteMovieFavorites(Long sid, Long movieId) {
+        this.lambdaUpdate()
+                .eq(KpnSiteMovie::getSiteId, sid)
+                .eq(KpnSiteMovie::getMovieId, movieId)
+                .setSql(" `favorites` = `favorites` + 1")
+                .update();
+    }
+
+    @Override
+    public void removeSiteMovieFavorites(Long sid, Long movieId) {
+        this.lambdaUpdate()
+                .eq(KpnSiteMovie::getSiteId, sid)
+                .eq(KpnSiteMovie::getMovieId, movieId)
+                .setSql(" `favorites` = `favorites` - 1")
+                .update();
     }
 
     @Override

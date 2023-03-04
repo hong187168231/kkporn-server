@@ -28,6 +28,9 @@ public class KpnSiteTopicMovie extends SuperEntity {
     @ApiModelProperty(value = "电影id")
     private Long movieId;
 
+    @ApiModelProperty(value = "专题影片播放量")
+    private Long vv;
+
     @ApiModelProperty(value = "专题影片排序(只在首页有效)")
     private Long sort;
 }
