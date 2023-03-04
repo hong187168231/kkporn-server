@@ -32,4 +32,7 @@ public class KpnSiteAdvertiseCo extends PageCo {
     @ApiModelProperty(value = "有效结束时间")
     private String endTime;
 
+    @ApiModelProperty(value = "排序方式：1正序、2倒序")
+    private String sortBy;
+
 }

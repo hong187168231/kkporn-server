@@ -57,8 +57,16 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
       if (StringUtils.isNotBlank(params.getEndTime())) {
          wrapper.le(KpnSiteAdvertise::getCreateTime, params.getEndTime());
       }
-
-      wrapper.orderByDesc(KpnSiteAdvertise::getCreateTime);
+      if(StringUtils.isNotBlank(params.getSortBy())){
+         if (params.getSortBy().equals("1")){
+            wrapper.orderByAsc(KpnSiteAdvertise::getHits);
+         }
+         if (params.getSortBy().equals("2")){
+            wrapper.orderByDesc(KpnSiteAdvertise::getHits);
+         }
+      }else {
+         wrapper.orderByDesc(KpnSiteAdvertise::getCreateTime);
+      }
       Page<KpnSiteAdvertise> list = baseMapper.selectPage(page, wrapper);
       long total = page.getTotal();
       return PageResult.<KpnSiteAdvertise>builder().data(list.getRecords()).count(total).build();
