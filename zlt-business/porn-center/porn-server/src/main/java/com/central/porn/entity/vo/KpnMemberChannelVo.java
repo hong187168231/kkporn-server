@@ -24,6 +24,10 @@ public class KpnMemberChannelVo extends LanguageNameMulti implements Serializabl
 //    @ApiModelProperty("频道柬文名称")
 //    private String nameKh;
 
+    @ApiModelProperty(value = "频道图标")
+    private String icon;
+
+
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;
 }

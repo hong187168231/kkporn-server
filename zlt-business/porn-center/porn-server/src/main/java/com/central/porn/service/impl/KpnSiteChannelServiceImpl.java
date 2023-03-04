@@ -33,27 +33,35 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
     @Override
     public List<KpnSiteChannel> getAllChannelsBySiteId(Long sid) {
         //固定频道
-        String stashChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_STASH_CHANNEL_KEY, sid);
-        List<KpnSiteChannel> siteChannels = (List<KpnSiteChannel>) RedisRepository.get(stashChannelRedisKey);
-        if (CollectionUtil.isEmpty(siteChannels)) {
-            siteChannels = this.lambdaQuery()
-                    .eq(KpnSiteChannel::getSiteId, sid)
-                    .eq(KpnSiteChannel::getIsStable, true)
-                    .orderByDesc(KpnSiteChannel::getIsStable)
-                    .orderByDesc(KpnSiteChannel::getSort)
-                    .orderByDesc(KpnSiteChannel::getCreateTime)
-                    .list();
-            if (CollectionUtil.isNotEmpty(siteChannels)) {
-                RedisRepository.setExpire(stashChannelRedisKey, siteChannels, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
-            }
-        }
+//        String stashChannelRedisKey = StrUtil.format(PornConstants.RedisKey.SITE_STASH_CHANNEL_KEY, sid);
+//        List<KpnSiteChannel> siteChannels = (List<KpnSiteChannel>) RedisRepository.get(stashChannelRedisKey);
+//        if (CollectionUtil.isEmpty(siteChannels)) {
+//            siteChannels = this.lambdaQuery()
+//                    .eq(KpnSiteChannel::getSiteId, sid)
+//                    .eq(KpnSiteChannel::getIsStable, true)
+//                    .orderByDesc(KpnSiteChannel::getIsStable)
+//                    .orderByDesc(KpnSiteChannel::getSort)
+//                    .orderByDesc(KpnSiteChannel::getCreateTime)
+//                    .list();
+//            if (CollectionUtil.isNotEmpty(siteChannels)) {
+//                RedisRepository.setExpire(stashChannelRedisKey, siteChannels, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+//            }
+//        }
+
+        List<KpnSiteChannel> siteChannels = this.lambdaQuery()
+                .eq(KpnSiteChannel::getSiteId, sid)
+                .eq(KpnSiteChannel::getIsStable, true)
+                .orderByDesc(KpnSiteChannel::getIsStable)
+                .orderByDesc(KpnSiteChannel::getSort)
+                .orderByDesc(KpnSiteChannel::getCreateTime)
+                .list();
 
         //站点自定义频道,无影片不展示
         String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV, sid, PornConstants.Symbol.ASTERISK);
         Set<String> notStashChannelKeys = RedisRepository.keys(redisKey);
 
         List<Long> channelIds = notStashChannelKeys.stream().map(s -> Long.parseLong(s.substring(s.lastIndexOf(":") + 1))).collect(Collectors.toList());
-        if(CollectionUtil.isNotEmpty(channelIds)){
+        if (CollectionUtil.isNotEmpty(channelIds)) {
             List<KpnSiteChannel> kpnSiteChannels = listByIds(channelIds);
             kpnSiteChannels.sort(Comparator.comparingLong(KpnSiteChannel::getSort).thenComparing(KpnSiteChannel::getId).reversed());
 
@@ -73,25 +81,26 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         return list.stream().map(KpnSiteChannel::getId).collect(Collectors.toList());
     }
 
-    //todo 过滤掉无影片的频道
     @Override
     public List<KpnSiteChannel> getMemberChannels(Long uid) {
-        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_USER_CHANNEL_KEY, uid);
-        List<KpnSiteChannel> memberChannels = (List<KpnSiteChannel>) RedisRepository.get(userChannelRedisKey);
-        if (CollectionUtil.isEmpty(memberChannels)) {
-            memberChannels = this.baseMapper.getMemberChannels(uid);
-            if (CollectionUtil.isNotEmpty(memberChannels)) {
-                RedisRepository.setExpire(userChannelRedisKey, memberChannels, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
-            }
-        }
-        return memberChannels;
+//        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_USER_CHANNEL_KEY, uid);
+//        List<KpnSiteChannel> memberChannels = (List<KpnSiteChannel>) RedisRepository.get(userChannelRedisKey);
+//        if (CollectionUtil.isEmpty(memberChannels)) {
+//            memberChannels = this.baseMapper.getMemberChannels(uid);
+//            if (CollectionUtil.isNotEmpty(memberChannels)) {
+//                RedisRepository.setExpire(userChannelRedisKey, memberChannels, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+//            }
+//        }
+//        return memberChannels;
+
+        return this.baseMapper.getMemberChannels(uid);
     }
 
     @Override
     @Async
     public void saveMemberChannelsSort(Long uid, @RequestBody List<MemberChannelSortCo> channelSortCos) {
-        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_USER_CHANNEL_KEY, uid);
-        RedisRepository.delete(userChannelRedisKey);
+//        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_USER_CHANNEL_KEY, uid);
+//        RedisRepository.delete(userChannelRedisKey);
 
         if (CollectionUtil.isNotEmpty(channelSortCos)) {
             for (MemberChannelSortCo channelSortCo : channelSortCos) {
@@ -130,8 +139,8 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         userChannelService.save(siteUserChannel);
 
         //重置缓存
-        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_USER_CHANNEL_KEY, uid);
-        RedisRepository.delete(userChannelRedisKey);
+//        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_USER_CHANNEL_KEY, uid);
+//        RedisRepository.delete(userChannelRedisKey);
         getMemberChannels(uid);
         log.info("频道添加完成 userId: {},channelId: {}", uid, channelId);
     }
@@ -146,8 +155,8 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
                 .remove();
 
         //重置缓存
-        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_USER_CHANNEL_KEY, uid);
-        RedisRepository.delete(userChannelRedisKey);
+//        String userChannelRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_USER_CHANNEL_KEY, uid);
+//        RedisRepository.delete(userChannelRedisKey);
         getMemberChannels(uid);
         log.info("频道移除完成 userId: {},channelId: {}", uid, channelId);
     }
