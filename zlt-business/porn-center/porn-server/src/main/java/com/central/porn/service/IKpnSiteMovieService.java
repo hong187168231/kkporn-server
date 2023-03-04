@@ -44,9 +44,10 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * 增加站点影片播放量
      *
      * @param sid     站点id
+     * @param topicId 专题id
      * @param movieId 影片id
      */
-    Long addSiteMovieVv(Long sid, Long movieId);
+    Long addSiteMovieVv(Long sid, Long topicId, Long movieId);
 
     /**
      * 增加站点影片收藏量
@@ -143,4 +144,28 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * @return
      */
     List<KpnSiteMovieBaseVo> searchSiteVipMovieTop5(Long sid);
+
+    /**
+     * 站点影片播放量-add
+     *
+     * @param sid     站点id
+     * @param movieId 影片id
+     */
+    void addSiteMovieVv(Long sid, Long movieId);
+
+    /**
+     * 站点影片收藏量-加1
+     *
+     * @param sid     站点id
+     * @param movieId 影片id
+     */
+    void addSiteMovieFavorites(Long sid, Long movieId);
+
+    /**
+     * 站点影片收藏量-减1
+     *
+     * @param sid     站点id
+     * @param movieId 影片id
+     */
+    void removeSiteMovieFavorites(Long sid, Long movieId);
 }

@@ -18,10 +18,10 @@ public interface IKpnSiteTopicService extends ISuperService<KpnSiteTopic> {
 
     /**
      * 获取站点专题信息(包含影片信息)
+     *
      * @param id
      * @return
      */
     List<KpnSiteTopicVo> getBySiteId(Long id);
-
 
 }

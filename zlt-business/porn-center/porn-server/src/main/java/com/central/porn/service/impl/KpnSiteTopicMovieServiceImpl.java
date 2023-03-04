@@ -53,6 +53,15 @@ public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicM
     public List<Long> getTopicMovieIdsSortedByColumn(Long sid, Long topicId, String column) {
         return this.baseMapper.getTopicMovieIdsSortedByColumn(sid, topicId, column);
     }
+
+    @Override
+    public void addTopicMovieVv(Long sid, Long topicId, Long movieId) {
+        this.lambdaUpdate().setSql(" `vv` = `vv` + 1")
+                .eq(KpnSiteTopicMovie::getSiteId, sid)
+                .eq(KpnSiteTopicMovie::getTopicId, topicId)
+                .eq(KpnSiteTopicMovie::getMovieId, movieId)
+                .update();
+    }
 }
 
 
