@@ -41,6 +41,7 @@ public class SiteChannelRptJob implements SimpleJob, CommandLineRunner {
             for (KpnSite kpnSite : kpnSites) {
                 Long sid = kpnSite.getId();
 
+                //非固定标签
                 List<Long> channelIds = siteChannelService.getSiteNotStableChannelIds(sid);
                 for (Long channelId : channelIds) {
                     //按播放量高->低

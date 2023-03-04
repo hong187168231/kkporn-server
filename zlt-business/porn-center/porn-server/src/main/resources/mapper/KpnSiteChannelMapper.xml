@@ -11,6 +11,7 @@
           and b.status = 1
         order by a.sort desc, a.create_time desc
     </select>
+
     <select id="getChannelMovieIdsSortedByColumn" resultType="java.lang.Long">
         select y.movie_id
         from (

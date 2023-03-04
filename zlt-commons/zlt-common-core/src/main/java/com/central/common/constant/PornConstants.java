@@ -127,7 +127,7 @@ public final class PornConstants {
         //缓存站点信息 siteid
         public static final String SITE_INFO_KEY = "SITE:INFO:{}";
         //缓存站点频道信息 siteid
-        public static final String SITE_STASH_CHANNEL_KEY = "SITE:CHANNEL:{}";
+//        public static final String SITE_STASH_CHANNEL_KEY = "SITE:CHANNEL:{}";
         //缓存站点专题信息 siteid
         public static final String KPN_SITE_TOPIC_KEY = "KPN:SITE:TOPIC:{}";
         //缓存站点专题影片id信息 list类型  siteid,topicid
@@ -192,7 +192,7 @@ public final class PornConstants {
         public static final String KPN_SITE_VIP_MOVIEID_VV = "KPN:SITE:VIP:MOVIEID:VV:{}";
 
         //缓存会员频道信息 userid
-        public static final String KPN_SITE_USER_CHANNEL_KEY = "KPN:SITE:USER:CHANNEL:{}";
+//        public static final String KPN_SITE_USER_CHANNEL_KEY = "KPN:SITE:USER:CHANNEL:{}";
 
         //站点影片信息变动标识 默认0,有变动1
         public static final String KPN_SITE_MOVIE_CHANGE_FLAG = "KPN:SITE:MOVIE:CHANGE:FLAG:{}";
