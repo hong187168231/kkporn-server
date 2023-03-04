@@ -60,6 +60,7 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
             kpnActor.setUpdateBy(null!=user?user.getUsername():kpnActor.getUpdateBy());
         }else {
             kpnActor.setCreateBy(null!=user?user.getUsername():kpnActor.getCreateBy());
+            kpnActor.setUpdateBy(null!=user?user.getUsername():kpnActor.getCreateBy());
         }
         this.saveOrUpdate(kpnActor);
         return Result.succeed("保存成功");

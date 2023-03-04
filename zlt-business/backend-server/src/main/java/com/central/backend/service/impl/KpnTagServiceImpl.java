@@ -76,6 +76,7 @@ public class KpnTagServiceImpl extends SuperServiceImpl<KpnTagMapper, KpnTag> im
             kpnTag.setUpdateBy(null!=user?user.getUsername():kpnTag.getUpdateBy());
         }else {
             kpnTag.setCreateBy(null!=user?user.getUsername():kpnTag.getCreateBy());
+            kpnTag.setUpdateBy(null!=user?user.getUsername():kpnTag.getCreateBy());
         }
         this.saveOrUpdate(kpnTag);
         return Result.succeed("保存成功");

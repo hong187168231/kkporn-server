@@ -48,6 +48,7 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
             kpnSiteProduct.setUpdateBy(null!=user?user.getUsername():kpnSiteProduct.getUpdateBy());
         }else {
             kpnSiteProduct.setCreateBy(null!=user?user.getUsername():kpnSiteProduct.getCreateBy());
+            kpnSiteProduct.setUpdateBy(null!=user?user.getUsername():kpnSiteProduct.getCreateBy());
         }
         this.saveOrUpdate(kpnSiteProduct);
         return Result.succeed("保存成功");

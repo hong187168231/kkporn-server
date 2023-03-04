@@ -63,6 +63,7 @@ public class KpnSiteServeServiceImpl extends SuperServiceImpl<KpnSiteServeMapper
                 return Result.failed("平台客服账号已存在");
             }
             kpnSiteServe.setCreateBy(null!=user?user.getUsername():kpnSiteServe.getCreateBy());
+            kpnSiteServe.setUpdateBy(null!=user?user.getUsername():kpnSiteServe.getCreateBy());
         }
         this.saveOrUpdate(kpnSiteServe);
         return Result.succeed("保存成功");

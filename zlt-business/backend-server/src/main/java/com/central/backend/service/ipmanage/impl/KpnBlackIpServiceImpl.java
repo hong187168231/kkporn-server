@@ -71,6 +71,7 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
                 return Result.failed("黑名单IP已存在");
             }
             kpnBlackIp.setCreateBy(null!=user?user.getUsername():kpnBlackIp.getCreateBy());
+            kpnBlackIp.setUpdateBy(null!=user?user.getUsername():kpnBlackIp.getCreateBy());
         }
         this.saveOrUpdate(kpnBlackIp);
         return Result.succeed("保存成功");

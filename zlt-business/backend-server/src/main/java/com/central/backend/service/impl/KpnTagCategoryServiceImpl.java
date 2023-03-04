@@ -68,6 +68,7 @@ public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMa
             kpnTagCategory.setUpdateBy(null!=user?user.getUsername():kpnTagCategory.getUpdateBy());
         }else {
             kpnTagCategory.setCreateBy(null!=user?user.getUsername():kpnTagCategory.getCreateBy());
+            kpnTagCategory.setUpdateBy(null!=user?user.getUsername():kpnTagCategory.getCreateBy());
         }
         this.saveOrUpdate(kpnTagCategory);
         return Result.succeed("保存成功");

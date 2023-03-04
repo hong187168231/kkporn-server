@@ -66,6 +66,7 @@ public class KpnSiteBankCardServiceImpl extends SuperServiceImpl<KpnSiteBankCard
                 return Result.failed("卡号已存在");
             }
             kpnSiteBankCard.setCreateBy(null!=user?user.getUsername():kpnSiteBankCard.getCreateBy());
+            kpnSiteBankCard.setUpdateBy(null!=user?user.getUsername():kpnSiteBankCard.getCreateBy());
         }
         this.saveOrUpdate(kpnSiteBankCard);
         return Result.succeed("保存成功");

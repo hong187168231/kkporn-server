@@ -73,6 +73,7 @@ public class KpnSiteBankServiceImpl extends SuperServiceImpl<KpnSiteBankMapper, 
                 return Result.failed("银行名称已存在");
             }
             kpnSiteBank.setCreateBy(null!=user?user.getUsername():kpnSiteBank.getCreateBy());
+            kpnSiteBank.setUpdateBy(null!=user?user.getUsername():kpnSiteBank.getCreateBy());
         }
         this.saveOrUpdate(kpnSiteBank);
         return Result.succeed("保存成功");

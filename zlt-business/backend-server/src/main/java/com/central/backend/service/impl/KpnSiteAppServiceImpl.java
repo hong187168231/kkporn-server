@@ -53,6 +53,7 @@ public class KpnSiteAppServiceImpl extends SuperServiceImpl<KpnSiteAppMapper, Kp
                 return Result.failed("版本已存在");
             }
             kpnSiteApp.setCreateBy(null!=user?user.getUsername():kpnSiteApp.getCreateBy());
+            kpnSiteApp.setUpdateBy(null!=user?user.getUsername():kpnSiteApp.getCreateBy());
         }
         this.saveOrUpdate(kpnSiteApp);
         return Result.succeed("保存成功");

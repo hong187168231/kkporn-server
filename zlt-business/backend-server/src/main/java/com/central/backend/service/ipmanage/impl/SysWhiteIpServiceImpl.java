@@ -76,6 +76,7 @@ public class SysWhiteIpServiceImpl extends SuperServiceImpl<SysWhiteIpMapper, Sy
                 return Result.failed("黑名单IP已存在");
             }
             sysWhiteIp.setCreateBy(null!=user?user.getUsername():sysWhiteIp.getCreateBy());
+            sysWhiteIp.setUpdateBy(null!=user?user.getUsername():sysWhiteIp.getCreateBy());
         }
         this.saveOrUpdate(sysWhiteIp);
         return Result.succeed("保存成功");

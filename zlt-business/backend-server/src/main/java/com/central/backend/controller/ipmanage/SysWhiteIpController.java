@@ -40,6 +40,10 @@ public class SysWhiteIpController {
      */
     @ApiOperation(value = "查询列表")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "ip", value = "IP地址", required = false),
+            @ApiImplicitParam(name = "updateBy", value = "更新人", required = false),
+            @ApiImplicitParam(name = "startTime", value = "起始时间查询", required = false),
+            @ApiImplicitParam(name = "endTime", value = "结束时间查询", required = false),
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
