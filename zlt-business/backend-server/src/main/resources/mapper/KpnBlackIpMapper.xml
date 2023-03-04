@@ -14,8 +14,13 @@
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
-    <select id="findList" resultMap="BaseResultMap">
-        select * from kpn_black_ip t
+    <select id="findList" resultType="com.central.backend.model.vo.KpnBlackIpVO">
+        select t.id as id,t.ip_section as ipSection,
+               t.remark as remark,t.site_id as siteId,
+               t.site_code as siteCode,t.site_name as siteName,
+               t.create_by as createBy,t.create_time as createTime,
+               t.update_by as updateBy,t.update_time as updateTime
+        from kpn_black_ip t
         <where>
             1=1
             <if test="p.siteId != null and  p.siteId != '' and p.siteId != 0">
