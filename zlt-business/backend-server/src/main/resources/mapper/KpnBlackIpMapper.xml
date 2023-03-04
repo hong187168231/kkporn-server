@@ -2,7 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.central.backend.mapper.ipmanage.KpnBlackIpMapper">
-    <select id="findList" resultType="com.central.common.model.ipmanage.KpnBlackIp">
+    <resultMap id="BaseResultMap" type="com.central.backend.model.vo.KpnBlackIpVO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="ip_section" jdbcType="VARCHAR" property="ipSection"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="site_id" jdbcType="BIGINT" property="siteId"/>
+        <result column="site_code" jdbcType="VARCHAR" property="siteCode"/>
+        <result column="site_name" jdbcType="VARCHAR" property="siteName"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <select id="findList" resultMap="BaseResultMap">
         select * from kpn_black_ip t
         <where>
             1=1

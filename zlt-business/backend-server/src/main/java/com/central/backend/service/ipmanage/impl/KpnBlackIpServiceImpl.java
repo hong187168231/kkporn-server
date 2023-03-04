@@ -2,6 +2,7 @@ package com.central.backend.service.ipmanage.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.central.backend.mapper.ipmanage.KpnBlackIpMapper;
+import com.central.backend.model.vo.KpnBlackIpVO;
 import com.central.backend.service.ipmanage.IKpnBlackIpService;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
@@ -36,13 +37,13 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
      * @return
      */
     @Override
-    public PageResult<KpnBlackIp> findList(Map<String, Object> params, SysUser user){
+    public PageResult<KpnBlackIpVO> findList(Map<String, Object> params, SysUser user){
         if(null!=user && null!=user.getSiteId() && user.getSiteId()!=0){//
             params.put("siteId",user.getSiteId());
         }
-        Page<KpnBlackIp> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
-        List<KpnBlackIp> list  =  baseMapper.findList(page, params);
-        return PageResult.<KpnBlackIp>builder().data(list).count(page.getTotal()).build();
+        Page<KpnBlackIpVO> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
+        List<KpnBlackIpVO> list  =  baseMapper.findList(page, params);
+        return PageResult.<KpnBlackIpVO>builder().data(list).count(page.getTotal()).build();
     }
     @Override
     public Result saveOrUpdateKpnBlackIp(KpnBlackIp kpnBlackIp, SysUser user){
