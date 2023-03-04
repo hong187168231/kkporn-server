@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.central.backend.model.vo.KpnBlackIpVO;
 import com.central.backend.service.ipmanage.IKpnBlackIpService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.SysUser;
@@ -44,7 +45,7 @@ public class KpnBlackIpController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnBlackIp>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
+    public Result<PageResult<KpnBlackIpVO>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }

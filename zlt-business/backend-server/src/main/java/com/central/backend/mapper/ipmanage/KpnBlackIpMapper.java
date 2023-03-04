@@ -1,5 +1,6 @@
 package com.central.backend.mapper.ipmanage;
 
+import com.central.backend.model.vo.KpnBlackIpVO;
 import com.central.common.model.ipmanage.KpnBlackIp;
 import com.central.db.mapper.SuperMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,5 +24,5 @@ public interface KpnBlackIpMapper extends SuperMapper<KpnBlackIp> {
      * @param params
      * @return
      */
-    List<KpnBlackIp> findList(Page<KpnBlackIp> page, @Param("p") Map<String, Object> params);
+    List<KpnBlackIpVO> findList(Page<KpnBlackIpVO> page, @Param("p") Map<String, Object> params);
 }
