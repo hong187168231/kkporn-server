@@ -66,7 +66,7 @@ public class SysWhiteIpServiceImpl extends SuperServiceImpl<SysWhiteIpMapper, Sy
         if(!matcher.matches()){
             return Result.failed("白名单IP格式错误");
         }
-        if(null!=sysWhiteIp.getId()){
+        if(null!=sysWhiteIp.getId()&&0!=sysWhiteIp.getId()){
             sysWhiteIp.setUpdateBy(null!=user?user.getUsername():sysWhiteIp.getUpdateBy());
         }else {
             LambdaQueryWrapper<SysWhiteIp> wrapper = new LambdaQueryWrapper<>();

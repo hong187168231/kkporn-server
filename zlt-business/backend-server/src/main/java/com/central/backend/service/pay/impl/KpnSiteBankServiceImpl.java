@@ -60,7 +60,7 @@ public class KpnSiteBankServiceImpl extends SuperServiceImpl<KpnSiteBankMapper, 
     }
     @Override
     public Result saveOrUpdateKpnSiteBank(KpnSiteBank kpnSiteBank, SysUser user){
-        if(null!=kpnSiteBank.getId()){
+        if(null!=kpnSiteBank.getId()&&0!=kpnSiteBank.getId()){
             kpnSiteBank.setUpdateBy(null!=user?user.getUsername():kpnSiteBank.getUpdateBy());
         }else {
             LambdaQueryWrapper<KpnSiteBank> wrapper = new LambdaQueryWrapper<>();

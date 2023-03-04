@@ -44,7 +44,7 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
     }
     @Override
     public Result saveOrUpdateKpnSiteProduct(KpnSiteProduct kpnSiteProduct, SysUser user){
-        if(null!=kpnSiteProduct.getId()){
+        if(null!=kpnSiteProduct.getId()&&0!=kpnSiteProduct.getId()){
             kpnSiteProduct.setUpdateBy(null!=user?user.getUsername():kpnSiteProduct.getUpdateBy());
         }else {
             kpnSiteProduct.setCreateBy(null!=user?user.getUsername():kpnSiteProduct.getCreateBy());

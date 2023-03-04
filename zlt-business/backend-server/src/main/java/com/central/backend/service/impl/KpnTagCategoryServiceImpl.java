@@ -64,7 +64,7 @@ public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMa
     }
     @Override
     public Result saveOrUpdateKpnTagCategory(KpnTagCategory kpnTagCategory, SysUser user){
-        if(null!=kpnTagCategory.getId()){
+        if(null!=kpnTagCategory.getId()&&0!=kpnTagCategory.getId()){
             kpnTagCategory.setUpdateBy(null!=user?user.getUsername():kpnTagCategory.getUpdateBy());
         }else {
             kpnTagCategory.setCreateBy(null!=user?user.getUsername():kpnTagCategory.getCreateBy());

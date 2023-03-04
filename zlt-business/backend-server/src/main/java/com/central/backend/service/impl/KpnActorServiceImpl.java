@@ -56,7 +56,7 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
     }
     @Override
     public Result saveOrUpdateKpnActor(KpnActor kpnActor,SysUser user){
-        if(null!=kpnActor.getId()){
+        if(null!=kpnActor.getId()&&0!=kpnActor.getId()){
             kpnActor.setUpdateBy(null!=user?user.getUsername():kpnActor.getUpdateBy());
         }else {
             kpnActor.setCreateBy(null!=user?user.getUsername():kpnActor.getCreateBy());

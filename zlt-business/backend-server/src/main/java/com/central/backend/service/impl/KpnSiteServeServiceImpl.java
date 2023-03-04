@@ -49,7 +49,7 @@ public class KpnSiteServeServiceImpl extends SuperServiceImpl<KpnSiteServeMapper
     }
     @Override
     public Result saveOrUpdateKpnSiteServe(KpnSiteServe kpnSiteServe, SysUser user){
-        if(null!=kpnSiteServe.getId()){
+        if(null!=kpnSiteServe.getId()&&0!=kpnSiteServe.getId()){
             kpnSiteServe.setUpdateBy(null!=user?user.getUsername():kpnSiteServe.getUpdateBy());
         }else {
             LambdaQueryWrapper<KpnSiteServe> wrapper = new LambdaQueryWrapper<>();

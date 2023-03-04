@@ -58,7 +58,7 @@ public class KpnBlackIpServiceImpl extends SuperServiceImpl<KpnBlackIpMapper, Kp
         if(!matcher.matches()){
             return Result.failed("黑名单IP格式错误");
         }
-        if(null!=kpnBlackIp.getId()){
+        if(null!=kpnBlackIp.getId()&&0!=kpnBlackIp.getId()){
             kpnBlackIp.setUpdateBy(null!=user?user.getUsername():kpnBlackIp.getUpdateBy());
         }else {
             LambdaQueryWrapper<KpnBlackIp> wrapper = new LambdaQueryWrapper<>();

@@ -53,7 +53,7 @@ public class KpnSiteBankCardServiceImpl extends SuperServiceImpl<KpnSiteBankCard
     }
     @Override
     public Result saveOrUpdateKpnSiteBankCard(KpnSiteBankCard kpnSiteBankCard, SysUser user){
-        if(null!=kpnSiteBankCard.getId()){
+        if(null!=kpnSiteBankCard.getId()&&0!=kpnSiteBankCard.getId()){
             kpnSiteBankCard.setUpdateBy(null!=user?user.getUsername():kpnSiteBankCard.getUpdateBy());
         }else {
             LambdaQueryWrapper<KpnSiteBankCard> wrapper = new LambdaQueryWrapper<>();
