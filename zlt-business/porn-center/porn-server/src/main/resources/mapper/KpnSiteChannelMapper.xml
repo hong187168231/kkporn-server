@@ -4,7 +4,7 @@
 <mapper namespace="com.central.porn.mapper.KpnSiteChannelMapper">
 
     <select id="getMemberChannels" resultType="com.central.common.model.KpnSiteChannel">
-        select b.id, b.name_zh, b.name_en, b.name_kh, a.sort
+        select b.id, b.name_zh, b.name_en, b.name_kh, a.sort, b.icon
         from kpn_site_user_channel a
                  left join kpn_site_channel b on b.id = a.channel_id
         where a.user_id = #{uid}

@@ -614,6 +614,7 @@ public class MemberController {
                 memberChannelVo.setChannelId(kpnSiteChannel.getId());
                 BeanUtil.copyProperties(kpnSiteChannel, memberChannelVo);
                 memberChannelVo.setName(LanguageUtil.getLanguageName(memberChannelVo));
+                memberChannelVo.setIcon(externalEndpoint + kpnSiteChannel.getIcon());
                 return memberChannelVo;
             }).collect(Collectors.toList());
 
