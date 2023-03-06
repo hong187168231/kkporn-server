@@ -58,10 +58,10 @@
                 and t.pay_type LIKE CONCAT('%',#{p.payType},'%')
             </if>
             <choose>
-                <when test="p.orderByParms != null and  p.orderByParms != '' and  p.orderByParms != 2">
+                <when test="p.orderByParms != null and  p.orderByParms != '' and  p.orderByParms == 2">
                     ORDER BY t.vv <choose><when test="p.sortBy != null and  p.sortBy != '' and  p.sortBy == 1"> ASC </when><otherwise> DESC </otherwise></choose>
                 </when>
-                <when test="p.orderByParms != null and  p.orderByParms != '' and  p.orderByParms != 3">
+                <when test="p.orderByParms != null and  p.orderByParms != '' and  p.orderByParms == 3">
                     ORDER BY t.favorites <choose><when test="p.sortBy != null and  p.sortBy != '' and  p.sortBy == 1"> ASC </when><otherwise> DESC </otherwise></choose>
                 </when>
                 <otherwise>
