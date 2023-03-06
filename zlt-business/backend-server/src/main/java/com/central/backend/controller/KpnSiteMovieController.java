@@ -55,6 +55,8 @@ public class KpnSiteMovieController {
             @ApiImplicitParam(name = "startTime", value = "更新时间起始", required = false),
             @ApiImplicitParam(name = "endTime", value = "更新时间结束", required = false),
             @ApiImplicitParam(name = "movieId", value = "影片id", required = false, dataType = "Long"),
+            @ApiImplicitParam(name = "orderByParms", value = "排序字段：1影片数量、2播放数量，3收藏数，默认演员创建时间", required = false, dataType = "Integer"),
+            @ApiImplicitParam(name = "sortBy", value = "排序方式：1正序、2倒叙(默认)", required = false, dataType = "Integer"),
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
