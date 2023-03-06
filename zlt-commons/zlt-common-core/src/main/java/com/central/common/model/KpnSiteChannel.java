@@ -1,5 +1,6 @@
 package com.central.common.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,6 +44,10 @@ public class KpnSiteChannel extends SuperEntity {
 
     @ApiModelProperty(value = "关联标签(tag_id_1,tag_id_2,....)")
     private String tags;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "关联标签名称")
+    private String tagsName;
 
     @ApiModelProperty(value = "是否固定频道 0自定义,1内置固定")
     private Boolean isStable;

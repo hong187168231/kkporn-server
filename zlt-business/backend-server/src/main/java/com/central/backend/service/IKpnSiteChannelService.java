@@ -25,4 +25,6 @@ public interface IKpnSiteChannelService extends ISuperService<KpnSiteChannel> {
 
 
     Result saveOrUpdateSiteChannel(KpnSiteChannel siteChannel);
+
+    void saveSiteChannelList(Long siteId,String siteCode,String siteName,String createBy);
 }
