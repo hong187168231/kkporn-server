@@ -1,4 +1,4 @@
-package com.central.porn.core.language;
+package com.central.common.language;
 
 
 public class LanguageThreadLocal {

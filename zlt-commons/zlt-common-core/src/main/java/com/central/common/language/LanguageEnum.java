@@ -1,4 +1,4 @@
-package com.central.porn.core.language;
+package com.central.common.language;
 
 public enum LanguageEnum {
     EN("en", "en_us", "英文"),

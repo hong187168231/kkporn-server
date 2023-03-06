@@ -1,8 +1,8 @@
 package com.central.porn.entity.vo;
 
 import com.central.common.model.KpnSiteAnnouncement;
-import com.central.porn.core.language.LanguageEnum;
-import com.central.porn.core.language.LanguageThreadLocal;
+import com.central.common.language.LanguageEnum;
+import com.central.common.language.LanguageThreadLocal;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

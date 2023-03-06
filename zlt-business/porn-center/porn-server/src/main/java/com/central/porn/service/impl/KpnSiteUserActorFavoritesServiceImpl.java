@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.model.KpnActor;
 import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.service.impl.SuperServiceImpl;
-import com.central.porn.core.language.LanguageUtil;
+import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.mapper.KpnSiteUserActorFavoritesMapper;

@@ -1,7 +1,8 @@
-package com.central.porn.enums;
+package com.central.common.model.enums;
 
-import com.central.porn.core.language.LanguageEnum;
-import com.central.porn.core.language.LanguageThreadLocal;
+
+import com.central.common.language.LanguageEnum;
+import com.central.common.language.LanguageThreadLocal;
 
 import java.util.Arrays;
 import java.util.List;

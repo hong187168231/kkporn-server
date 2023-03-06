@@ -14,7 +14,7 @@ import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.oss.model.ObjectInfo;
 import com.central.oss.template.MinioTemplate;
-import com.central.porn.core.language.LanguageUtil;
+import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.*;

@@ -1,7 +1,7 @@
 package com.central.porn.enums;
 
-import com.central.porn.core.language.LanguageEnum;
-import com.central.porn.core.language.LanguageThreadLocal;
+import com.central.common.language.LanguageEnum;
+import com.central.common.language.LanguageThreadLocal;
 
 public enum OrderStatusEnum {
     approval(0, "待审核", "Waiting for approval", "កំពុងរង់ចាំការយល់ព្រម"),

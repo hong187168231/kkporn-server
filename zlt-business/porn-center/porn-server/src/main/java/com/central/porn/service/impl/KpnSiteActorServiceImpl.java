@@ -10,7 +10,7 @@ import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
-import com.central.porn.core.language.LanguageUtil;
+import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.mapper.KpnSiteActorMapper;

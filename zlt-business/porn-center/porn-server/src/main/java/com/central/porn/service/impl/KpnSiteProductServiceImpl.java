@@ -8,7 +8,7 @@ import com.central.common.model.enums.KbChangeTypeEnum;
 import com.central.common.model.enums.VipChangeTypeEnum;
 import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.service.impl.SuperServiceImpl;
-import com.central.porn.core.language.LanguageUtil;
+import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.vo.KpnSiteProductVo;
 import com.central.porn.mapper.KpnSiteProductMapper;
 import com.central.porn.service.*;

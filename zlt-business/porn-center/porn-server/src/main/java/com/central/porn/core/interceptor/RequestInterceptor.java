@@ -3,7 +3,7 @@ package com.central.porn.core.interceptor;
 
 import cn.hutool.extra.servlet.ServletUtil;
 import com.central.common.constant.PornConstants;
-import com.central.porn.core.language.LanguageThreadLocal;
+import com.central.common.language.LanguageThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

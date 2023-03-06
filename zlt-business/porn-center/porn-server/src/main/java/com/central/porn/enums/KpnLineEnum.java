@@ -1,8 +1,7 @@
 package com.central.porn.enums;
 
-import com.central.porn.core.language.LanguageEnum;
-import com.central.porn.core.language.LanguageThreadLocal;
-import com.central.porn.core.language.LanguageUtil;
+import com.central.common.language.LanguageEnum;
+import com.central.common.language.LanguageThreadLocal;
 
 /**
  * 线路

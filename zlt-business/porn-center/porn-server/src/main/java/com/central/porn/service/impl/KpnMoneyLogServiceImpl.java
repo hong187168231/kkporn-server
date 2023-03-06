@@ -11,7 +11,7 @@ import com.central.common.model.SysUser;
 import com.central.common.model.enums.KbChangeTypeEnum;
 import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.service.impl.SuperServiceImpl;
-import com.central.porn.core.language.LanguageUtil;
+import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.KbChangeRecordVo;
 import com.central.porn.entity.vo.KpnSiteProductVo;

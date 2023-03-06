@@ -11,7 +11,7 @@ import com.central.common.model.*;
 import com.central.common.model.enums.CodeEnum;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.utils.I18nUtil;
-import com.central.porn.core.language.LanguageUtil;
+import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.*;
 import com.central.porn.enums.KpnActorSortTypeEnum;
