@@ -5,10 +5,7 @@ import com.central.backend.service.IKpnSiteChannelService;
 import com.central.backend.service.IKpnTagService;
 import com.central.backend.vo.CategoryVo;
 import com.central.backend.vo.KpnTagVo;
-import com.central.common.model.KpnSiteChannel;
-import com.central.common.model.KpnTag;
-import com.central.common.model.PageResult;
-import com.central.common.model.Result;
+import com.central.common.model.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,8 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -53,9 +52,24 @@ public class KpnSiteChannelController {
     })
     public Result<PageResult<KpnSiteChannel>> findSiteChannelList(@RequestParam Map<String, Object> params) {
         PageResult<KpnSiteChannel> list = siteChannelService.findSiteChannelList(params);
+        List<KpnTagVo> tagList = kpnTagService.findTagList(params);
+        Map<Long, KpnTagVo> map = tagList.stream().collect(Collectors.toMap(KpnTagVo::getId, (p) -> p));
         list.getData().stream().forEach(info->{
             if (info.getIcon()!=null){
                 info.setIcon(externalEndpoint+"/"+info.getIcon());
+            }
+            //关联标签
+            if (info.getTags()!=null){
+               String[] tage =info.getTags().split(",");
+               StringBuilder tageName=new StringBuilder();
+                for (int i = 0; i < tage.length; i++) {
+                    KpnTagVo kpnTagInfo = map.get(Long.valueOf(tage[i]));
+                    if (kpnTagInfo!=null){
+                        String character= i==0 ? "" : "/";
+                        tageName.append( character + kpnTagInfo.getNameZh() );
+                    }
+                }
+                info.setTagsName(tageName.toString());
             }
         });
         return Result.succeed(list);

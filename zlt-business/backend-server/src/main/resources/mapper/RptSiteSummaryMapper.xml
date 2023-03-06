@@ -8,11 +8,11 @@
 
 	<select id="findSummaryTotal" resultType="com.central.backend.vo.RptSiteSummaryVo">
 		SELECT
-		IFNULL(SUM( s.pv ),0),
-		IFNULL(SUM( s.uv ),0),
-		IFNULL(SUM( s.new_user_num ),0),
-		IFNULL(SUM( s.new_vip_num ),0),
-		IFNULL(SUM( s.recharge ) ,0)
+		IFNULL(SUM( s.pv ),0) as pvTotal,
+		IFNULL(SUM( s.uv ),0) as uvTotal,
+		IFNULL(SUM( s.new_user_num ),0) as newUserNumTotal,
+		IFNULL(SUM( s.new_vip_num ),0) as newVipNumTotal,
+		IFNULL(SUM( s.recharge ) ,0) as rechargeTotal
 		FROM
 			rpt_site_summary s
 
