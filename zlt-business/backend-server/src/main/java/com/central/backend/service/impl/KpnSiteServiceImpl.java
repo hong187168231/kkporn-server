@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.KpnSiteCo;
 import com.central.backend.co.KpnSiteUpdateCo;
 import com.central.backend.mapper.KpnSiteMapper;
+import com.central.backend.service.IKpnSiteChannelService;
 import com.central.backend.service.IKpnSiteService;
 import com.central.backend.util.PictureUtil;
 import com.central.backend.vo.KpnSiteListVo;
@@ -28,8 +29,11 @@ import java.util.Random;
 @Slf4j
 @Service
 public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite> implements IKpnSiteService {
+
+
     @Autowired
-    private MinioTemplate minioTemplate;
+    private IKpnSiteChannelService siteChannelService;
+
 
 
     @Override
@@ -54,6 +58,8 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
         //新增
         if (kpnSite.getId() == null) {
             insert = super.save(kpnSite);
+            //生成站点对应的频道栏目配置
+            siteChannelService.saveSiteChannelList(kpnSite.getId(),kpnSite.getCode(),kpnSite.getName(),kpnSite.getCreateBy());
         }else {
             KpnSite info = baseMapper.selectById(kpnSite.getId());
             if (info == null) {

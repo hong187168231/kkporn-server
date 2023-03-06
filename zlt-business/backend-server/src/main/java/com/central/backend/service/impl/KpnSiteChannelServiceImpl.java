@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -75,5 +76,22 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
             return  Result.succeed(siteChannel, "操作成功");
         }
         return Result.failed("操作失败");
+    }
+
+    @Override
+    public void saveSiteChannelList(Long siteId,String siteCode,String siteName,String createBy) {
+        LambdaQueryWrapper<KpnSiteChannel> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(KpnSiteChannel::getSiteId,0L);
+        List<KpnSiteChannel> kpnSiteChannels = baseMapper.selectList(wrapper);
+        if (kpnSiteChannels!=null && kpnSiteChannels.size()>0){
+            kpnSiteChannels.stream().forEach(info ->{
+                info.setSiteId(siteId);
+                info.setSiteCode(siteCode);
+                info.setSiteName(siteName);
+                info.setCreateBy(createBy);
+                info.setUpdateBy(createBy);
+            });
+        }
+        super.saveBatch(kpnSiteChannels);
     }
 }
