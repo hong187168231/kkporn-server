@@ -1,7 +1,7 @@
 package com.central.common.language;
 
 
-import com.central.porn.entity.vo.LanguageNameMulti;
+import com.central.common.vo.LanguageNameMulti;
 import org.springframework.stereotype.Component;
 
 @Component
