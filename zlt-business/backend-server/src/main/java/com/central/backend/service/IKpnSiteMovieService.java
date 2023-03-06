@@ -25,9 +25,9 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      */
     PageResult<KpnSiteMovieVO> findList(Map<String, Object> params, SysUser user);
 
-    public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list);
+    public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list,SysUser user);
 
-    public void updateBatchPayTypeById(List<KpnSiteMovieStatusDto> list);
+    public void updateBatchPayTypeById(List<KpnSiteMovieStatusDto> list,SysUser user);
 
 
     /**

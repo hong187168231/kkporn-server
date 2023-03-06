@@ -12,6 +12,7 @@ import com.central.common.model.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.service.impl.SuperServiceImpl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
@@ -42,12 +43,20 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         return PageResult.<KpnSiteMovieVO>builder().data(list).count(page.getTotal()).build();
     }
     @Override
-    public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list){
+    public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list,SysUser user){
+        for (KpnSiteMovieStatusDto dto : list){
+            dto.setUpdateBy(null!=user?user.getUsername():dto.getUpdateBy());
+            dto.setUpdateTime(new Date());
+        }
         baseMapper.updateBatchStatusById(list);
     }
 
     @Override
-    public void updateBatchPayTypeById(List<KpnSiteMovieStatusDto> list){
+    public void updateBatchPayTypeById(List<KpnSiteMovieStatusDto> list,SysUser user){
+        for (KpnSiteMovieStatusDto dto : list){
+            dto.setUpdateBy(null!=user?user.getUsername():dto.getUpdateBy());
+            dto.setUpdateTime(new Date());
+        }
         baseMapper.updateBatchPayTypeById(list);
     }
 

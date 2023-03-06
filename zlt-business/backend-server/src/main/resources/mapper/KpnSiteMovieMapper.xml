@@ -64,10 +64,12 @@
     <update id="updateBatchStatusById">
         <foreach collection="list" item="item" separator=";">
             update
-            `kpn_site_movie`
+            kpn_site_movie
             set
-            `status` = #{item.status}
-            where
+            `status` = #{item.status},
+            update_time = #{item.updateTime},
+            update_by = #{item.updateBy}
+             where
             id = #{item.id}
         </foreach>
     </update>
@@ -75,10 +77,12 @@
     <update id="updateBatchPayTypeById">
         <foreach collection="list" item="item" separator=";">
             update
-            `kpn_site_movie`
+            kpn_site_movie
             set
-            `pay_type` = #{item.payType}
-            where
+            pay_type = #{item.payType},
+            update_time = #{item.updateTime},
+            update_by = #{item.updateBy}
+             where
             id = #{item.id}
         </foreach>
     </update>

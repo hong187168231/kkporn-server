@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 站点影片
@@ -58,7 +59,7 @@ public class KpnSiteMovieController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     @GetMapping
-    public Result<PageResult<KpnSiteMovieVO>> list(@RequestParam Map<String, Object> params, @LoginUser SysUser user) {
+    public Result<PageResult<KpnSiteMovieVO>> list(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
         return Result.succeed(kpnSiteMovieService.findList(params,user));
     }
 
@@ -76,8 +77,8 @@ public class KpnSiteMovieController {
       */
     @ApiOperation(value = "批量发布上架下架")
     @PostMapping("/setingStatus")
-    public Result updateBatchStatusById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovie) {
-        kpnSiteMovieService.updateBatchStatusById(kpnSiteMovie);
+    public Result updateBatchStatusById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovie,@ApiIgnore @LoginUser SysUser user) {
+        kpnSiteMovieService.updateBatchStatusById(kpnSiteMovie, user);
         return Result.succeed("保存成功");
     }
     /**
@@ -85,8 +86,8 @@ public class KpnSiteMovieController {
      */
     @ApiOperation(value = "批量设置付费类型")
     @PostMapping("/setingPayType")
-    public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovie) {
-        kpnSiteMovieService.updateBatchPayTypeById(kpnSiteMovie);
+    public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovie,@ApiIgnore @LoginUser SysUser user) {
+        kpnSiteMovieService.updateBatchPayTypeById(kpnSiteMovie, user);
         return Result.succeed("保存成功");
     }
 
