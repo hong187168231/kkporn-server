@@ -1,5 +1,6 @@
 package com.central.backend.controller.pay;
 
+import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.util.ObjectUtil;
@@ -28,7 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @RestController
 @RequestMapping("/kpnsiteproduct")
-@Api(tags = "vip产品")
+@Api(tags = "vip支付产品")
 public class KpnSiteProductController {
     @Autowired
     private IKpnSiteProductService kpnSiteProductService;
@@ -36,13 +37,13 @@ public class KpnSiteProductController {
     /**
      * 列表
      */
-    @ApiOperation(value = "查询列表")
+    @ApiOperation(value = "分页查询列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
-    @GetMapping
-    public Result<PageResult<KpnSiteProduct>> list(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
+    @GetMapping("/page")
+    public Result<PageResult<KpnSiteProduct>> listPage(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(params)) {
             return Result.failed("请求参数不能为空");
         }
@@ -52,6 +53,12 @@ public class KpnSiteProductController {
         if (ObjectUtil.isEmpty(params.get("limit"))) {
             return Result.failed("分页结束位置不能为空");
         }
+        return Result.succeed(kpnSiteProductService.findListPage(params,user));
+    }
+
+    @ApiOperation(value = "查询列表")
+    @GetMapping("/list")
+    public Result<List<KpnSiteProduct>> list(@RequestParam Map<String, Object> params, @ApiIgnore @LoginUser SysUser user) {
         return Result.succeed(kpnSiteProductService.findList(params,user));
     }
 

@@ -32,7 +32,7 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
      * @return
      */
     @Override
-    public PageResult<KpnSiteProduct> findList(Map<String, Object> params, SysUser user){
+    public PageResult<KpnSiteProduct> findListPage(Map<String, Object> params, SysUser user){
         if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
             params.put("siteId","");
         }else {
@@ -41,6 +41,15 @@ public class KpnSiteProductServiceImpl extends SuperServiceImpl<KpnSiteProductMa
         Page<KpnSiteProduct> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<KpnSiteProduct> list  =  baseMapper.findList(page, params);
         return PageResult.<KpnSiteProduct>builder().data(list).count(page.getTotal()).build();
+    }
+    @Override
+    public List<KpnSiteProduct> findList(Map<String, Object> params, SysUser user){
+        if(null==user || user.getSiteId()==null || user.getSiteId()==0){//
+            params.put("siteId","");
+        }else {
+            params.put("siteId",user.getSiteId());
+        }
+        return baseMapper.findList(params);
     }
     @Override
     public Result saveOrUpdateKpnSiteProduct(KpnSiteProduct kpnSiteProduct, SysUser user){
