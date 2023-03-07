@@ -1,5 +1,6 @@
 package com.central.porn.entity.vo;
 
+import com.central.common.vo.LanguageNameMulti;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

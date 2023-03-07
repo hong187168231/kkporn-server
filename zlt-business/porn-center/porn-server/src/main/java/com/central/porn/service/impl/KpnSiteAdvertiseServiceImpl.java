@@ -10,6 +10,7 @@ import com.central.porn.service.IKpnSiteAdvertiseService;
 import com.central.porn.service.IKpnSiteTopicService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
     @Autowired
     private IKpnSiteTopicService siteTopicService;
 
+    @Async
     @Override
     public void addHits(Long adId) {
         this.lambdaUpdate().setSql(" `hits` = `hits` + 1 ").eq(KpnSiteAdvertise::getId, adId).update();

@@ -101,7 +101,7 @@ public class KpnActorController {
         if (ObjectUtil.isEmpty(kpnActor.getBirthday())) {
             return Result.failed("出生日期不能为空");
         }
-        if (ObjectUtil.isEmpty(kpnActor.getCountry())) {
+        if (ObjectUtil.isEmpty(kpnActor.getCountryZh())) {
             return Result.failed("国籍不能为空");
         }
         if (ObjectUtil.isEmpty(kpnActor.getAvatarUrl())) {
@@ -111,16 +111,16 @@ public class KpnActorController {
             return Result.failed("写真照片不能为空");
         }
         if (ObjectUtil.isNotNull(kpnActor.getRemark())) {
-            if(kpnActor.getRemark().length()>100){
+            if (kpnActor.getRemark().length() > 100) {
                 return Result.failed("简介长度不能超过100");
             }
         }
-        if (ObjectUtil.isNotNull(kpnActor.getInterest())) {
-            if(kpnActor.getInterest().length()>100){
+        if (ObjectUtil.isNotNull(kpnActor.getInterestZh())) {
+            if (kpnActor.getInterestZh().length() > 100) {
                 return Result.failed("兴趣长度不能超过100");
             }
         }
-        return kpnActorService.saveOrUpdateKpnActor(kpnActor,user);
+        return kpnActorService.saveOrUpdateKpnActor(kpnActor, user);
     }
 
     /**

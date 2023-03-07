@@ -32,8 +32,12 @@ public class KpnActor extends SuperEntity {
     private Integer sex;
     @ApiModelProperty(value = "生日 年月日")
     private String birthday;
-    @ApiModelProperty(value = "国籍")
-    private String country;
+    @ApiModelProperty(value = "国籍(中文)")
+    private String countryZh;
+    @ApiModelProperty(value = "国籍(英文)")
+    private String countryEn;
+    @ApiModelProperty(value = "国籍(柬文)")
+    private String countryKh;
     @ApiModelProperty(value = "身高")
     private BigDecimal height;
     @ApiModelProperty(value = "体重(KG)")
@@ -46,8 +50,12 @@ public class KpnActor extends SuperEntity {
     private String avatarUrl;
     @ApiModelProperty(value = "写真照url")
     private String portraitUrl;
-    @ApiModelProperty(value = "兴趣")
-    private String interest;
+    @ApiModelProperty(value = "兴趣(中文)")
+    private String interestZh;
+    @ApiModelProperty(value = "兴趣(英文)")
+    private String interestEn;
+    @ApiModelProperty(value = "兴趣(柬文)")
+    private String interestKh;
     @ApiModelProperty(value = "简介")
     private String remark;
 
