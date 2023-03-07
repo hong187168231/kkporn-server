@@ -102,7 +102,13 @@ public class KpnActorController {
             return Result.failed("出生日期不能为空");
         }
         if (ObjectUtil.isEmpty(kpnActor.getCountryZh())) {
-            return Result.failed("国籍不能为空");
+            return Result.failed("国籍(中文)不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getCountryEn())) {
+            return Result.failed("国籍(英文)不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnActor.getCountryKh())) {
+            return Result.failed("国籍(柬文)不能为空");
         }
         if (ObjectUtil.isEmpty(kpnActor.getAvatarUrl())) {
             return Result.failed("头像不能为空");
@@ -117,7 +123,17 @@ public class KpnActorController {
         }
         if (ObjectUtil.isNotNull(kpnActor.getInterestZh())) {
             if (kpnActor.getInterestZh().length() > 100) {
-                return Result.failed("兴趣长度不能超过100");
+                return Result.failed("兴趣(中文)长度不能超过100");
+            }
+        }
+        if (ObjectUtil.isNotNull(kpnActor.getInterestEn())) {
+            if (kpnActor.getInterestEn().length() > 100) {
+                return Result.failed("兴趣(英文)长度不能超过100");
+            }
+        }
+        if (ObjectUtil.isNotNull(kpnActor.getInterestKh())) {
+            if (kpnActor.getInterestKh().length() > 100) {
+                return Result.failed("兴趣(柬文)长度不能超过100");
             }
         }
         return kpnActorService.saveOrUpdateKpnActor(kpnActor, user);
