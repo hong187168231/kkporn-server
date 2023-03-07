@@ -1,6 +1,7 @@
 package com.central.common.language;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.central.common.vo.LanguageNameMulti;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +43,11 @@ public class LanguageUtil {
             name = languageNameVo.getNameKh();
         }
         languageNameVo.setNull();
+
+        if(StrUtil.isBlank(name)){
+            name = languageNameVo.getNameZh();
+        }
+
         return name;
     }
 
