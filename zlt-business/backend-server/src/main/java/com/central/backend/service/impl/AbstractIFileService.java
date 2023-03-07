@@ -6,6 +6,7 @@ import com.central.backend.mapper.FileMapper;
 import com.central.backend.model.FileInfo;
 import com.central.backend.service.IFileService;
 import com.central.backend.util.FileUtil;
+import com.central.backend.util.PictureUtil;
 import com.central.common.model.PageResult;
 import com.central.oss.config.FileServerProperties;
 import com.central.oss.model.ObjectInfo;
@@ -31,6 +32,10 @@ public abstract class AbstractIFileService extends ServiceImpl<FileMapper, FileI
 
     @Override
     public FileInfo upload(MultipartFile file) {
+        if (file!=null){
+            //随机生成文件名字
+            file = PictureUtil.generateRandomName(file);
+        }
         FileInfo fileInfo = FileUtil.getFileInfo(file);
         if (!fileInfo.getName().contains(FILE_SPLIT)) {
             throw new IllegalArgumentException("缺少后缀名");
