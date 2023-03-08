@@ -105,9 +105,11 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      *
      * @param sid      站点id
      * @param keywords 关键词
+     * @param currPage 当前页
+     * @param pageSize 每页条数
      * @return
      */
-    List<KpnSiteMovieBaseVo> searchSiteMovieKeywords(Long sid, String keywords);
+    PornPageResult<KpnSiteMovieBaseVo> searchSiteMovieKeywords(Long sid, String keywords, Integer currPage, Integer pageSize);
 
     /**
      * 查询影片库

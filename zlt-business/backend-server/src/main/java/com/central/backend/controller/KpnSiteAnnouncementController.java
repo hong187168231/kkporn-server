@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.co.KpnSiteAnnouncementCo;
 import com.central.backend.co.KpnSiteAnnouncementUpdateCo;
 import com.central.backend.service.IKpnSiteAnnouncementService;
@@ -55,6 +56,17 @@ public class KpnSiteAnnouncementController {
         }else {
             announcement.setUpdateBy(sysUser.getUsername());
         }*/
+
+
+        if (ObjectUtil.isEmpty(announcement.getTitleZh()) || ObjectUtil.isEmpty(announcement.getTitleEn()) || ObjectUtil.isEmpty(announcement.getTitleKh())) {
+            return Result.failed("标题不能为空");
+        }
+        if (ObjectUtil.isEmpty(announcement.getContentZh()) || ObjectUtil.isEmpty(announcement.getContentEn()) || ObjectUtil.isEmpty(announcement.getContentKh())) {
+            return Result.failed("内容不能为空");
+        }
+        if (ObjectUtil.isEmpty(announcement.getSort())) {
+            return Result.failed("排序不能为空");
+        }
         Result result = announcementService.saveOrUpdateAnnouncement(announcement);
         return result;
     }

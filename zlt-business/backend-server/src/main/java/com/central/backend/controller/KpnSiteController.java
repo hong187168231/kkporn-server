@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.co.KpnSiteCo;
 import com.central.backend.co.KpnSiteUpdateCo;
 import com.central.backend.service.IKpnSiteService;
@@ -79,6 +80,21 @@ public class KpnSiteController {
         }else {
            kpnSite.setUpdateBy(sysUser.getUsername());
         }*/
+        if (ObjectUtil.isEmpty(kpnSite.getName())) {
+            return Result.failed("站点名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSite.getCode())) {
+            return Result.failed("站点编码不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSite.getLogoUrl())) {
+            return Result.failed("站点logo不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSite.getCurrencyCode())) {
+            return Result.failed("币种不能为空");
+        }
+        if (ObjectUtil.isEmpty(kpnSite.getDomains())) {
+            return Result.failed("域名不能为空");
+        }
         return  siteService.saveOrUpdateSite(kpnSite);
     }
 

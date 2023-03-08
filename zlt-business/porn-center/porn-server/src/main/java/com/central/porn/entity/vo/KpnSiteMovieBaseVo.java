@@ -42,6 +42,9 @@ public class KpnSiteMovieBaseVo extends LanguageNameMulti implements Serializabl
     @ApiModelProperty("影片状态 0:下架,1:上架")
     private Integer status;
 
+    @ApiModelProperty("付费类型 0/false:免费,1/true:付费")
+    private Boolean payType;
+
 //    @ApiModelProperty("影片中文名")
 //    private String nameZh;
 //

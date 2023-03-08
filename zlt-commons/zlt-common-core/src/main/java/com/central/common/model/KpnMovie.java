@@ -25,8 +25,8 @@ public class KpnMovie extends SuperEntity {
     private String nameEn;
     @ApiModelProperty("柬文名称")
     private String nameKh;
-    @ApiModelProperty("国家")
-    private String country;
+    @ApiModelProperty("影片所属国家 0:日本,1:中国大陆,2:中国台湾,3:韩国,4:欧美,5:东南亚,6:其他地区")
+    private Integer country;
     @ApiModelProperty("影片类型 0/false无码 1/true有码")
     private Boolean type;
     @ApiModelProperty("拍摄性质 special:专业拍摄,sneak:偷拍,selfie:自拍,other:其他")
@@ -55,6 +55,8 @@ public class KpnMovie extends SuperEntity {
     private Boolean status;
     @ApiModelProperty("影片处理状态 0/false:未处理 , 1/true:处理完成")
     private Boolean handleStatus;
+    @ApiModelProperty("影片删除状态 0/false:未删除 , 1/true:已删除")
+    private Boolean deleteStatus;
     @ApiModelProperty("简介")
     private String remark;
     @ApiModelProperty("影片播放量(所有站点播放量之和)")

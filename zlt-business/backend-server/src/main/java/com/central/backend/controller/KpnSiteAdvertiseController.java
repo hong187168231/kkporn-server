@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.co.KpnSiteAdvertiseCo;
 import com.central.backend.co.KpnSiteAdvertiseUpdateCo;
 import com.central.backend.service.IKpnSiteAdvertiseService;
@@ -58,6 +59,25 @@ public class KpnSiteAdvertiseController {
         }else {
             advertise.setUpdateBy(sysUser.getUsername());
         }*/
+
+        if (ObjectUtil.isEmpty(advertise.getNameZh()) || ObjectUtil.isEmpty(advertise.getNameEn()) || ObjectUtil.isEmpty(advertise.getNameKh())) {
+            return Result.failed("广告名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(advertise.getDevice())) {
+            return Result.failed("投放平台不能为空");
+        }
+        if (ObjectUtil.isEmpty(advertise.getPosition())) {
+            return Result.failed("广告位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(advertise.getSort())) {
+            return Result.failed("排序不能为空");
+        }
+        if (ObjectUtil.isEmpty(advertise.getUrl())) {
+            return Result.failed("广告图片不能为空");
+        }
+        if (ObjectUtil.isEmpty(advertise.getStartTime()) || ObjectUtil.isEmpty(advertise.getEndTime())) {
+            return Result.failed("有效时间不能为空");
+        }
         return  advertiseService.saveOrUpdateAdvertise(advertise);
     }
 

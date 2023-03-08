@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class SiteMovieListVo {
 
+    @ApiModelProperty(value = "id")
+    private Long id;
     @ApiModelProperty(value = "影片id")
     private Long movieId;
 

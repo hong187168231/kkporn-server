@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.co.KpnSiteTopicSaveCo;
 import com.central.backend.co.KpnSiteTopicUpdateCo;
 import com.central.backend.service.IKpnSiteMovieService;
@@ -108,6 +109,20 @@ public class KpnSiteTopicController {
         }else {
             info.setUpdateBy(sysUser.getUsername());
         }*/
+
+        if (ObjectUtil.isEmpty(params.getKpnSiteTopicInfo().getNameZh()) || ObjectUtil.isEmpty(params.getKpnSiteTopicInfo().getNameEn()) ||ObjectUtil.isEmpty(params.getKpnSiteTopicInfo().getNameKh())) {
+            return Result.failed("名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.getKpnSiteTopicInfo().getSort())) {
+            return Result.failed("排序不能为空");
+        }
+        if (ObjectUtil.isEmpty(params.getKpnSiteTopicInfo().getComposingId())) {
+            return Result.failed("排版布局不能为空");
+        }
+
+        if (ObjectUtil.isEmpty(params.getMovieList()) || params.getMovieList().size()==0) {
+            return Result.failed("影片不能为空");
+        }
         return siteTopicService.saveOrUpdateTopic(params);
     }
 
@@ -128,6 +143,14 @@ public class KpnSiteTopicController {
         PageResult<MovieVo> list = siteMovieService.findMovieList(params);
         return Result.succeed(list);
     }
+
+    @ApiOperation("删除影片")
+    @DeleteMapping(value = "/deleteMovieId/{id}")
+    public Result deleteMovieId(@PathVariable Long id) {
+        boolean b = siteTopicMovieService.deleteId(id);
+        return b ? Result.succeed("删除成功") : Result.failed("删除失败");
+    }
+
 
 
 }

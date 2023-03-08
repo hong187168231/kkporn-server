@@ -45,6 +45,13 @@ public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicM
     }
 
     @Override
+    public Boolean deleteId(Long id) {
+        int i = baseMapper.deleteById(id);
+        return i > 0 ? true : false;
+    }
+
+
+    @Override
     public PageResult<SiteMovieListVo> findSiteMovieList(Map<String, Object> params) {
         Page<SiteMovieListVo> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         List<SiteMovieListVo> list  =  baseMapper.findSiteMovieList(page,params);

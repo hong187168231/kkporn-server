@@ -53,8 +53,8 @@ public class KpnSiteMovie extends SuperEntity {
     private Integer status;
     @ApiModelProperty("播放地址")
     private String coverUrl;
-    @ApiModelProperty("国家")
-    private String country;
+    @ApiModelProperty("影片所属国家 0:日本,1:中国大陆,2:中国台湾,3:韩国,4:欧美,5:东南亚,6:其他地区")
+    private Integer country;
     @ApiModelProperty("影片类型 0/false无码 1/true有码")
     private Boolean type;
     @ApiModelProperty("拍摄性质 special:专业拍摄,sneak:偷拍,selfie:自拍,other:其他")

@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.service.IKpnSitePlatformService;
 import com.central.common.model.KpnSitePlatform;
 import com.central.common.model.Result;
@@ -44,6 +45,9 @@ public class KpnSitePlatformController {
     @ApiOperation(value = "保存配置")
     @PostMapping("/saveOrUpdatePlatform")
     public Result saveOrUpdatePlatform(@RequestBody KpnSitePlatform info) {
+        if (ObjectUtil.isEmpty(info.getSiteId())) {
+            return Result.failed("站点id不能为空");
+        }
         Boolean aBoolean = sitePlatformService.saveOrUpdatePlatform(info);
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }
