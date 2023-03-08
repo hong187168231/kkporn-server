@@ -18,4 +18,11 @@ public interface IAsyncService {
      * @param actorId 演员id
      */
     void delActorCache(Long actorId);
+
+    /**
+     * 清楚站点专题缓存
+     *
+     * @param sid
+     */
+    void deleteSiteTopicCache(Long sid);
 }

@@ -5,6 +5,7 @@ import com.central.backend.co.KpnSiteTopicSaveCo;
 import com.central.backend.co.KpnSiteTopicUpdateCo;
 import com.central.backend.mapper.KpnSiteTopicMapper;
 import com.central.backend.mapper.KpnSiteTopicMovieMapper;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSiteTopicMovieService;
 import com.central.backend.service.IKpnSiteTopicService;
 import com.central.backend.vo.KpnSiteTopicVo;
@@ -31,6 +32,9 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
     @Autowired
     private IKpnSiteTopicMovieService siteTopicMovieService;
 
+    @Autowired
+    private IAsyncService asyncService;
+
 
     @Override
     public PageResult<KpnSiteTopicVo> findSiteTopicList(Map<String, Object> params) {
@@ -51,6 +55,8 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
         siteTopicInfo.setStatus(state);
         siteTopicInfo.setUpdateBy(params.getUpdateBy());
         int i = baseMapper.updateById(siteTopicInfo);
+        //add by year
+        asyncService.deleteSiteTopicCache(siteTopicInfo.getSiteId());
         return i > 0 ?Result.succeed(siteTopicInfo, "更新成功") : Result.failed("更新失败");
     }
 
@@ -63,6 +69,10 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
         List<KpnSiteTopicMovie> topicMovieTopicIdList = siteTopicMovieService.findTopicMovieTopicIdList(id);
         List<Long> movieIds = topicMovieTopicIdList.stream().map(KpnSiteTopicMovie::getId).collect(Collectors.toList());
         b = siteTopicMovieService.deleteTopicId(movieIds);
+
+        //add by year
+        KpnSiteTopic siteTopic = getById(id);
+        asyncService.deleteSiteTopicCache(siteTopic.getSiteId());
         return b;
     }
 
@@ -80,6 +90,8 @@ public class KpnSiteTopicServiceImpl extends SuperServiceImpl<KpnSiteTopicMapper
         }
         //添加站点专题影片关联表
         insert= siteTopicMovieService.saveOrUpdateTopicMovie(params.getMovieList());
+        //add by year
+        asyncService.deleteSiteTopicCache(KpnSiteTopicInfo.getSiteId());
         return insert ? Result.succeed("操作成功") : Result.failed("操作失败");
     }
 }
