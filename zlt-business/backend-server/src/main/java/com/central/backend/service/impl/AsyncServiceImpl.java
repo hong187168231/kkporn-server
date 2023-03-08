@@ -19,13 +19,32 @@ public class AsyncServiceImpl implements IAsyncService {
     @Async
     @Override
     public void setVipExpire(Date newVipExpire, Long userId) {
-        long expireInSeconds = (newVipExpire.getTime() - new Date().getTime()) / 1000;
-        String vipExpireKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_EXPIRE, userId);
-        RedisRepository.setExpire(vipExpireKey, DateUtil.formatDateTime(newVipExpire), expireInSeconds, TimeUnit.SECONDS);
+        try {
+            long expireInSeconds = (newVipExpire.getTime() - new Date().getTime()) / 1000;
+            String vipExpireKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_EXPIRE, userId);
+            RedisRepository.setExpire(vipExpireKey, DateUtil.formatDateTime(newVipExpire), expireInSeconds, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
+    @Async
     @Override
     public void delActorCache(Long actorId) {
-        RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.KPN_ACTOR_KEY, actorId));
+        try {
+            RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.KPN_ACTOR_KEY, actorId));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void deleteSiteTopicCache(Long sid) {
+        try {
+            RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_KEY, sid));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }
