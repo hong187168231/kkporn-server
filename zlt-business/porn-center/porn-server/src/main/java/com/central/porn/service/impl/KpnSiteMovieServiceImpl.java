@@ -310,12 +310,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         List<Long> resultMovieIds = new ArrayList<>();
         int start = (currPage - 1) * pageSize;
         int end = start + (pageSize - 1);
-        for (int i = start; i <= end; i++) {
-            resultMovieIds.add(movieIds.get(i));
-            if (resultMovieIds.size() >= movieIds.size()) {
-                break;
+
+        try {
+            for (int i = start; i <= end; i++) {
+                resultMovieIds.add(movieIds.get(i));
             }
+        }catch(Exception ignored){
         }
+
         List<KpnSiteMovieBaseVo> siteMovieBaseVos = getSiteMovieByIds(sid, resultMovieIds, false);
 //        siteMovieBaseVos.sort(KpnSiteMovieBaseVo::compareByVv);
 

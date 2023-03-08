@@ -27,7 +27,7 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
         if (CollectionUtil.isEmpty(actorIds)) {
             return new ArrayList<>();
         }
-
+        // todo 清缓存
         List<String> redisKeyList = actorIds.stream().map(actorId -> StrUtil.format(PornConstants.RedisKey.KPN_ACTOR_KEY, actorId)).collect(Collectors.toList());
         List<KpnActor> cachedKpnActors = (ArrayList) RedisRepository.mget(redisKeyList);
         boolean hasNullElem = cachedKpnActors.stream().anyMatch(Objects::isNull);
