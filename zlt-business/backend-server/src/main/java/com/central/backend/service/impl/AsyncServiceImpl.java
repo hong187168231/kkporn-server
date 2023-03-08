@@ -1,6 +1,7 @@
 package com.central.backend.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.backend.service.IAsyncService;
 import com.central.common.constant.PornConstants;
@@ -53,6 +54,19 @@ public class AsyncServiceImpl implements IAsyncService {
     public void deleteSiteTopicMovieCache(Long sid, Long topicId) {
         try {
             RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_SORT_KEY, sid, topicId));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void deleteSiteInfoCache(Long sid) {
+        try {
+            RedisRepository.delete(PornConstants.RedisKey.SITE_LIST_KEY);
+            if (ObjectUtil.isNotEmpty(sid)) {
+                RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.SITE_INFO_KEY, sid));
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

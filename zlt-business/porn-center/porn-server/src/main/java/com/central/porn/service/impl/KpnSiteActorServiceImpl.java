@@ -56,6 +56,12 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
         KpnActorVo kpnActorVo = new KpnActorVo();
         BeanUtil.copyProperties(kpnActor, kpnActorVo);
         kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
+        if (StrUtil.isNotBlank(kpnActorVo.getAvatarUrl())) {
+            kpnActorVo.setAvatarUrl(externalEndpoint + kpnActorVo.getAvatarUrl());
+        }
+        if (StrUtil.isNotBlank(kpnActorVo.getPortraitUrl())) {
+            kpnActorVo.setPortraitUrl(externalEndpoint + kpnActorVo.getPortraitUrl());
+        }
         //站点演员收藏量
         Long siteActorFavorites = getSiteActorFavorites(sid, kpnActor.getId());
         kpnActorVo.setFavorites(siteActorFavorites);

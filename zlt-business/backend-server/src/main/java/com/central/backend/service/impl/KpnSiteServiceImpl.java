@@ -4,22 +4,18 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.KpnSiteCo;
 import com.central.backend.co.KpnSiteUpdateCo;
 import com.central.backend.mapper.KpnSiteMapper;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSiteChannelService;
 import com.central.backend.service.IKpnSiteService;
-import com.central.backend.util.PictureUtil;
 import com.central.backend.vo.KpnSiteListVo;
 import com.central.backend.vo.KpnSiteVo;
-import com.central.common.model.*;
+import com.central.common.model.KpnSite;
+import com.central.common.model.PageResult;
+import com.central.common.model.Result;
 import com.central.common.service.impl.SuperServiceImpl;
-import com.central.oss.model.ObjectInfo;
-import com.central.oss.template.MinioTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -34,14 +30,17 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
     @Autowired
     private IKpnSiteChannelService siteChannelService;
 
+    @Autowired
+    private IAsyncService asyncService;
 
 
     @Override
     public PageResult<KpnSite> findSiteList(KpnSiteCo params) {
         Page<KpnSite> page = new Page<>(params.getPage(), params.getLimit());
-        List<KpnSite> list  =  baseMapper.findList(page, params);
+        List<KpnSite> list = baseMapper.findList(page, params);
         return PageResult.<KpnSite>builder().data(list).count(page.getTotal()).build();
     }
+
     @Override
     public List<KpnSite> findKpnSiteList(Map<String, Object> params) {
         return baseMapper.findKpnSiteList(params);
@@ -53,14 +52,14 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
     }
 
     @Override
-    public Result saveOrUpdateSite(KpnSite kpnSite ) {
-        boolean insert =false;
+    public Result saveOrUpdateSite(KpnSite kpnSite) {
+        boolean insert = false;
         //新增
         if (kpnSite.getId() == null) {
             insert = super.save(kpnSite);
             //生成站点对应的频道栏目配置
-            siteChannelService.saveSiteChannelList(kpnSite.getId(),kpnSite.getCode(),kpnSite.getName(),kpnSite.getCreateBy());
-        }else {
+            siteChannelService.saveSiteChannelList(kpnSite.getId(), kpnSite.getCode(), kpnSite.getName(), kpnSite.getCreateBy());
+        } else {
             KpnSite info = baseMapper.selectById(kpnSite.getId());
             if (info == null) {
                 return Result.failed("数据不存在");
@@ -68,8 +67,10 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
             //修改
             insert = super.updateById(kpnSite);
         }
-        if(insert){
-            return  Result.succeed(kpnSite, "操作成功");
+        if (insert) {
+            // add by year 删除站点信息缓存
+            asyncService.deleteSiteInfoCache(kpnSite.getId());
+            return Result.succeed(kpnSite, "操作成功");
         }
         return Result.failed("操作失败");
     }
@@ -81,15 +82,20 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
         if (siteInfo == null) {
             return Result.failed("此站点不存在");
         }
-        if (params.getStatus()!=null){
+        if (params.getStatus() != null) {
             siteInfo.setStatus(params.getStatus());
         }
-        if (params.getRepairStatus()!=null){
+        if (params.getRepairStatus() != null) {
             siteInfo.setRepairStatus(params.getRepairStatus());
         }
         siteInfo.setUpdateBy(params.getUpdateBy());
         int i = baseMapper.updateById(siteInfo);
-        return i>0 ? Result.succeed(siteInfo, "更新成功"): Result.failed("更新失败");
+
+        // add by year 删除站点信息缓存
+        if (i > 0) {
+            asyncService.deleteSiteInfoCache(siteInfo.getId());
+        }
+        return i > 0 ? Result.succeed(siteInfo, "更新成功") : Result.failed("更新失败");
     }
 
 

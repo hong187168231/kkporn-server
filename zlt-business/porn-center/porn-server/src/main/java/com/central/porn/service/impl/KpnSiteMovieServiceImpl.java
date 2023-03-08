@@ -312,6 +312,9 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         int end = start + (pageSize - 1);
         for (int i = start; i <= end; i++) {
             resultMovieIds.add(movieIds.get(i));
+            if (resultMovieIds.size() >= movieIds.size()) {
+                break;
+            }
         }
         List<KpnSiteMovieBaseVo> siteMovieBaseVos = getSiteMovieByIds(sid, resultMovieIds, false);
 //        siteMovieBaseVos.sort(KpnSiteMovieBaseVo::compareByVv);

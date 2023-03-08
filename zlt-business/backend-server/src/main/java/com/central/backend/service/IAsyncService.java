@@ -33,4 +33,11 @@ public interface IAsyncService {
      * @param topicId 站提id
      */
     void deleteSiteTopicMovieCache(Long sid, Long topicId);
+
+    /**
+     * 删除站点信息缓存
+     *
+     * @param sid 站点id
+     */
+    void deleteSiteInfoCache(Long sid);
 }

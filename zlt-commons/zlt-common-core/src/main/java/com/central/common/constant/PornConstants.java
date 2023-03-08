@@ -122,7 +122,7 @@ public final class PornConstants {
         public static final Long EXPIRE_TIME_7_DAYS = 7 * 24 * 60 * 60L;
         //缓存时间 1天
         public static final Long EXPIRE_TIME_1_DAYS = 1 * 24 * 60 * 60L;
-        //缓存所有站点信息
+        //-缓存所有站点信息
         public static final String SITE_LIST_KEY = "SITE:LIST";
         //缓存站点信息 siteid
         public static final String SITE_INFO_KEY = "SITE:INFO:{}";
@@ -130,7 +130,7 @@ public final class PornConstants {
 //        public static final String SITE_STASH_CHANNEL_KEY = "SITE:CHANNEL:{}";
         //-缓存站点专题信息 siteid
         public static final String KPN_SITE_TOPIC_KEY = "KPN:SITE:TOPIC:{}";
-        //缓存站点专题影片id信息 list类型  siteid,topicid
+        //- 缓存站点专题影片id信息 list类型  siteid,topicid
         public static final String KPN_SITE_TOPIC_MOVIEID_SORT_KEY = "KPN:SITE:TOPIC:MOVIEID:SORT:{}:{}";
         //缓存影片VO信息 str siteid movieid
         public static final String KPN_SITEID_MOVIEID_VO_KEY = "KPN:SITEID:MOVIEID:VO:{}:{}";
