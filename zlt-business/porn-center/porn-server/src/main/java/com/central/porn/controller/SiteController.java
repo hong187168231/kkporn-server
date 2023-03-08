@@ -7,11 +7,11 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
+import com.central.common.language.LanguageUtil;
 import com.central.common.model.*;
 import com.central.common.model.enums.CodeEnum;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.utils.I18nUtil;
-import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.*;
 import com.central.porn.enums.KpnActorSortTypeEnum;
@@ -365,7 +365,11 @@ public class SiteController {
      */
     @GetMapping("/search/keywords")
     @ApiOperation(value = "关键词搜索影片")
-    public Result<List<KpnSiteMovieBaseVo>> searchMovieByKeywords(@RequestHeader("sid") Long sid, String keywords) {
+    public Result<PornPageResult<KpnSiteMovieBaseVo>> searchMovieByKeywords(@ApiParam(value = "站点id", required = true)
+                                                                  @RequestHeader("sid") Long sid,
+                                                                  @ApiParam("关键词") String keywords,
+                                                                  @ApiParam("当前页") Integer currPage,
+                                                                  @ApiParam("每页条数") Integer pageSize) {
         try {
             if (StrUtil.isBlank(keywords)) {
                 return Result.failed("关键词不能为空");
@@ -377,7 +381,7 @@ public class SiteController {
                 return Result.failed("关键词太长");
             }
 
-            List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovieKeywords(sid, keywords);
+            PornPageResult<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.searchSiteMovieKeywords(sid, keywords, currPage, pageSize);
             return Result.succeed(kpnSiteMovieBaseVos, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -426,7 +430,7 @@ public class SiteController {
      */
     @GetMapping("/actor/list")
     @ApiOperation(value = "演员列表")
-    public Result<PornPageResult<KpnActorVo>> getActorList(@ApiParam("站点id") @RequestHeader(value = "sid") Long sid,
+    public Result<PornPageResult<KpnActorVo>> getActorList(@ApiParam(value = "站点id", required = true) @RequestHeader(value = "sid") Long sid,
                                                            @ApiParam("排序字段 HOT:收藏量,LATEST:最新") String sortType,
                                                            @ApiParam("排序顺序 0:正序,1倒序") Integer sortOrder,
                                                            @ApiParam("当前页数") Integer currPage,

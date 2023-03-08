@@ -1,6 +1,7 @@
 package com.central.porn.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
@@ -23,6 +24,9 @@ public class KpnTagServiceImpl extends SuperServiceImpl<KpnTagMapper, KpnTag> im
 
     @Override
     public List<KpnTagVo> getByTagIds(List<Long> tagIds) {
+        if (CollectionUtil.isEmpty(tagIds)) {
+            return new ArrayList<>();
+        }
         List<KpnTag> kpnTags = this.lambdaQuery().in(KpnTag::getId, tagIds).list();
 
         List<KpnTagVo> result = new ArrayList<>();
