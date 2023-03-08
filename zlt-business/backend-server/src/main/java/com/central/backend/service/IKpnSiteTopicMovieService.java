@@ -22,6 +22,8 @@ public interface IKpnSiteTopicMovieService extends ISuperService<KpnSiteTopicMov
 
     Boolean deleteTopicId(List<Long> movieIds) ;
 
+    Boolean deleteId(Long id);
+
 
 
     PageResult<SiteMovieListVo> findSiteMovieList(Map<String, Object> params);

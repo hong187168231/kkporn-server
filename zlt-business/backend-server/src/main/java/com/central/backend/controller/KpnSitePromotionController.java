@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.service.IKpnSitePromotionService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSitePromotion;
@@ -51,6 +52,10 @@ public class KpnSitePromotionController {
         }else {
             info.setUpdateBy(sysUser.getUsername());
         }*/
+
+        if (ObjectUtil.isEmpty(info.getSiteId())) {
+            return Result.failed("站点id不能为空");
+        }
         Boolean aBoolean = promotionService.saveOrUpdatePromotion(info);
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }

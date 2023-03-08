@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.co.KpnLineUpdateCo;
 import com.central.backend.service.IKpnLineService;
 import com.central.common.annotation.LoginUser;
@@ -52,6 +53,12 @@ public class KpnLineController {
         }else {
            line.setUpdateBy(sysUser.getUsername());
         }*/
+        if (ObjectUtil.isEmpty(line.getLine())) {
+            return Result.failed("线路不能为空");
+        }
+        if (ObjectUtil.isEmpty(line.getDomain())) {
+            return Result.failed("域名不能为空");
+        }
         boolean aBoolean = lineService.saveOrUpdateLine(line);
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }

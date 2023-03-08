@@ -7,6 +7,7 @@
 
 	<select id="findSiteMovieList" resultType="com.central.backend.vo.SiteMovieListVo">
 		SELECT
+		m.id as id,
 			m.movie_id,
 			mt.name_zh,
 			mt.name_en,

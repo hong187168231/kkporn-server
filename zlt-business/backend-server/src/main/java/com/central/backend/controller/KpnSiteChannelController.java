@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.co.KpnSiteChannelUpdateCo;
 import com.central.backend.service.IKpnSiteChannelService;
 import com.central.backend.service.IKpnTagService;
@@ -86,6 +87,16 @@ public class KpnSiteChannelController {
         }else {
            siteChannel.setUpdateBy(sysUser.getUsername());
         }*/
+
+        if (ObjectUtil.isEmpty(siteChannel.getNameZh()) || ObjectUtil.isEmpty(siteChannel.getNameEn()) || ObjectUtil.isEmpty(siteChannel.getNameKh())) {
+            return Result.failed("名称不能为空");
+        }
+        if (ObjectUtil.isEmpty(siteChannel.getSort())) {
+            return Result.failed("排序不能为空");
+        }
+        if (ObjectUtil.isEmpty(siteChannel.getIcon())) {
+            return Result.failed("图标不能为空");
+        }
         return  siteChannelService.saveOrUpdateSiteChannel(siteChannel);
     }
 
