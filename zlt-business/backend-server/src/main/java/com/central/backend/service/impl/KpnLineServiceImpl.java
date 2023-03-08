@@ -48,6 +48,10 @@ public class KpnLineServiceImpl extends SuperServiceImpl<KpnLineMapper, KpnLine>
                 insert = super.updateById(line);
             }
         }
+        // add by year 删除线路缓存
+        if(insert){
+            asyncService.deleteSiteLines();
+        }
         return insert;
     }
 

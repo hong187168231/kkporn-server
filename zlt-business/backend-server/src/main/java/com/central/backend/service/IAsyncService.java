@@ -40,4 +40,10 @@ public interface IAsyncService {
      * @param sid 站点id
      */
     void deleteSiteInfoCache(Long sid);
+
+    /**
+     * 删除线路缓存
+     */
+    void deleteLinesCache();
+
 }

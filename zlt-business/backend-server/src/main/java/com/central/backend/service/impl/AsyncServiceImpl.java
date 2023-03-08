@@ -63,10 +63,20 @@ public class AsyncServiceImpl implements IAsyncService {
     @Override
     public void deleteSiteInfoCache(Long sid) {
         try {
-            RedisRepository.delete(PornConstants.RedisKey.SITE_LIST_KEY);
+            RedisRepository.delete(PornConstants.RedisKey.KPN_SITE_LIST_KEY);
             if (ObjectUtil.isNotEmpty(sid)) {
-                RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.SITE_INFO_KEY, sid));
+                RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.KPN_SITE_INFO_KEY, sid));
             }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void deleteLinesCache() {
+        try {
+            RedisRepository.delete(PornConstants.RedisKey.KPN_LINE);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

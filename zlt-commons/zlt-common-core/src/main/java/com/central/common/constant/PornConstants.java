@@ -123,9 +123,11 @@ public final class PornConstants {
         //缓存时间 1天
         public static final Long EXPIRE_TIME_1_DAYS = 1 * 24 * 60 * 60L;
         //-缓存所有站点信息
-        public static final String SITE_LIST_KEY = "SITE:LIST";
-        //缓存站点信息 siteid
-        public static final String SITE_INFO_KEY = "SITE:INFO:{}";
+        public static final String KPN_SITE_LIST_KEY = "KPN:SITE:LIST";
+        //-缓存站点信息 siteid
+        public static final String KPN_SITE_INFO_KEY = "KPN:SITE:INFO:{}";
+        //缓存站点平台配置 siteid
+        public static final String KPN_SITE_PLATFORM_CONFIG_KEY = "KPN:SITE:PLATFORM:CONFIG:{}";
         //缓存站点频道信息 siteid
 //        public static final String SITE_STASH_CHANNEL_KEY = "SITE:CHANNEL:{}";
         //-缓存站点专题信息 siteid
@@ -146,7 +148,7 @@ public final class PornConstants {
         public static final String KPN_SITE_ACTOR_FAVORITES_KEY = "KPN:SITEID:ACTORID:FAVORITES:{}:{}";
         //缓存站点演员影片量 siteid,actorid
         public static final String KPN_SITE_ACTOR_MOVIENUM_KEY = "KPN:SITEID:ACTORID:MOVIENUM:{}:{}";
-        //缓存线路信息
+        //-缓存线路信息
         public static final String KPN_LINE = "KPN:LINE";
         //缓存站点月播放量排行 list siteid
         public static final String KPN_SITE_MONTH_MOVIE_KEY = "KPN:SITEID:MONTH:MOVIES:{}";

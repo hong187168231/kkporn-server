@@ -2,12 +2,12 @@ package com.central.backend.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.co.KpnLineUpdateCo;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnLineService;
-import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnLine;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
-import com.central.common.model.SysUser;
+import com.central.common.model.enums.CodeEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -29,6 +29,9 @@ public class KpnLineController {
 
     @Autowired
     private IKpnLineService lineService;
+
+    @Autowired
+    private IAsyncService asyncService;
 
 
     @ApiOperation("查询线路配置列表")
@@ -60,6 +63,10 @@ public class KpnLineController {
             return Result.failed("域名不能为空");
         }
         boolean aBoolean = lineService.saveOrUpdateLine(line);
+        // add by year 删除线路缓存
+        if (aBoolean) {
+            asyncService.deleteLinesCache();
+        }
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }
 
@@ -68,6 +75,11 @@ public class KpnLineController {
     public Result updateEnabledLine(@Valid @ModelAttribute KpnLineUpdateCo params) {
         // params.setUpdateBy(sysUser.getUsername());
         Result result = lineService.updateEnabledLine(params);
+
+        // add by year 删除线路缓存
+        if (result.getResp_code().equals(CodeEnum.SUCCESS.getCode())) {
+            asyncService.deleteLinesCache();
+        }
         return result;
     }
 
@@ -77,7 +89,12 @@ public class KpnLineController {
     @ApiOperation(value = "删除")
     @DeleteMapping(value = "/deleteLineId/{id}")
     public Result delete(@PathVariable Long id) {
-        lineService.removeById(id);
+        boolean succeed = lineService.removeById(id);
+
+        // add by year 删除线路缓存
+        if (succeed) {
+            asyncService.deleteLinesCache();
+        }
         return Result.succeed("删除成功");
     }
 
