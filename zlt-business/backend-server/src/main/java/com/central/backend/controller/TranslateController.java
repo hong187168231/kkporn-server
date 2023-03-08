@@ -1,6 +1,7 @@
 package com.central.backend.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.model.co.QueryI18nInfoPageCo;
 import com.central.backend.model.co.SaveI18nInfoCo;
 import com.central.backend.model.co.UpdateI18nInfoCo;
@@ -14,6 +15,8 @@ import com.central.common.vo.I18nInfoPageVO;
 import com.central.common.vo.LanguageLabelVO;
 import com.central.backend.service.II18nInfosService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -115,14 +118,32 @@ public class TranslateController {
     }
 
     @GetMapping("/backendInfos")
-    @ApiOperation(value = "查询国际化字典分页")
+    @ApiOperation(value = "查询后台国际化字典分页")
     public Result<PageResult<I18nInfoPageVO>> backendInfos(@ModelAttribute QueryI18nInfoPageCo param) {
+        if (ObjectUtil.isEmpty(param)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(param.getPage())) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(param.getLimit())) {
+            return Result.failed("分页结束位置不能为空");
+        }
         return Result.succeed(i18nInfosService.findInfos(param));
     }
 
     @GetMapping("/frontInfos")
     @ApiOperation(value = "查询前台国际化字典分页")
     public Result<PageResult<I18nInfoPageVO>> frontInfos(@ModelAttribute QueryI18nInfoPageCo param) {
+        if (ObjectUtil.isEmpty(param)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(param.getPage())) {
+            return Result.failed("分页起始位置不能为空");
+        }
+        if (ObjectUtil.isEmpty(param.getLimit())) {
+            return Result.failed("分页结束位置不能为空");
+        }
         return Result.succeed(i18nInfosService.findInfos(param));
     }
 

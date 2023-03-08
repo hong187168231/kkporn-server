@@ -10,7 +10,7 @@
                 and t.ip = #{p.ip}
             </if>
             <if test="p.updateBy != null and p.updateBy != ''">
-                and t.update_by = #{p.updateBy}
+                and t.update_by LIKE CONCAT('%',#{p.updateBy},'%')
             </if>
             <if test="p.startTime!=null and p.startTime != ''">
                 and DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]>DATE_FORMAT(#{p.startTime},'%Y-%m-%d %H:%i:%s')
