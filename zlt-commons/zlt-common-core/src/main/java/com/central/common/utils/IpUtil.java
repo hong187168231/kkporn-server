@@ -1,4 +1,4 @@
-package com.central.oauth.utils;
+package com.central.common.utils;
 
 
 import lombok.extern.slf4j.Slf4j;

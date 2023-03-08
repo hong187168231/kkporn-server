@@ -25,7 +25,7 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
-@Api(tags = "翻译api")
+@Api(tags = "多语言配置")
 @RequestMapping("/translate")
 public class TranslateController {
 

@@ -4,7 +4,7 @@ import com.central.common.constant.PornConstants;
 import com.central.common.model.LoginAppUser;
 import com.central.common.utils.ServletUtil;
 import com.central.oauth.service.ProcessLoginInfoService;
-import com.central.oauth.utils.IpUtil;
+import com.central.common.utils.IpUtil;
 import com.central.user.feign.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

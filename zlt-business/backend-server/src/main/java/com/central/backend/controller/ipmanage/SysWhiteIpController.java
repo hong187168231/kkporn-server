@@ -78,6 +78,11 @@ public class SysWhiteIpController {
         return Result.succeed(sysWhiteIpService.ipcheck(ip));
     }
 
+    @GetMapping("/iperror")
+    public Result iperror() {
+        return Result.failed("IP地址未加入白名单");
+    }
+
     /**
      * 查询
      */

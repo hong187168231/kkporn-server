@@ -1,20 +1,18 @@
-package com.central.porn.core.interceptor;
+package com.central.backend.core.interceptor;
 
 
 import cn.hutool.extra.servlet.ServletUtil;
+import com.central.backend.service.ipmanage.ISysSysIpSwitchButtonService;
+import com.central.backend.service.ipmanage.ISysWhiteIpService;
 import com.central.common.constant.PornConstants;
-import com.central.common.constant.SecurityConstants;
 import com.central.common.language.LanguageThreadLocal;
 import com.central.common.model.enums.StatusEnum;
 import com.central.common.model.ipmanage.SysIpSwitchButton;
-import com.central.common.utils.IpUtil;
-import com.central.porn.service.IKpnBlackIpService;
-import com.central.porn.service.ISysSysIpSwitchButtonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-
+import com.central.common.utils.IpUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.Charset;
@@ -25,11 +23,11 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class RequestInterceptor implements HandlerInterceptor {
+public class IpBlackCheckInterceptor implements HandlerInterceptor {
     @Autowired
-    private ISysSysIpSwitchButtonService iSysSysIpSwitchButtonService;
+    private ISysWhiteIpService iSysWhiteIpService;
     @Autowired
-    IKpnBlackIpService iKpnBlackIpService;
+    ISysSysIpSwitchButtonService iSysSysIpSwitchButtonService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String language = ServletUtil.getHeader(request, PornConstants.Str.LANGUAGE, Charset.defaultCharset());
@@ -38,11 +36,10 @@ public class RequestInterceptor implements HandlerInterceptor {
         for(SysIpSwitchButton switchButton : buttonList){
             if(StatusEnum.ONE_FALSE.getStatus()==switchButton.getWhiteipSwithcButton()){//白名单开关为1
                 String ip = IpUtil.getIpAddr(request);
-                String siteId = request.getHeader(SecurityConstants.USER_SITE_ID_HEADER);
-                if(iKpnBlackIpService.ipcheck(ip,siteId)){
-                    response.sendRedirect(request.getContextPath()+"/kpnblackip/iperror");
-                    return false;
-                }
+                    if(!iSysWhiteIpService.ipcheck(ip)){
+                        response.sendRedirect(request.getContextPath()+"/syswhiteip/iperror");
+                        return false;
+                    }
             }
         }
         return true;

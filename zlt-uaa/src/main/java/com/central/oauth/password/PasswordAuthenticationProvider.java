@@ -1,11 +1,9 @@
 package com.central.oauth.password;
 
-import com.alibaba.fastjson.JSON;
 import com.central.oauth.exception.CustomOAuth2Exception;
 import com.central.oauth.modle.CodeErrorAuthEnum;
 import com.central.oauth.service.ProcessLoginInfoService;
 import com.central.oauth.service.impl.UserDetailServiceFactory;
-import com.central.oauth.utils.IpUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * 扩展用户名密码provider
