@@ -4,27 +4,30 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
+import com.central.common.language.LanguageUtil;
 import com.central.common.model.KpnActor;
 import com.central.common.model.KpnSiteActor;
 import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
-import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.mapper.KpnSiteActorMapper;
 import com.central.porn.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
+@RefreshScope
 @Service
 public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper, KpnSiteActor> implements IKpnSiteActorService {
 
@@ -42,6 +45,9 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
 
     @Autowired
     private TaskExecutor taskExecutor;
+
+    @Value("${zlt.minio.externalEndpoint}")
+    private String externalEndpoint;
 
     @Override
     public KpnActorVo getKpnActorVo(Long sid, Long actorId) {
@@ -75,7 +81,7 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
     public Long addSiteActorFavorites(Long sid, Long userId, Long actorId) {
         KpnSiteUserActorFavorites userActorFavorites = userActorFavoritesService.getUserActorFavorites(userId, actorId);
         if (ObjectUtil.isNotEmpty(userActorFavorites)) {
-            throw new RuntimeException("已经收藏该演员,不可重复操作");
+            throw new RuntimeException("已经收藏,不可重复操作");
         }
 
         String siteActorFavoritesKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ACTOR_FAVORITES_KEY, sid, actorId);
@@ -108,46 +114,43 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
     @Override
     public PornPageResult<KpnActorVo> getActorListByFavorites(Long sid, String sortOrder, Integer currPage, Integer pageSize) {
         Integer startIndex = (currPage - 1) * pageSize;
-        List<KpnActorVo> kpnActorVos = baseMapper.getActorListByFavorites(sid, sortOrder, startIndex, pageSize);
+        List<Long> actorIds = baseMapper.getActorListByFavorites(sid, sortOrder, startIndex, pageSize);
         Long total = baseMapper.getActorCount(sid);
         Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);
 
-        List<Long> actorIds = kpnActorVos.stream().map(KpnActorVo::getId).collect(Collectors.toList());
+        List<KpnActorVo> resultActorVos = new ArrayList<>();
         List<KpnActor> kpnActors = actorService.getActorByIds(actorIds);
-
-        for (int i = 0; i < kpnActorVos.size(); i++) {
-            KpnActorVo kpnActorVo = kpnActorVos.get(i);
-            BeanUtil.copyProperties(kpnActors.get(i), kpnActorVo,"favorites");
+        for (KpnActor kpnActor : kpnActors) {
+            KpnActorVo kpnActorVo = new KpnActorVo();
+            BeanUtil.copyProperties(kpnActor, kpnActorVo);
             kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
+            if (StrUtil.isNotBlank(kpnActorVo.getAvatarUrl())) {
+                kpnActorVo.setAvatarUrl(externalEndpoint + kpnActorVo.getAvatarUrl());
+            }
+            if (StrUtil.isNotBlank(kpnActorVo.getPortraitUrl())) {
+                kpnActorVo.setPortraitUrl(externalEndpoint + kpnActorVo.getPortraitUrl());
+            }
+            resultActorVos.add(kpnActorVo);
         }
-
-//        kpnActorVos = kpnActors.stream().map(kpnActor -> {
-//            KpnActorVo kpnActorVo = new KpnActorVo();
-//            BeanUtil.copyProperties(kpnActor, kpnActorVo);
-//            kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
-//            return kpnActorVo;
-//        }).collect(Collectors.toList());
-
-        return PornPageResult.<KpnActorVo>builder().count(total).totalPage(totalPage).currPage(currPage).pageSize(pageSize).data(kpnActorVos).build();
+        return PornPageResult.<KpnActorVo>builder().count(total).totalPage(totalPage).currPage(currPage).pageSize(pageSize).data(resultActorVos).build();
     }
 
     @Override
     public PornPageResult<KpnActorVo> getActorListByCreateTime(Long sid, String sortOrder, Integer currPage, Integer pageSize) {
         Integer startIndex = (currPage - 1) * pageSize;
-        List<KpnActorVo> kpnActorVos = baseMapper.getActorListByCreateTime(sid, sortOrder, startIndex, pageSize);
+        List<Long> actorIds = baseMapper.getActorListByCreateTime(sid, sortOrder, startIndex, pageSize);
         Long total = baseMapper.getActorCount(sid);
         Integer totalPage = (int) (total % pageSize == 0 ? total / pageSize : total / pageSize + 1);
 
-        List<Long> actorIds = kpnActorVos.stream().map(KpnActorVo::getId).collect(Collectors.toList());
+        List<KpnActorVo> resultActorVos = new ArrayList<>();
         List<KpnActor> kpnActors = actorService.getActorByIds(actorIds);
-
-        for (int i = 0; i < kpnActorVos.size(); i++) {
-            KpnActorVo kpnActorVo = kpnActorVos.get(i);
-            BeanUtil.copyProperties(kpnActors.get(i), kpnActorVo,"favorites");
+        for (KpnActor kpnActor : kpnActors) {
+            KpnActorVo kpnActorVo = new KpnActorVo();
+            BeanUtil.copyProperties(kpnActor, kpnActorVo);
             kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
+            resultActorVos.add(kpnActorVo);
         }
-
-        return PornPageResult.<KpnActorVo>builder().count(total).totalPage(totalPage).currPage(currPage).pageSize(pageSize).data(kpnActorVos).build();
+        return PornPageResult.<KpnActorVo>builder().count(total).totalPage(totalPage).currPage(currPage).pageSize(pageSize).data(resultActorVos).build();
     }
 
     private void cacheSiteActorFavorites(String siteActorFavoritesKey, Long sid, Long actorId) {

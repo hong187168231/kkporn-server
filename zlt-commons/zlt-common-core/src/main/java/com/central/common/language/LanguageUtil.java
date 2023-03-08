@@ -42,11 +42,10 @@ public class LanguageUtil {
         else if (language.equalsIgnoreCase(LanguageEnum.KH.name().toLowerCase())) {
             name = languageNameVo.getNameKh();
         }
-        languageNameVo.setNull();
-
         if(StrUtil.isBlank(name)){
             name = languageNameVo.getNameZh();
         }
+        languageNameVo.setNull();
 
         return name;
     }

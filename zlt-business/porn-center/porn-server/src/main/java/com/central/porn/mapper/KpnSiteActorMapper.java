@@ -20,7 +20,7 @@ public interface KpnSiteActorMapper extends BaseMapper<KpnSiteActor> {
      * @param pageSize   每页条数
      * @return
      */
-    List<KpnActorVo> getActorListByFavorites(@Param("sid") Long sid, @Param("sortOrder") String sortOrder, @Param("startIndex") Integer startIndex, @Param("pageSize") Integer pageSize);
+    List<Long> getActorListByFavorites(@Param("sid") Long sid, @Param("sortOrder") String sortOrder, @Param("startIndex") Integer startIndex, @Param("pageSize") Integer pageSize);
 
     /**
      * 获取演员列表-按创建时间
@@ -31,7 +31,7 @@ public interface KpnSiteActorMapper extends BaseMapper<KpnSiteActor> {
      * @param pageSize  每页条数
      * @return
      */
-    List<KpnActorVo> getActorListByCreateTime(@Param("sid") Long sid, @Param("sortOrder") String sortOrder, @Param("startIndex") Integer startIndex, @Param("pageSize") Integer pageSize);
+    List<Long> getActorListByCreateTime(@Param("sid") Long sid, @Param("sortOrder") String sortOrder, @Param("startIndex") Integer startIndex, @Param("pageSize") Integer pageSize);
 
     /**
      * 站点演员总数

@@ -3,6 +3,7 @@ package com.central.backend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.central.backend.mapper.KpnActorMapper;
 import com.central.backend.model.vo.KpnActorVO;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnActorService;
 import com.central.backend.service.IKpnMovieService;
 import com.central.common.model.*;
@@ -29,6 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnActor> implements IKpnActorService {
     @Autowired
     private IKpnMovieService iKpnMovieService;
+
+    @Autowired
+    private IAsyncService asyncService;
     /**
      * 列表
      * @param params
@@ -58,6 +62,7 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
     public Result saveOrUpdateKpnActor(KpnActor kpnActor,SysUser user){
         if(null!=kpnActor.getId()&&0!=kpnActor.getId()){
             kpnActor.setUpdateBy(null!=user?user.getUsername():kpnActor.getUpdateBy());
+            asyncService.delActorCache(kpnActor.getId());
         }else {
             kpnActor.setCreateBy(null!=user?user.getUsername():kpnActor.getCreateBy());
             kpnActor.setUpdateBy(null!=user?user.getUsername():kpnActor.getCreateBy());

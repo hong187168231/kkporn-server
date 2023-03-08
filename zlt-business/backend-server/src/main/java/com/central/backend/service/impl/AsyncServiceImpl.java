@@ -23,4 +23,9 @@ public class AsyncServiceImpl implements IAsyncService {
         String vipExpireKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_EXPIRE, userId);
         RedisRepository.setExpire(vipExpireKey, DateUtil.formatDateTime(newVipExpire), expireInSeconds, TimeUnit.SECONDS);
     }
+
+    @Override
+    public void delActorCache(Long actorId) {
+        RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.KPN_ACTOR_KEY, actorId));
+    }
 }
