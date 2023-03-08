@@ -47,4 +47,14 @@ public class AsyncServiceImpl implements IAsyncService {
             log.error(e.getMessage(), e);
         }
     }
+
+    @Async
+    @Override
+    public void deleteSiteTopicMovieCache(Long sid, Long topicId) {
+        try {
+            RedisRepository.delete(StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_SORT_KEY, sid, topicId));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }

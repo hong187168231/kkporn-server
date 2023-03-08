@@ -1,18 +1,18 @@
 package com.central.backend.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.mapper.KpnSiteTopicMovieMapper;
-import com.central.backend.model.vo.KpnSiteMovieVO;
-import com.central.backend.model.vo.KpnTagCategoryVO;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSiteTopicMovieService;
 import com.central.backend.vo.SiteMovieListVo;
-import com.central.common.model.KpnSiteSuggestion;
 import com.central.common.model.KpnSiteTopicMovie;
 import com.central.common.model.PageResult;
 import com.central.common.service.impl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,10 +23,19 @@ import java.util.Map;
 @Service
 public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicMovieMapper, KpnSiteTopicMovie> implements IKpnSiteTopicMovieService {
 
+    @Autowired
+    private IAsyncService asyncService;
 
     @Override
     public Boolean saveOrUpdateTopicMovie(List<KpnSiteTopicMovie> list) {
-        return super.saveOrUpdateBatch(list);
+        boolean result = super.saveOrUpdateBatch(list);
+
+        //add by year 删除专题影片缓存
+        if (result && CollUtil.isNotEmpty(list)) {
+            KpnSiteTopicMovie topicMovie = list.get(0);
+            asyncService.deleteSiteTopicMovieCache(topicMovie.getSiteId(), topicMovie.getTopicId());
+        }
+        return result;
     }
 
     @Override
@@ -41,12 +50,27 @@ public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicM
     @Override
     public Boolean deleteTopicId(List<Long> movieIds) {
         int i = baseMapper.deleteBatchIds(movieIds);
+
+        //add by year 删除专题影片缓存
+        if (i > 0) {
+            Long topicMovieId = movieIds.get(0);
+            KpnSiteTopicMovie topicMovie = getById(topicMovieId);
+            asyncService.deleteSiteTopicMovieCache(topicMovie.getSiteId(), topicMovie.getTopicId());
+        }
+
         return i > 0 ? true : false;
     }
 
     @Override
     public Boolean deleteId(Long id) {
         int i = baseMapper.deleteById(id);
+
+        //add by year 删除专题影片缓存
+        if (i > 0) {
+            Long topicMovieId = id;
+            KpnSiteTopicMovie topicMovie = getById(topicMovieId);
+            asyncService.deleteSiteTopicMovieCache(topicMovie.getSiteId(), topicMovie.getTopicId());
+        }
         return i > 0 ? true : false;
     }
 
