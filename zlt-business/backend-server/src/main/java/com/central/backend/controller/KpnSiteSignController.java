@@ -45,7 +45,7 @@ public class KpnSiteSignController {
 
     @ApiOperation(value = "保存签到配置")
     @PostMapping("/saveOrUpdate")
-    public Result saveOrUpdateSign(@RequestBody List<KpnSiteSign> list) {
+    public Result saveOrUpdate(@RequestBody List<KpnSiteSign> list) {
         Boolean aBoolean = signService.saveOrUpdateSign(list);
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }

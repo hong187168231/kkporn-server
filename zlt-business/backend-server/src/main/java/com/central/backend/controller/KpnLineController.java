@@ -42,13 +42,13 @@ public class KpnLineController {
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
-    public Result<PageResult<KpnLine>> findSiteList(@RequestParam Map<String, Object> params) {
+    public Result<PageResult<KpnLine>> findLineList(@RequestParam Map<String, Object> params) {
         PageResult<KpnLine> lineList = lineService.findSiteList(params);
         return Result.succeed(lineList);
     }
 
     @ApiOperation(value = "新增or更新线路")
-    @PostMapping( "/saveOrUpdateAdvertise")
+    @PostMapping( "/saveOrUpdateLine")
     public Result saveOrUpdateLine(@RequestBody KpnLine line)  {
    /*    if (line.getId() == null) {
            line.setUpdateBy(sysUser.getUsername());
@@ -71,7 +71,7 @@ public class KpnLineController {
     }
 
     @ApiOperation(value = "修改线路状态")
-    @GetMapping("/updateEnabledAdvertise")
+    @GetMapping("/updateEnabledLine")
     public Result updateEnabledLine(@Valid @ModelAttribute KpnLineUpdateCo params) {
         // params.setUpdateBy(sysUser.getUsername());
         Result result = lineService.updateEnabledLine(params);
