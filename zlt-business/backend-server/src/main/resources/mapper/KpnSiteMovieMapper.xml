@@ -70,35 +70,44 @@
             </choose>
         </where>
     </select>
-
-    <update id="updateBatchStatusById">
-        <foreach collection="list" item="item" separator=";">
-            update
-            kpn_site_movie
-            set
-            `status` = #{item.status},
-            update_time = #{item.updateTime},
-            update_by = #{item.updateBy}
-             where
-            id = #{item.id}
+    <update id="updateBatchStatusById" parameterType="java.util.List">
+        update kpn_site_movie set
+        `status`=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.status,jdbcType=VARCHAR}
+        </foreach>
+        ,`update_by`=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.updateBy,jdbcType=VARCHAR}
+        </foreach>
+        ,`update_time`=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.updateTime,jdbcType=VARCHAR}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=DECIMAL}
         </foreach>
     </update>
-
-    <update id="updateBatchPayTypeById">
-        <foreach collection="list" item="item" separator=";">
-            update
-            kpn_site_movie
-            set
-            pay_type = #{item.payType},
-            update_time = #{item.updateTime},
-            update_by = #{item.updateBy}
-             where
-            id = #{item.id}
+    <update id="updateBatchPayTypeById" parameterType="java.util.List">
+        update kpn_site_movie set
+        `pay_type`=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.payType,jdbcType=VARCHAR}
+        </foreach>
+        ,`update_by`=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.updateBy,jdbcType=VARCHAR}
+        </foreach>
+        ,`update_time`=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.updateTime,jdbcType=VARCHAR}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=DECIMAL}
         </foreach>
     </update>
-
-
-
 
     <select id="findMovieList" resultType="com.central.backend.vo.MovieVo">
         select
