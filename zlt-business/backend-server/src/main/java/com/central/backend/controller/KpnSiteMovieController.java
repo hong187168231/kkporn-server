@@ -90,11 +90,11 @@ public class KpnSiteMovieController {
       */
     @ApiOperation(value = "批量发布上架下架")
     @PostMapping("/settingStatus")
-    public Result updateBatchStatusById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovie,@ApiIgnore @LoginUser SysUser user) {
-        if (ObjectUtil.isEmpty(kpnSiteMovie) || kpnSiteMovie.size()==0) {
+    public Result updateBatchStatusById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovieStatusDtoList,@ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnSiteMovieStatusDtoList) || kpnSiteMovieStatusDtoList.size()==0) {
             return Result.failed("请求参数不能为空");
         }
-        kpnSiteMovieService.updateBatchStatusById(kpnSiteMovie, user);
+        kpnSiteMovieService.updateBatchStatusById(kpnSiteMovieStatusDtoList, user);
         return Result.succeed("保存成功");
     }
     /**
@@ -102,11 +102,11 @@ public class KpnSiteMovieController {
      */
     @ApiOperation(value = "批量设置付费类型")
     @PostMapping("/settingPayType")
-    public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMoviePayTpyeDto> kpnSiteMovie, @ApiIgnore @LoginUser SysUser user) {
-        if (ObjectUtil.isEmpty(kpnSiteMovie) || kpnSiteMovie.size()==0) {
+    public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMoviePayTpyeDto> kpnSiteMoviePayTpyeDtoList, @ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnSiteMoviePayTpyeDtoList) || kpnSiteMoviePayTpyeDtoList.size()==0) {
             return Result.failed("请求参数不能为空");
         }
-        kpnSiteMovieService.updateBatchPayTypeById(kpnSiteMovie, user);
+        kpnSiteMovieService.updateBatchPayTypeById(kpnSiteMoviePayTpyeDtoList, user);
         return Result.succeed("保存成功");
     }
 
