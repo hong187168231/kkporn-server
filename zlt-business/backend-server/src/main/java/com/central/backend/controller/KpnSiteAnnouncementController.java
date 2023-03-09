@@ -37,7 +37,7 @@ public class KpnSiteAnnouncementController {
     @ApiOperation("查询公告管理列表")
     @ResponseBody
     @GetMapping("/findAnnouncementList")
-    public Result<PageResult<KpnSiteAnnouncement>> findNoticeList(@ModelAttribute KpnSiteAnnouncementCo params) {
+    public Result<PageResult<KpnSiteAnnouncement>> findAnnouncementList(@ModelAttribute KpnSiteAnnouncementCo params) {
         PageResult<KpnSiteAnnouncement> noticeList = announcementService.findNoticeList(params);
         return Result.succeed(noticeList);
     }

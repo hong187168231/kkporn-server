@@ -34,7 +34,7 @@ public class KpnSitePlatformController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "siteId", value = "站点id", required = true, dataType = "Long"),
     })
-    public Result<KpnSitePlatform> findPromotionInfo(@RequestParam("siteId") Long siteId) {
+    public Result<KpnSitePlatform> findPlatformInfo(@RequestParam("siteId") Long siteId) {
         KpnSitePlatform promotion = sitePlatformService.findPromotionInfo(siteId);
         return Result.succeed(promotion);
     }

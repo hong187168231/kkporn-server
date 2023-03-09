@@ -75,7 +75,7 @@ public class KpnSiteTopicController {
             @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
-    public Result<PageResult<SiteMovieListVo>> findSiteMovieList(@RequestParam Map<String, Object> params) {
+    public Result<PageResult<SiteMovieListVo>> findSiteTopicMovieList(@RequestParam Map<String, Object> params) {
         PageResult<SiteMovieListVo> list = siteTopicMovieService.findSiteMovieList(params);
         return Result.succeed(list);
     }
