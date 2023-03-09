@@ -1,4 +1,4 @@
-package com.central.porn.enums;
+package com.central.common.model.enums;
 
 import com.central.common.language.LanguageEnum;
 import com.central.common.language.LanguageThreadLocal;
@@ -6,8 +6,10 @@ import com.central.common.language.LanguageThreadLocal;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum KpnMovieSearchTypeSubtitleEnum {
+    All(-1, "全部", "All", "ទាំងអស់។"),
     Nothing(0, "无字幕", "No subtitle", "គ្មានចំណងជើងរងទេ។"),
     Chinese(1, "中文字幕", "Chinese subtitle", "អត្ថបទរឿងចិន"),
     English(2, "英文字幕", "English subtitles", "អត្ថបទរឿងជាភាសាអង់គ្លេស"),
@@ -28,10 +30,15 @@ public enum KpnMovieSearchTypeSubtitleEnum {
         this.nameKh = nameKh;
     }
 
-    public static Map<Integer, String> getOptions() {
+    public static Map<Integer, String> getOptions(Boolean needAll) {
         final String language = LanguageThreadLocal.getLanguage();
 
-        return Arrays.stream(values()).collect(Collectors.toMap(o -> o.code, o -> {
+        Stream<KpnMovieSearchTypeSubtitleEnum> stream = Arrays.stream(values());
+        if (!needAll) {
+            stream = stream.filter(e -> e.code != -1);
+        }
+
+        return stream.collect(Collectors.toMap(o -> o.code, o -> {
             if (language.equalsIgnoreCase(LanguageEnum.ZH.name().toLowerCase())) {
                 return o.nameZh;
             }

@@ -1,4 +1,4 @@
-package com.central.porn.enums;
+package com.central.common.model.enums;
 
 import com.central.common.language.LanguageEnum;
 import com.central.common.language.LanguageThreadLocal;
@@ -6,31 +6,39 @@ import com.central.common.language.LanguageThreadLocal;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * 影片收费类型
+ * 拍摄性质
  */
-public enum KpnMovieSearchTypePayEnum {
-    Free(0,"免费", "free", "ឥតគិតថ្លៃ"),
-    Vip(1,"VIP观看", "VIP only", "វីអាយភីតែប៉ុណ្ណោះ"),
+public enum KpnMovieSearchTypeShootingEnum {
+    All(-1,"全部","All","ទាំងអស់។"),
+    Professional(0, "专业拍摄", "professional", "វិជ្ជាជីវៈ"),
+    SneakShot(1, "偷拍", "sneak shot", "ការបាញ់ប្រហារ"),
+    Selfie(2, "自拍", "selfie", "សែលហ្វី"),
+    Other(3, "其他", "other", "ផ្សេងទៀត"),
     ;
-
     private Integer code;
     private String nameZh;
     private String nameEn;
     private String nameKh;
 
-    KpnMovieSearchTypePayEnum(Integer code, String nameZh, String nameEn, String nameKh) {
+    KpnMovieSearchTypeShootingEnum(Integer code, String nameZh, String nameEn, String nameKh) {
         this.code = code;
         this.nameZh = nameZh;
         this.nameEn = nameEn;
         this.nameKh = nameKh;
     }
 
-    public static Map<Integer, String> getOptions() {
+    public static Map<Integer, String> getOptions(Boolean needAll) {
         final String language = LanguageThreadLocal.getLanguage();
 
-        return Arrays.stream(values()).collect(Collectors.toMap(o -> o.code, o -> {
+        Stream<KpnMovieSearchTypeShootingEnum> stream = Arrays.stream(values());
+        if (!needAll) {
+            stream = stream.filter(e -> e.code != -1);
+        }
+
+        return stream.collect(Collectors.toMap(o -> o.code, o -> {
             if (language.equalsIgnoreCase(LanguageEnum.ZH.name().toLowerCase())) {
                 return o.nameZh;
             }

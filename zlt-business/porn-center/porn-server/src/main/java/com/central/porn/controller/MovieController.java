@@ -8,12 +8,13 @@ import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.model.KpnSiteUserMovieFavorites;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
-import com.central.common.model.enums.KpnMovieSearchTypeCountryEnum;
+import com.central.common.model.enums.*;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
-import com.central.porn.enums.*;
+import com.central.porn.enums.KpnMovieSortTypeEnum;
+import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -162,10 +163,11 @@ public class MovieController {
     public Result<Map<String, Map<Integer, String>>> getSearchOptions() {
         try {
             Map<String, Map<Integer, String>> searchOptionMap = new TreeMap<>();
-            searchOptionMap.put(PornConstants.Str.COUNTRY, KpnMovieSearchTypeCountryEnum.getOptions());
-            searchOptionMap.put(PornConstants.Str.SUBTITLE, KpnMovieSearchTypeSubtitleEnum.getOptions());
-            searchOptionMap.put(PornConstants.Str.SHOOTING, KpnMovieSearchTypeShootingEnum.getOptions());
-            searchOptionMap.put(PornConstants.Str.PAY, KpnMovieSearchTypePayEnum.getOptions());
+            searchOptionMap.put(PornConstants.Str.TYPE, KpnMovieTypeEnum.getOptions(Boolean.FALSE));
+            searchOptionMap.put(PornConstants.Str.COUNTRY, KpnMovieSearchTypeCountryEnum.getOptions(Boolean.FALSE));
+            searchOptionMap.put(PornConstants.Str.SUBTITLE, KpnMovieSearchTypeSubtitleEnum.getOptions(Boolean.FALSE));
+            searchOptionMap.put(PornConstants.Str.SHOOTING, KpnMovieSearchTypeShootingEnum.getOptions(Boolean.FALSE));
+            searchOptionMap.put(PornConstants.Str.PAY, KpnMovieSearchTypePayEnum.getOptions(Boolean.FALSE));
 
             return Result.succeed(searchOptionMap, "succeed");
         } catch (Exception e) {

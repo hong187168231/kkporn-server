@@ -75,6 +75,7 @@ public final class PornConstants {
         public static final String SID = "sid";
         public static final String Host = "Host";
         public static final String REFERER = "Referer";
+        public static final String TYPE = "type";
         public static final String COUNTRY = "country";
         public static final String SHOOTING = "shooting";
         public static final String SUBTITLE = "subtitle";

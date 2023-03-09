@@ -57,10 +57,10 @@ public class KpnSiteMovie extends SuperEntity {
     private Integer country;
     @ApiModelProperty("影片类型 0/false无码 1/true有码")
     private Boolean type;
-    @ApiModelProperty("拍摄性质 special:专业拍摄,sneak:偷拍,selfie:自拍,other:其他")
-    private String shootingType;
-    @ApiModelProperty("字幕类型 no:无字幕,zh:中文,en:英文,zhen:中英,other:其他")
-    private String subtitleType;
+    @ApiModelProperty("拍摄性质 0:专业拍摄,1:偷拍,2:自拍,3:其他")
+    private Integer shootingType;
+    @ApiModelProperty("字幕类型 0:无字幕,1:中文,2:英文,3:中英,4:其他")
+    private Integer subtitleType;
     @ApiModelProperty("番号")
     private String serialNumber;
     @ApiModelProperty("制作商")
