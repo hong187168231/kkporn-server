@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -101,6 +102,12 @@ public class SiteController {
     @Value("${zlt.minio.externalEndpoint}")
     private String externalEndpoint;
 
+    @Autowired
+    private TaskExecutor taskExecutor;
+
+    @Autowired
+    private IKpnSitePlatformService sitePlatformService;
+
     public static final String AUTHENTICATION_MODE = "password_code";
 
     /**
@@ -128,10 +135,7 @@ public class SiteController {
                 site = siteService.getInfoById(Long.parseLong(sid));
             }
 
-            // TODO 异常统一处理
             if (ObjectUtil.isEmpty(site)) {
-//                throw new RuntimeException("站点不存在");
-
                 return Result.failed("站点不存在");
             }
             //站点信息
@@ -151,23 +155,34 @@ public class SiteController {
 
     @GetMapping("/heartbeat")
     @ApiOperation(value = "心跳,1分钟一次")
-    public Result<String> heartbeat(@ApiParam("站点id") @RequestHeader(value = "sid") Long sid,
-                                    @ApiParam("在线唯一标识 已登录的使用username,未登录的用uuid") String uniqueOnlineId) {
+    public Result<SiteConfigInfoVo> heartbeat(@ApiParam(value = "站点id", required = true)
+                                              @RequestHeader(value = "sid") Long sid,
+                                              @ApiParam("在线唯一标识 已登录的使用username,未登录的用uuid")
+                                              @RequestParam String uniqueOnlineId) {
         try {
-            String uniqueOnlineIdRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ONLINE_UNIQUE_ID, sid, uniqueOnlineId);
-            String redisUniqueOnlineId = (String) RedisRepository.get(uniqueOnlineIdRedisKey);
+            taskExecutor.execute(() -> {
+                String uniqueOnlineIdRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ONLINE_UNIQUE_ID, sid, uniqueOnlineId);
+                String redisUniqueOnlineId = (String) RedisRepository.get(uniqueOnlineIdRedisKey);
 
-            if (StrUtil.isBlank(redisUniqueOnlineId)) {
-                RedisRepository.incr(StrUtil.format(PornConstants.RedisKey.KPN_SITE_ONLINE_COUNT, sid));
-            }
-            RedisRepository.setExpire(uniqueOnlineIdRedisKey, sid + PornConstants.Symbol.SHARP + uniqueOnlineId, PornConstants.RedisKey.EXPIRE_TIME_90_SECONDS);
-            return Result.succeed("succeed");
+                if (StrUtil.isBlank(redisUniqueOnlineId)) {
+                    RedisRepository.incr(StrUtil.format(PornConstants.RedisKey.KPN_SITE_ONLINE_COUNT, sid));
+                }
+                RedisRepository.setExpire(uniqueOnlineIdRedisKey, sid + PornConstants.Symbol.SHARP + uniqueOnlineId, PornConstants.RedisKey.EXPIRE_TIME_90_SECONDS);
+            });
+
+            //线路
+            Map<String, List<String>> kpnLineVos = kpnLineService.getLines();
+            //站点平台配置
+            KpnSitePlatform sitePlatform = sitePlatformService.getBySiteId(sid);
+            //防走失
+            SiteConfigInfoVo siteConfigInfoVo = SiteConfigInfoVo.builder().kpnLineVos(kpnLineVos).tryTime(sitePlatform.getTryTime()).lostDomain(sitePlatform.getLostDomain()).build();
+
+            return Result.succeed(siteConfigInfoVo, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
         }
     }
-
     /**
      * 获取站点线路
      *

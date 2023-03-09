@@ -20,9 +20,37 @@ public interface IAsyncService {
     void delActorCache(Long actorId);
 
     /**
-     * 清楚站点专题缓存
+     * 删除站点专题缓存
      *
      * @param sid
      */
     void deleteSiteTopicCache(Long sid);
+
+    /**
+     * 删除站点专题影片
+     *
+     * @param sid     站点id
+     * @param topicId 站提id
+     */
+    void deleteSiteTopicMovieCache(Long sid, Long topicId);
+
+    /**
+     * 删除站点信息缓存
+     *
+     * @param sid 站点id
+     */
+    void deleteSiteInfoCache(Long sid);
+
+    /**
+     * 删除线路缓存
+     */
+    void deleteLinesCache();
+
+    /**
+     * 删除标签相关影片缓存
+     *
+     * @param tagId
+     */
+    void deleteMovieVoCacheByTag(Long tagId);
+
 }

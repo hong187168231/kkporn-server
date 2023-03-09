@@ -37,5 +37,11 @@ public interface IKpnSiteService extends ISuperService<KpnSite> {
 
     List<KpnSiteListVo> findSiteBoxList(Integer roleId);
 
+    /**
+     * 获取站点列表
+     * @return
+     */
+    List<KpnSite> getList();
+
 
 }

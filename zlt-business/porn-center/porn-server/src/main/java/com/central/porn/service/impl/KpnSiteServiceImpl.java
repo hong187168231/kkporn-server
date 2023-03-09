@@ -21,7 +21,7 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
 
     @Override
     public List<KpnSite> getList() {
-        String redisKey = PornConstants.RedisKey.SITE_LIST_KEY;
+        String redisKey = PornConstants.RedisKey.KPN_SITE_LIST_KEY;
         List<KpnSite> kpnSites = (ArrayList) RedisRepository.get(redisKey);
         if (CollectionUtil.isEmpty(kpnSites)) {
             kpnSites = this.lambdaQuery().eq(KpnSite::getStatus, true).list();
@@ -40,7 +40,7 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
 
     @Override
     public KpnSite getInfoById(Long sid) {
-        String siteKey = StrUtil.format(PornConstants.RedisKey.SITE_INFO_KEY, sid);
+        String siteKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_INFO_KEY, sid);
         KpnSite kpnSite = (KpnSite) RedisRepository.get(siteKey);
         if (ObjectUtil.isEmpty(kpnSite)) {
             kpnSite = getById(sid);

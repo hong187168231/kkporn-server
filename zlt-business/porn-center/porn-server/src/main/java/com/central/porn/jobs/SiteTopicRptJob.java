@@ -52,7 +52,6 @@ public class SiteTopicRptJob implements SimpleJob, CommandLineRunner {
                     List<Long> movieIdsByVvDesc = siteTopicMovieService.getTopicMovieIdsSortedByColumn(sid, topicId, PornConstants.Sql.COLUMN_VV);
                     RedisRepository.delete(redisKey);
                     if (CollectionUtil.isNotEmpty(movieIdsByVvDesc)) {
-
                         RedisRepository.leftPushAll(redisKey, movieIdsByVvDesc.stream().map(String::valueOf).collect(Collectors.toList()));
                     }
 

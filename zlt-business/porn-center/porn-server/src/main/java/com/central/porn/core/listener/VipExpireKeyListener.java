@@ -30,11 +30,9 @@ public class VipExpireKeyListener implements MessageListener {
             String content = new String(body, StandardCharsets.UTF_8);
             log.info("key：" + title + ",event:" + content + ",p:" + p);
             if (content.startsWith(PornConstants.RedisKey.KPN_SITE_VIP_EXPIRE_PREFIX)) {
-
                 long userId = Long.parseLong(StrUtil.subAfter(content, PornConstants.Symbol.COLON, true));
                 sysUserService.updateVipExpire(userId);
             } else if (content.startsWith(PornConstants.RedisKey.KPN_SITE_ONLINE_UNIQUE_ID_PREFIX)) {
-
                 String[] keyItemArr = StrUtil.split(content, PornConstants.Symbol.COLON);
                 log.info("用户:{},下线了", keyItemArr[5]);
                 RedisRepository.decr(StrUtil.format(PornConstants.RedisKey.KPN_SITE_ONLINE_COUNT, keyItemArr[4]));

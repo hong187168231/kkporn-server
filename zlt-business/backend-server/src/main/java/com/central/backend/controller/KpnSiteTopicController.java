@@ -144,10 +144,10 @@ public class KpnSiteTopicController {
         return Result.succeed(list);
     }
 
-    @ApiOperation("删除影片")
-    @DeleteMapping(value = "/deleteMovieId/{id}")
-    public Result deleteMovieId(@PathVariable Long id) {
-        boolean b = siteTopicMovieService.deleteId(id);
+    @ApiOperation("删除专题关联影片")
+    @DeleteMapping(value = "/deleteMovieId/{topicMovieId}")
+    public Result deleteMovieId(@PathVariable Long topicMovieId) {
+        boolean b = siteTopicMovieService.deleteId(topicMovieId);
         return b ? Result.succeed("删除成功") : Result.failed("删除失败");
     }
 
