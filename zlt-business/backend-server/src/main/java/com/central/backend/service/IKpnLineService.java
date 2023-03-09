@@ -15,7 +15,7 @@ import java.util.Map;
 public interface IKpnLineService extends ISuperService<KpnLine> {
 
 
-    PageResult<KpnLine> findSiteList(Map<String, Object> params);
+    PageResult<KpnLine> findLineList(Map<String, Object> params);
 
     boolean saveOrUpdateLine(KpnLine line)  ;
 

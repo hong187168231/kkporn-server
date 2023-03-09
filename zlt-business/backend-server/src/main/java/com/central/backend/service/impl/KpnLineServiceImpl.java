@@ -26,7 +26,7 @@ public class KpnLineServiceImpl extends SuperServiceImpl<KpnLineMapper, KpnLine>
     private IAsyncService asyncService;
 
     @Override
-    public PageResult<KpnLine> findSiteList(Map<String, Object> params) {
+    public PageResult<KpnLine> findLineList(Map<String, Object> params) {
         Page<KpnLine> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
         LambdaQueryWrapper<KpnLine> wrapper = new LambdaQueryWrapper<>();
         Integer line = MapUtils.getInteger(params, "line");

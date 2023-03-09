@@ -43,7 +43,7 @@ public class KpnLineController {
             @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
     })
     public Result<PageResult<KpnLine>> findLineList(@RequestParam Map<String, Object> params) {
-        PageResult<KpnLine> lineList = lineService.findSiteList(params);
+        PageResult<KpnLine> lineList = lineService.findLineList(params);
         return Result.succeed(lineList);
     }
 
@@ -87,7 +87,7 @@ public class KpnLineController {
      * 删除
      */
     @ApiOperation(value = "删除")
-    @DeleteMapping(value = "/deleteLineId/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public Result delete(@PathVariable Long id) {
         boolean succeed = lineService.removeById(id);
 

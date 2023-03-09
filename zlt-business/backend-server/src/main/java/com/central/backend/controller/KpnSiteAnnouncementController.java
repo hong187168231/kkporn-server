@@ -38,7 +38,7 @@ public class KpnSiteAnnouncementController {
     @ResponseBody
     @GetMapping("/findAnnouncementList")
     public Result<PageResult<KpnSiteAnnouncement>> findAnnouncementList(@ModelAttribute KpnSiteAnnouncementCo params) {
-        PageResult<KpnSiteAnnouncement> noticeList = announcementService.findNoticeList(params);
+        PageResult<KpnSiteAnnouncement> noticeList = announcementService.findAnnouncementList(params);
         return Result.succeed(noticeList);
     }
 

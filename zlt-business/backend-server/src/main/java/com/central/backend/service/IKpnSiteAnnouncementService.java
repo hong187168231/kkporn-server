@@ -10,7 +10,7 @@ import com.central.common.service.ISuperService;
 
 public interface IKpnSiteAnnouncementService extends ISuperService<KpnSiteAnnouncement> {
 
-    PageResult<KpnSiteAnnouncement> findNoticeList(KpnSiteAnnouncementCo params) ;
+    PageResult<KpnSiteAnnouncement> findAnnouncementList(KpnSiteAnnouncementCo params) ;
 
 
     Result saveOrUpdateAnnouncement(KpnSiteAnnouncement sysNotice) ;
