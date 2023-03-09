@@ -32,10 +32,10 @@
             <if test="p.updateBy != null and p.updateBy != ''">
                 and t.update_by = #{p.updateBy}
             </if>
-            <if test="p.startTime!=null and p.startTime != ''">
+            <if test="p.startTime!=null">
                 and DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]>DATE_FORMAT(#{p.startTime},'%Y-%m-%d %H:%i:%s')
             </if>
-            <if test="p.endTime!=null and p.endTime != ''">
+            <if test="p.endTime!=null">
                 and DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]>DATE_FORMAT(#{p.endTime},'%Y-%m-%d %H:%i:%s')
             </if>
         </where>

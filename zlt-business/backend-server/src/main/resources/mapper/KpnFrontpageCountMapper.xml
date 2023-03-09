@@ -33,18 +33,18 @@
                 and t.site_id = #{p.siteId}
             </if>
             <if test="p.status!=null and  p.status != '' and  p.status == 1">
-                <if test="p.startTime!=null and  p.startTime != ''">
+                <if test="p.startTime!=null">
                     and date_format(t.date,'%Y%m%d') <![CDATA[ >= ]]>DATE_FORMAT(#{startTime},'%Y%m%d')
                 </if>
-                <if test="p.endTime!=null and  p.endTime != ''">
+                <if test="p.endTime!=null">
                     and date_format(t.date,'%Y%m%d') <![CDATA[ <= ]]>DATE_FORMAT(#{p.endTime},'%Y%m%d')
                 </if>
             </if>
             <if test="p.status!=null and  p.status != '' and  p.status == 2">
-                <if test="p.startTime!=null and  p.startTime != ''">
+                <if test="p.startTime!=null">
                     and date_format(t.date,'%Y%m') <![CDATA[ >= ]]>DATE_FORMAT(#{startTime},'%Y%m')
                 </if>
-                <if test="p.endTime!=null and  p.endTime != ''">
+                <if test="p.endTime!=null">
                     and date_format(t.date,'%Y%m') <![CDATA[ <= ]]>DATE_FORMAT(#{p.endTime},'%Y%m')
                 </if>
             </if>

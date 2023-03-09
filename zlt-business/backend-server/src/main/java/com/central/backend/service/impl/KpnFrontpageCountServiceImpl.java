@@ -61,12 +61,15 @@ public class KpnFrontpageCountServiceImpl extends SuperServiceImpl<KpnFrontpageC
         Long onlineUsers = 0L;
         String onlineUsersKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ONLINE_COUNT);
         if(null!=user&&null!=user.getSiteId()&&0!=user.getSiteId()) {
-            onlineUsers = (Long) RedisRepository.get(StrUtil.format(onlineUsersKey , user.getSiteId()));//实时在线人数
+            Object obj = RedisRepository.get(StrUtil.format(onlineUsersKey , user.getSiteId()));//实时在线人数
+            onlineUsers = null!=obj?(Long) obj:0L;
         }else {//所有站点在线人数
             Map<String, Object> siteparams = new HashMap<>();
             List<KpnSite> kpnSiteList = iKpnSiteService.findKpnSiteList(siteparams);
             for (KpnSite kpnSite:kpnSiteList){
-                onlineUsers = onlineUsers + (Long) RedisRepository.get(StrUtil.format(onlineUsersKey , kpnSite.getId()));//实时在线人数
+                Object obj = RedisRepository.get(StrUtil.format(onlineUsersKey , kpnSite.getId()));
+                Long onlineUser = null!=obj?(Long) obj:0L;
+                onlineUsers = onlineUsers + onlineUser;//实时在线人数
             }
 
         }
