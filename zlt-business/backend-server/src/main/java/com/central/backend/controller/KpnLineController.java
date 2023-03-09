@@ -70,7 +70,7 @@ public class KpnLineController {
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }
 
-    @ApiOperation(value = "修改广告状态")
+    @ApiOperation(value = "修改线路状态")
     @GetMapping("/updateEnabledAdvertise")
     public Result updateEnabledLine(@Valid @ModelAttribute KpnLineUpdateCo params) {
         // params.setUpdateBy(sysUser.getUsername());
