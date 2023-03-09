@@ -155,4 +155,15 @@ public class AsyncServiceImpl implements IAsyncService {
             log.error(e.getMessage(), e);
         }
     }
+
+    @Async
+    @Override
+    public void deleteSitePlatformCache(Long sid) {
+        try {
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_PLATFORM_CONFIG_KEY, sid);
+            RedisRepository.delete(redisKey);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }

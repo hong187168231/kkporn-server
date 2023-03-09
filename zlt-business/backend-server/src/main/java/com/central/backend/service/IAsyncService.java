@@ -67,4 +67,11 @@ public interface IAsyncService {
      * @param siteMovieIds 站点影片id
      */
     void deleteSiteActorMovieNumCache(List<Long> siteMovieIds);
+
+    /**
+     * 站点id
+     *
+     * @param sid 站点id
+     */
+    void deleteSitePlatformCache(Long sid);
 }

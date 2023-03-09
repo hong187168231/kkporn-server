@@ -1,6 +1,7 @@
 package com.central.backend.controller;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSitePlatformService;
 import com.central.common.model.KpnSitePlatform;
 import com.central.common.model.Result;
@@ -22,6 +23,9 @@ public class KpnSitePlatformController {
 
     @Autowired
     private IKpnSitePlatformService sitePlatformService;
+
+    @Autowired
+    private IAsyncService asyncService;
 
 
     /* 查询平台配置
@@ -49,6 +53,11 @@ public class KpnSitePlatformController {
             return Result.failed("站点id不能为空");
         }
         Boolean aBoolean = sitePlatformService.saveOrUpdatePlatform(info);
+
+        //add by year 删除站点平台配置缓存
+        if(aBoolean){
+            asyncService.deleteSitePlatformCache(info.getSiteId());
+        }
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }
 }
