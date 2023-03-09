@@ -74,4 +74,18 @@ public interface IAsyncService {
      * @param sid 站点id
      */
     void deleteSitePlatformCache(Long sid);
+
+    /**
+     * 删除站点签到配置缓存
+     *
+     * @param sid 站点id
+     */
+    void deleteSiteSignConfigCache(Long sid);
+
+    /**
+     * 开启同步开关
+     *
+     * @param sid 站点id
+     */
+    void openSiteMoviesChangeSwitch(Long sid);
 }

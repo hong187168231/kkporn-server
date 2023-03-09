@@ -31,10 +31,9 @@ public class CacheMovieNamesJob implements CommandLineRunner {
     @Autowired
     private IKpnSiteMovieService siteMovieService;
 
-    //todo 并发问题,再考虑
     @Scheduled(cron = "0 0/1 * * * ?")
     public void loadCacheJob() {
-        log.info("CacheMovieNamesJob is running ....");
+        log.info("check site movie change work is running ....");
 
         List<KpnSite> kpnSites = siteService.getList();
         for (KpnSite kpnSite : kpnSites) {
@@ -42,7 +41,7 @@ public class CacheMovieNamesJob implements CommandLineRunner {
 
             String redisFlagKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_CHANGE_FLAG, sid);
             Integer oper = (Integer) RedisRepository.get(redisFlagKey);
-            if (oper != null && oper == PornConstants.Numeric.OPEN) {
+            if (oper != null && oper.equals(PornConstants.Numeric.OPEN) ) {
                 cacheData();
                 reCacheSiteData(sid);
                 log.info("sid:{},数据同步完成!", sid);
@@ -76,7 +75,6 @@ public class CacheMovieNamesJob implements CommandLineRunner {
 
     private void cacheData() {
         PornConstants.LocalCache.LOCAL_MAP_MOVIE_NAME.clear();
-        //todo 待优化
         List<KpnSiteMovie> kpnSiteMovies = siteMovieService.lambdaQuery()
                 .select(KpnSiteMovie::getMovieId, KpnSiteMovie::getNameZh, KpnSiteMovie::getNameEn, KpnSiteMovie::getNameKh)
                 .eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus())
