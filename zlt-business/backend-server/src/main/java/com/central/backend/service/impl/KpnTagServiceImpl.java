@@ -74,7 +74,7 @@ public class KpnTagServiceImpl extends SuperServiceImpl<KpnTagMapper, KpnTag> im
         }
         this.removeById(id);
         // add by year
-        asyncService.deleteMovieVoCacheByTag(id);
+        asyncService.deleteSiteMovieVoCacheByTag(id);
         return Result.succeed("删除成功");
     }
     @Override
@@ -87,7 +87,7 @@ public class KpnTagServiceImpl extends SuperServiceImpl<KpnTagMapper, KpnTag> im
         }
         this.saveOrUpdate(kpnTag);
         // add by year
-        asyncService.deleteMovieVoCacheByTag(kpnTag.getId());
+        asyncService.deleteSiteMovieVoCacheByTag(kpnTag.getId());
         return Result.succeed("保存成功");
     }
 }

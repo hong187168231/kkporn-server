@@ -38,23 +38,4 @@ public class KpnTagServiceImpl extends SuperServiceImpl<KpnTagMapper, KpnTag> im
         }
         return result;
     }
-
-
-    @Override
-    public KpnTagVo getByTagId(Long tagId) {
-        String tagRedisKey = StrUtil.format(PornConstants.RedisKey.KPN_TAGID_KEY, tagId);
-        KpnTag kpnTag = (KpnTag) RedisRepository.get(tagRedisKey);
-
-        if (ObjectUtil.isEmpty(kpnTag)) {
-            kpnTag = this.getById(tagId);
-            if (ObjectUtil.isNotEmpty(kpnTag)) {
-                RedisRepository.setExpire(tagRedisKey, kpnTag, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS, TimeUnit.SECONDS);
-            }
-        }
-
-        KpnTagVo kpnTagVo = new KpnTagVo();
-        BeanUtil.copyProperties(kpnTag, kpnTagVo);
-
-        return kpnTagVo;
-    }
 }

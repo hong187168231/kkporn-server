@@ -1,6 +1,7 @@
 package com.central.backend.service;
 
 import java.util.Date;
+import java.util.List;
 
 public interface IAsyncService {
 
@@ -22,7 +23,7 @@ public interface IAsyncService {
     /**
      * 删除站点专题缓存
      *
-     * @param sid
+     * @param sid 站点id
      */
     void deleteSiteTopicCache(Long sid);
 
@@ -49,8 +50,14 @@ public interface IAsyncService {
     /**
      * 删除标签相关影片缓存
      *
-     * @param tagId
+     * @param tagId 标签id
      */
-    void deleteMovieVoCacheByTag(Long tagId);
+    void deleteSiteMovieVoCacheByTag(Long tagId);
 
+    /**
+     * 删除站点影片缓存
+     *
+     * @param siteMovieIds 站点影片id
+     */
+    void deleteSiteMovieVoCacheById(List<Long> siteMovieIds);
 }
