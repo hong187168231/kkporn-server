@@ -1,9 +1,10 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.collection.CollUtil;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSiteSignService;
-import com.central.common.annotation.LoginUser;
-import com.central.common.model.*;
 import com.central.common.model.KpnSiteSign;
+import com.central.common.model.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -25,6 +26,8 @@ public class KpnSiteSignController {
     @Autowired
     private IKpnSiteSignService signService;
 
+    @Autowired
+    private IAsyncService asyncService;
 
 
     /* 查询签到列表
@@ -47,6 +50,12 @@ public class KpnSiteSignController {
     @PostMapping("/saveOrUpdate")
     public Result saveOrUpdate(@RequestBody List<KpnSiteSign> list) {
         Boolean aBoolean = signService.saveOrUpdateSign(list);
+
+        // add by year 删除站点签到配置缓存
+        if (CollUtil.isNotEmpty(list)) {
+            KpnSiteSign kpnSiteSign = list.get(0);
+            asyncService.deleteSiteSignConfigCache(kpnSiteSign.getSiteId());
+        }
         return aBoolean ? Result.succeed("操作成功") : Result.failed("操作失败");
     }
 

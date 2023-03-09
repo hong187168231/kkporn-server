@@ -1,5 +1,6 @@
 package com.central.backend.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.model.dto.KpnSiteMoviePayTpyeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
@@ -104,7 +105,12 @@ public class KpnSiteMovieController {
         List<Long> siteMovieIds = kpnSiteMovieStatusDtoList.stream().map(KpnSiteMovieStatusDto::getId).collect(Collectors.toList());
         asyncService.deleteSiteMovieVoCacheById(siteMovieIds);
         asyncService.deleteSiteActorMovieNumCache(siteMovieIds);
-
+        if (CollUtil.isNotEmpty(siteMovieIds)) {
+            KpnSiteMovie siteMovie = kpnSiteMovieService.getById(siteMovieIds.get(0));
+            if (ObjectUtil.isNotEmpty(siteMovie)) {
+                asyncService.openSiteMoviesChangeSwitch(siteMovie.getSiteId());
+            }
+        }
         return Result.succeed("保存成功");
     }
     /**

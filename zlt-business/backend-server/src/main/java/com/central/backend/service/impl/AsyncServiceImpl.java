@@ -166,4 +166,29 @@ public class AsyncServiceImpl implements IAsyncService {
             log.error(e.getMessage(), e);
         }
     }
+
+    @Async
+    @Override
+    public void deleteSiteSignConfigCache(Long sid) {
+        try {
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_SIGN_CONFIG, sid);
+            RedisRepository.delete(redisKey);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void openSiteMoviesChangeSwitch(Long sid) {
+        try {
+            if (ObjectUtil.isNotEmpty(sid)) {
+                String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_CHANGE_FLAG, sid);
+                RedisRepository.set(redisKey, PornConstants.Numeric.OPEN);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+    }
 }

@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @ApiModel("签到配置")
 public class KpnSiteSign extends SuperEntity {
 	@ApiModelProperty(value = "站点id")
-	private int siteId;
+	private Long siteId;
 
 	@ApiModelProperty(value = "站点编码")
 	private String siteCode;
