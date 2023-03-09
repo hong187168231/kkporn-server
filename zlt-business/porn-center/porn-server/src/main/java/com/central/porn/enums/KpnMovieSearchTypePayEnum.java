@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 影片收费类型
+ */
 public enum KpnMovieSearchTypePayEnum {
     Free(0,"免费", "free", "ឥតគិតថ្លៃ"),
     Vip(1,"VIP观看", "VIP only", "វីអាយភីតែប៉ុណ្ណោះ"),

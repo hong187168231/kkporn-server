@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel("站点影片")
-public class KpnSiteMoviePayTpyeDto {
+public class KpnSiteMoviePayTypeDto {
     @ApiModelProperty(value = "站点影片ID")
     private Long id;
     @ApiModelProperty("付费类型 0/false:免费,1/true:付费")

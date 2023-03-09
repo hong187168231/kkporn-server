@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
  * 拍摄性质
  */
 public enum KpnMovieSearchTypeShootingEnum {
-    Special(0, "专业拍摄", "professional", "វិជ្ជាជីវៈ"),
-    Sneak(1, "偷拍", "sneak shot", "ការបាញ់ប្រហារ"),
+    Professional(0, "专业拍摄", "professional", "វិជ្ជាជីវៈ"),
+    SneakShot(1, "偷拍", "sneak shot", "ការបាញ់ប្រហារ"),
     Selfie(2, "自拍", "selfie", "សែលហ្វី"),
     Other(3, "其他", "other", "ផ្សេងទៀត"),
     ;

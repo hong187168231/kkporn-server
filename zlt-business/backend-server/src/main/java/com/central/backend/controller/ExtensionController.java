@@ -22,8 +22,6 @@ public class ExtensionController {
     @Autowired
     private ISysUserService userService;
 
-
-
     @ApiOperation("查询推广列表")
     @ResponseBody
     @GetMapping("/findUserExtensionList")
