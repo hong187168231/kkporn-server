@@ -103,6 +103,8 @@ public class KpnSiteMovieController {
         //add by year 删除站点影片缓存
         List<Long> siteMovieIds = kpnSiteMovieStatusDtoList.stream().map(KpnSiteMovieStatusDto::getId).collect(Collectors.toList());
         asyncService.deleteSiteMovieVoCacheById(siteMovieIds);
+        asyncService.deleteSiteActorMovieNumCache(siteMovieIds);
+
         return Result.succeed("保存成功");
     }
     /**

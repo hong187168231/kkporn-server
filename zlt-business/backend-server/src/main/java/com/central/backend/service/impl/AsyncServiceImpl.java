@@ -139,4 +139,20 @@ public class AsyncServiceImpl implements IAsyncService {
             log.error(e.getMessage(), e);
         }
     }
+
+    @Async
+    @Override
+    public void deleteSiteActorMovieNumCache(List<Long> siteMovieIds) {
+        try {
+            if (CollUtil.isNotEmpty(siteMovieIds)) {
+                List<KpnSiteMovie> siteMovies = siteMovieService.listByIds(siteMovieIds);
+                for (KpnSiteMovie siteMovie : siteMovies) {
+                    String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ACTOR_MOVIENUM_KEY, siteMovie.getSiteId(), siteMovie.getActorId());
+                    RedisRepository.delete(redisKey);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }
