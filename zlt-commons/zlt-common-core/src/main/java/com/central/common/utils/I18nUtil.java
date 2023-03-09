@@ -112,23 +112,31 @@ public class I18nUtil implements ApplicationContextAware {
         }
         if (I18nKeys.FRONT.equals(requestSource)) {
             switch (language.toLowerCase()) {
-                case I18nKeys.Locale.EN_US:
-                    return I18nKeys.Redis.FrontMessage.EN_US_KEY;
+                case I18nKeys.Locale.ZH_CN:
+                    return I18nKeys.Redis.FrontMessage.ZH_CN_KEY;
                 case I18nKeys.Locale.KHM:
                     return I18nKeys.Redis.FrontMessage.KHM_KEY;
                 case I18nKeys.Locale.TH:
+                    return I18nKeys.Redis.FrontMessage.TH_KEY;
+                case I18nKeys.Locale.VI:
+                    return I18nKeys.Redis.FrontMessage.VI_KEY;
+                case I18nKeys.Locale.MY:
                     return I18nKeys.Redis.FrontMessage.TH_KEY;
                 default:
                     return I18nKeys.Redis.FrontMessage.EN_US_KEY;
             }
         } else {
             switch (language.toLowerCase()) {
-                case I18nKeys.Locale.EN_US:
-                    return I18nKeys.Redis.BackendMessage.EN_US_KEY;
+                case I18nKeys.Locale.ZH_CN:
+                    return I18nKeys.Redis.BackendMessage.ZH_CN_KEY;
                 case I18nKeys.Locale.KHM:
                     return I18nKeys.Redis.BackendMessage.KHM_KEY;
                 case I18nKeys.Locale.TH:
                     return I18nKeys.Redis.BackendMessage.TH_KEY;
+                case I18nKeys.Locale.VI:
+                    return I18nKeys.Redis.BackendMessage.VI_KEY;
+                case I18nKeys.Locale.MY:
+                    return I18nKeys.Redis.BackendMessage.MY_KEY;
                 default:
                     return I18nKeys.Redis.BackendMessage.EN_US_KEY;
             }
@@ -149,6 +157,8 @@ public class I18nUtil implements ApplicationContextAware {
         dto.setEnUs(ops.entries(I18nKeys.Redis.Backend.EN_US_KEY));
         dto.setKhm(ops.entries(I18nKeys.Redis.Backend.KHM_KEY));
         dto.setTh(ops.entries(I18nKeys.Redis.Backend.TH_KEY));
+        dto.setVi(ops.entries(I18nKeys.Redis.Backend.VI_KEY));
+        dto.setMy(ops.entries(I18nKeys.Redis.Backend.MY_KEY));
         return dto;
     }
 
@@ -167,6 +177,7 @@ public class I18nUtil implements ApplicationContextAware {
         dto.setKhm(ops.entries(I18nKeys.Redis.FrontPc.KHM_KEY));
         dto.setTh(ops.entries(I18nKeys.Redis.FrontPc.TH_KEY));
         dto.setVi(ops.entries(I18nKeys.Redis.FrontPc.VI_KEY));
+        dto.setMy(ops.entries(I18nKeys.Redis.FrontPc.MY_KEY));
         return dto;
     }
 
@@ -185,6 +196,7 @@ public class I18nUtil implements ApplicationContextAware {
         dto.setKhm(ops.entries(I18nKeys.Redis.FrontApp.KHM_KEY));
         dto.setTh(ops.entries(I18nKeys.Redis.FrontApp.TH_KEY));
         dto.setVi(ops.entries(I18nKeys.Redis.FrontApp.VI_KEY));
+        dto.setMy(ops.entries(I18nKeys.Redis.FrontApp.MY_KEY));
         return dto;
     }
 
@@ -202,6 +214,8 @@ public class I18nUtil implements ApplicationContextAware {
         dto.setEnUs(ops.entries(I18nKeys.Redis.FrontMessage.EN_US_KEY));
         dto.setKhm(ops.entries(I18nKeys.Redis.FrontMessage.KHM_KEY));
         dto.setTh(ops.entries(I18nKeys.Redis.FrontMessage.TH_KEY));
+        dto.setVi(ops.entries(I18nKeys.Redis.FrontMessage.VI_KEY));
+        dto.setMy(ops.entries(I18nKeys.Redis.FrontMessage.MY_KEY));
         return dto;
     }
 
@@ -225,12 +239,18 @@ public class I18nUtil implements ApplicationContextAware {
     // 找到对应语言的redis key
     private static String getRedisKey(String language) {
         switch (language.toLowerCase()) {
+            case I18nKeys.Locale.ZH_CN:
+                return I18nKeys.Redis.Backend.ZH_CN_KEY;
             case I18nKeys.Locale.EN_US:
                 return I18nKeys.Redis.Backend.EN_US_KEY;
             case I18nKeys.Locale.KHM:
                 return I18nKeys.Redis.Backend.KHM_KEY;
             case I18nKeys.Locale.TH:
                 return I18nKeys.Redis.Backend.TH_KEY;
+            case I18nKeys.Locale.VI:
+                return I18nKeys.Redis.Backend.VI_KEY;
+            case I18nKeys.Locale.MY:
+                return I18nKeys.Redis.Backend.MY_KEY;
         }
         return I18nKeys.Redis.Backend.EN_US_KEY;
     }

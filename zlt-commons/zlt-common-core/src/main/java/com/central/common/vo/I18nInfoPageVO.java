@@ -28,6 +28,9 @@ public class I18nInfoPageVO {
     @ApiModelProperty("越南语")
     private String vi;
 
+    @ApiModelProperty("马来语")
+    private String my;
+
     @ApiModelProperty("操作人")
     private String operator;
 

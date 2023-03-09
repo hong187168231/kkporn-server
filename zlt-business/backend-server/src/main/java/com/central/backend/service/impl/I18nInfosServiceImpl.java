@@ -123,6 +123,11 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                         c.hSet(I18nKeys.Redis.Backend.VI_KEY.getBytes(StandardCharsets.UTF_8),
                             f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getVi().getBytes(StandardCharsets.UTF_8));
                     }
+                    // 马来国际化
+                    if (StrUtil.isNotBlank(f.getMy())) {
+                        c.hSet(I18nKeys.Redis.Backend.MY_KEY.getBytes(StandardCharsets.UTF_8),
+                                f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
+                    }
                 } else if (I18nKeys.FRONT_PC.equals(f.getFromOf())) {
 
                     // 中文国际化
@@ -150,6 +155,11 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                     if (StrUtil.isNotBlank(f.getVi())) {
                         c.hSet(I18nKeys.Redis.FrontPc.VI_KEY.getBytes(StandardCharsets.UTF_8),
                             f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getVi().getBytes(StandardCharsets.UTF_8));
+                    }
+                    // 马来语国际化
+                    if (StrUtil.isNotBlank(f.getMy())) {
+                        c.hSet(I18nKeys.Redis.FrontPc.MY_KEY.getBytes(StandardCharsets.UTF_8),
+                                f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
                     }
                 } else if (I18nKeys.FRONT_APP.equals(f.getFromOf())) {
 
@@ -180,6 +190,11 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                         c.hSet(I18nKeys.Redis.FrontApp.VI_KEY.getBytes(StandardCharsets.UTF_8),
                             f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getVi().getBytes(StandardCharsets.UTF_8));
                     }
+                    // 马来语国际化
+                    if (StrUtil.isNotBlank(f.getMy())) {
+                        c.hSet(I18nKeys.Redis.FrontApp.MY_KEY.getBytes(StandardCharsets.UTF_8),
+                                f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
+                    }
                 } else if (I18nKeys.FRONT_MESSAGE.equals(f.getFromOf())) {
 
                     // 中文国际化
@@ -208,6 +223,11 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                     if (StrUtil.isNotBlank(f.getVi())) {
                         c.hSet(I18nKeys.Redis.FrontMessage.VI_KEY.getBytes(StandardCharsets.UTF_8),
                             f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getVi().getBytes(StandardCharsets.UTF_8));
+                    }
+                    // 马来语国际化
+                    if (StrUtil.isNotBlank(f.getMy())) {
+                        c.hSet(I18nKeys.Redis.FrontMessage.MY_KEY.getBytes(StandardCharsets.UTF_8),
+                                f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
                     }
                 }else if (I18nKeys.BACKEND_MESSAGE.equals(f.getFromOf())) {
 
@@ -238,6 +258,11 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                         c.hSet(I18nKeys.Redis.BackendMessage.VI_KEY.getBytes(StandardCharsets.UTF_8),
                             f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getVi().getBytes(StandardCharsets.UTF_8));
                     }
+                    // 马来语国际化
+                    if (StrUtil.isNotBlank(f.getMy())) {
+                        c.hSet(I18nKeys.Redis.BackendMessage.MY_KEY.getBytes(StandardCharsets.UTF_8),
+                                f.getZhCn().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
+                    }
                 }
             }
             return null;
@@ -252,6 +277,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         boolean khmChange = Objects.nonNull(param.getKhm());
         boolean thChange = Objects.nonNull(param.getTh());
         boolean viChange = Objects.nonNull(param.getVi());
+        boolean myChange = Objects.nonNull(param.getMy());
         I18nInfo info = getById(param.getId());
         if (null == info) {
             return false;
@@ -268,6 +294,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
             Wrappers.lambdaUpdate(I18nInfo.class).eq(I18nInfo::getId, param.getId()).eq(I18nInfo::getFromOf, from)
                 .set(zhcnChange, I18nInfo::getZhCn, param.getZhCn()).set(enusChange, I18nInfo::getEnUs, param.getEnUs())
                 .set(khmChange, I18nInfo::getKhm, param.getKhm()).set(thChange, I18nInfo::getTh, param.getTh()).set(viChange, I18nInfo::getVi, param.getVi())
+                    .set(myChange, I18nInfo::getMy, param.getMy())
                 .set(StrUtil.isNotBlank(param.getOperator()), I18nInfo::getOperator, param.getOperator())
                 .set(I18nInfo::getUpdateTime, new Date());
         int count = mapper.update(null, update);
@@ -305,6 +332,9 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         if (Objects.isNull(info.getVi())) {
             info.setVi("");
         }
+        if (Objects.isNull(info.getMy())) {
+            info.setMy("");
+        }
         info.setUpdateTime(new Date());
         boolean succeed = save(info);
         if (succeed) {
@@ -319,6 +349,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         boolean khmChange = StrUtil.isNotBlank(param.getKhm());
         boolean thChange = StrUtil.isNotBlank(param.getTh());
         boolean viChange = StrUtil.isNotBlank(param.getVi());
+        boolean myChange = StrUtil.isNotBlank(param.getMy());
 
         // 更新redis
         String i18nKey = info.getZhCn();
@@ -429,6 +460,26 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         if (StringUtils.isNotEmpty(oldKey)) {
             I18nUtil.deleteByKey(redisKey, oldKey);
         }
+        // 更新马来语国际化
+        if (I18nKeys.FRONT_PC.equals(from)) {
+            redisKey = I18nKeys.Redis.FrontPc.MY_KEY;
+        } else if (I18nKeys.FRONT_APP.equals(from)) {
+            redisKey = I18nKeys.Redis.FrontApp.MY_KEY;
+        } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+            redisKey = I18nKeys.Redis.FrontMessage.MY_KEY;
+        } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+            redisKey = I18nKeys.Redis.BackendMessage.MY_KEY;
+        } else {
+            redisKey = I18nKeys.Redis.Backend.MY_KEY;
+        }
+        if (myChange) {
+            I18nUtil.resetSource(redisKey, i18nKey, param.getMy());
+        } else {
+            I18nUtil.deleteByKey(redisKey, i18nKey);
+        }
+        if (StringUtils.isNotEmpty(oldKey)) {
+            I18nUtil.deleteByKey(redisKey, oldKey);
+        }
     }
 
     private void deleteI18nRedis(I18nInfo info) {
@@ -437,6 +488,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         boolean khmChange = StrUtil.isNotBlank(info.getKhm());
         boolean thChange = StrUtil.isNotBlank(info.getTh());
         boolean viChange = StrUtil.isNotBlank(info.getVi());
+        boolean myChange = StrUtil.isNotBlank(info.getMy());
         Integer from = info.getFromOf();
         String oldKey = info.getZhCn();
         // 更新redis
@@ -518,6 +570,21 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
             }
             I18nUtil.deleteByKey(redisKey, oldKey);
         }
+        if (myChange) {
+            // 更新越南语国际化
+            if (I18nKeys.FRONT_PC.equals(from)) {
+                redisKey = I18nKeys.Redis.FrontPc.MY_KEY;
+            } else if (I18nKeys.FRONT_APP.equals(from)) {
+                redisKey = I18nKeys.Redis.FrontApp.MY_KEY;
+            } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+                redisKey = I18nKeys.Redis.FrontMessage.MY_KEY;
+            } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+                redisKey = I18nKeys.Redis.BackendMessage.MY_KEY;
+            } else {
+                redisKey = I18nKeys.Redis.Backend.MY_KEY;
+            }
+            I18nUtil.deleteByKey(redisKey, oldKey);
+        }
     }
 
     @Override
@@ -542,6 +609,9 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                 case I18nKeys.LocaleCode.VI:
                     params.setVi(param.getWord());
                     break;
+                case I18nKeys.LocaleCode.MY:
+                    params.setMy(param.getWord());
+                    break;
             }
         }
         params.setFrom(param.getFrom());
@@ -557,7 +627,8 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
             new LanguageLabelVO(I18nKeys.LocaleCode.EN_US, I18nKeys.LocaleCodeEn.EN, I18nUtil.t("英文")),
             new LanguageLabelVO(I18nKeys.LocaleCode.KHM, I18nKeys.LocaleCodeEn.KM, I18nUtil.t("柬埔寨语")),
             new LanguageLabelVO(I18nKeys.LocaleCode.TH, I18nKeys.LocaleCodeEn.TH, I18nUtil.t("泰语")),
-            new LanguageLabelVO(I18nKeys.LocaleCode.VI, I18nKeys.LocaleCodeEn.VI, I18nUtil.t("越南语")));
+            new LanguageLabelVO(I18nKeys.LocaleCode.VI, I18nKeys.LocaleCodeEn.VI, I18nUtil.t("越南语")),
+                new LanguageLabelVO(I18nKeys.LocaleCode.MY, I18nKeys.LocaleCodeEn.MY, I18nUtil.t("马来语")));
     }
 
 

@@ -29,4 +29,7 @@ public class I18nSourceDTO implements Serializable {
     @ApiModelProperty("越南语国际化资源")
     private Map<String, String> vi;
 
+    @ApiModelProperty("马来国际化资源")
+    private Map<String, String> my;
+
 }

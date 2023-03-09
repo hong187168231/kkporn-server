@@ -32,6 +32,7 @@
             t.khm,
             t.th,
             t.vi,
+            t.my,
             t.operator,
             t.update_time
         FROM i18n_info t
@@ -50,6 +51,9 @@
             </if>
             <if test="p.vi != null and p.vi != ''">
                 AND t.vi LIKE concat('%', #{p.vi}, '%')
+            </if>
+            <if test="p.my != null and p.my != ''">
+                AND t.my LIKE concat('%', #{p.my}, '%')
             </if>
             <if test="p.from != null">
                 AND t.from_of = #{p.from}
