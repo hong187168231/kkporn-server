@@ -39,6 +39,9 @@ public class I18nInfo extends SuperEntity {
     @ApiModelProperty(value = "越南语")
     private String vi;
 
+    @ApiModelProperty(value = "马来语")
+    private String my;
+
     @ApiModelProperty(value = "操作人")
     private String operator;
 

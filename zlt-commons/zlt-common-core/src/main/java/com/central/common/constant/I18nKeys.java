@@ -76,6 +76,10 @@ public interface I18nKeys {
          * 越南语
          */
         String VI = "vi";
+        /**
+         * 马来语
+         */
+        String MY = "my";
     }
 
 
@@ -86,6 +90,7 @@ public interface I18nKeys {
         int KHM = 2;
         int TH = 3;
         int VI = 4;
+        int MY = 5;
     }
 
     // 语种代码
@@ -96,6 +101,7 @@ public interface I18nKeys {
         String KM = "km";
         String TH = "th";
         String VI = "vi";
+        String MY = "my";
     }
 
     interface Redis {
@@ -124,6 +130,10 @@ public interface I18nKeys {
              * 越南语国际化 key
              */
             String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.FRONT_PC;
+            /**
+             * 马来语国际化 key
+             */
+            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.FRONT_PC;
         }
 
         // 前台移动端
@@ -151,6 +161,10 @@ public interface I18nKeys {
              * 越南语国际化 key
              */
             String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.FRONT_APP;
+            /**
+             * 马来语国际化 key
+             */
+            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.FRONT_APP;
         }
 
         // 前台message
@@ -179,6 +193,10 @@ public interface I18nKeys {
              * 越南语国际化 key
              */
             String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.FRONT_MESSAGE;
+            /**
+             * 马来语国际化 key
+             */
+            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.FRONT_MESSAGE;
         }
 
         // 后台
@@ -206,6 +224,10 @@ public interface I18nKeys {
              * 越南语国际化 key
              */
             String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.BACKEND;
+            /**
+             * 马来语国际化 key
+             */
+            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.BACKEND;
         }
 
         // 后台Message
@@ -233,6 +255,10 @@ public interface I18nKeys {
              * 越南语国际化 key
              */
             String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.BACKEND_MESSAGE;
+            /**
+             * 马来语国际化 key
+             */
+            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.BACKEND_MESSAGE;
         }
     }
 
