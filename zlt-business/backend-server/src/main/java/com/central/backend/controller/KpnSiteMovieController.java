@@ -97,6 +97,8 @@ public class KpnSiteMovieController {
             "            @ApiImplicitParam(name = \"id\", value = \"站点影片ID\", required = true, dataType = \"Integer\"),\n" +
             "            @ApiImplicitParam(name = \"status\", value = \"状态 0待发布,1上架,2下架\", required = true, dataType = \"Integer\")\n" +
             "    })")
+    @ApiImplicitParams({
+    })
     @PostMapping("/settingStatus")
     public Result updateBatchStatusById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovieStatusDtoList,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnSiteMovieStatusDtoList) || kpnSiteMovieStatusDtoList.size() == 0) {
@@ -123,6 +125,8 @@ public class KpnSiteMovieController {
             "            @ApiImplicitParam(name = \"id\", value = \"站点影片ID\", required = true, dataType = \"Integer\"),\n" +
             "            @ApiImplicitParam(name = \"payType\", value = \"付费类型 false:免费,true:付费\", required = true, dataType = \"Integer\")\n" +
             "    })")
+    @ApiImplicitParams({
+    })
     @PostMapping("/settingPayType")
     public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMoviePayTpyeDto> kpnSiteMoviePayTpyeDtoList, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnSiteMoviePayTpyeDtoList) || kpnSiteMoviePayTpyeDtoList.size() == 0) {
