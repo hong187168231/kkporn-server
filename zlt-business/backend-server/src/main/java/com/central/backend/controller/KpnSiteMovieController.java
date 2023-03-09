@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.central.backend.model.dto.KpnSiteMoviePayTpyeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.model.vo.KpnSiteMovieVO;
 import com.central.backend.service.IKpnSiteMovieService;
@@ -88,7 +89,7 @@ public class KpnSiteMovieController {
       * 批量发布上架下架
       */
     @ApiOperation(value = "批量发布上架下架")
-    @PostMapping("/setingStatus")
+    @PostMapping("/settingStatus")
     public Result updateBatchStatusById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovie,@ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnSiteMovie) || kpnSiteMovie.size()==0) {
             return Result.failed("请求参数不能为空");
@@ -100,8 +101,8 @@ public class KpnSiteMovieController {
      * 批量发布上架下架
      */
     @ApiOperation(value = "批量设置付费类型")
-    @PostMapping("/setingPayType")
-    public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovie,@ApiIgnore @LoginUser SysUser user) {
+    @PostMapping("/settingPayType")
+    public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMoviePayTpyeDto> kpnSiteMovie, @ApiIgnore @LoginUser SysUser user) {
         if (ObjectUtil.isEmpty(kpnSiteMovie) || kpnSiteMovie.size()==0) {
             return Result.failed("请求参数不能为空");
         }

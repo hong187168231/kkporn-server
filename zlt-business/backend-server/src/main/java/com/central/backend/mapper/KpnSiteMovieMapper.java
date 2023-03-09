@@ -1,5 +1,6 @@
 package com.central.backend.mapper;
 
+import com.central.backend.model.dto.KpnSiteMoviePayTpyeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.model.vo.KpnSiteMovieVO;
 import com.central.backend.vo.MovieVo;
@@ -29,7 +30,7 @@ public interface KpnSiteMovieMapper extends SuperMapper<KpnSiteMovie> {
     List<KpnSiteMovieVO> findList(Page<KpnSiteMovieVO> page, @Param("p") Map<String, Object> params);
 
     int updateBatchStatusById(List<KpnSiteMovieStatusDto> list);
-    int updateBatchPayTypeById(List<KpnSiteMovieStatusDto> list);
+    int updateBatchPayTypeById(List<KpnSiteMoviePayTpyeDto> list);
 
 
     List<MovieVo> findMovieList(Page<MovieVo> page, @Param("p") Map<String, Object> params);

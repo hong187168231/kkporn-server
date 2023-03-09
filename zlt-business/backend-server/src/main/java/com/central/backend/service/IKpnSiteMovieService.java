@@ -1,5 +1,6 @@
 package com.central.backend.service;
 
+import com.central.backend.model.dto.KpnSiteMoviePayTpyeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.model.vo.KpnSiteMovieVO;
 import com.central.backend.vo.MovieVo;
@@ -27,7 +28,7 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
 
     public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list,SysUser user);
 
-    public void updateBatchPayTypeById(List<KpnSiteMovieStatusDto> list,SysUser user);
+    public void updateBatchPayTypeById(List<KpnSiteMoviePayTpyeDto> list, SysUser user);
 
 
     /**

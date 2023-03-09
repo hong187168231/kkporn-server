@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @Builder
@@ -16,4 +18,8 @@ public class KpnSiteMoviePayTpyeDto {
     private Long id;
     @ApiModelProperty("付费类型 0/false:免费,1/true:付费")
     private Boolean payType;
+    @ApiModelProperty(value = "更新人")
+    private String updateBy;
+    @ApiModelProperty(value = "更新时间")
+    private Date updateTime;
 }
