@@ -22,7 +22,7 @@ public interface IKpnSiteTopicMovieService extends ISuperService<KpnSiteTopicMov
 
     Boolean deleteTopicId(List<Long> movieIds) ;
 
-    Boolean deleteId(Long id);
+    Boolean deleteId(Long topicMovieId);
 
 
 

@@ -62,12 +62,11 @@ public class KpnSiteTopicMovieServiceImpl extends SuperServiceImpl<KpnSiteTopicM
     }
 
     @Override
-    public Boolean deleteId(Long id) {
-        int i = baseMapper.deleteById(id);
+    public Boolean deleteId(Long topicMovieId) {
+        int i = baseMapper.deleteById(topicMovieId);
 
         //add by year 删除专题影片缓存
         if (i > 0) {
-            Long topicMovieId = id;
             KpnSiteTopicMovie topicMovie = getById(topicMovieId);
             asyncService.deleteSiteTopicMovieCache(topicMovie.getSiteId(), topicMovie.getTopicId());
         }
