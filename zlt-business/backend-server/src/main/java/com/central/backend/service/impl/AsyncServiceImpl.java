@@ -26,6 +26,17 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 public class AsyncServiceImpl implements IAsyncService {
+    @Autowired
+    @Lazy
+    private IKpnMovieTagService movieTagService;
+
+    @Autowired
+    @Lazy
+    private IKpnSiteService siteService;
+
+    @Autowired
+    @Lazy
+    private IKpnSiteMovieService siteMovieService;
 
     @Async
     @Override
@@ -91,18 +102,6 @@ public class AsyncServiceImpl implements IAsyncService {
             log.error(e.getMessage(), e);
         }
     }
-
-    @Autowired
-    @Lazy
-    private IKpnMovieTagService movieTagService;
-
-    @Autowired
-    @Lazy
-    private IKpnSiteService siteService;
-
-    @Autowired
-    @Lazy
-    private IKpnSiteMovieService siteMovieService;
 
     @Async
     @Override

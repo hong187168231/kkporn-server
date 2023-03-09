@@ -223,6 +223,12 @@ public class SiteController {
                 if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.SEARCH.getSort().equals(kpnSiteChannelVo.getSort())) {
                     kpnSiteChannelVo.setIsSearch(true);
                 }
+                if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.NEWEST.getSort().equals(kpnSiteChannelVo.getSort())) {
+                    kpnSiteChannelVo.setIsNewest(true);
+                }
+                if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.POPULAR.getSort().equals(kpnSiteChannelVo.getSort())) {
+                    kpnSiteChannelVo.setIsHottest(true);
+                }
                 kpnSiteChannelVo.setIcon(externalEndpoint + kpnSiteChannelVo.getIcon());
 
                 return kpnSiteChannelVo;

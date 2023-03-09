@@ -458,7 +458,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         }
         //热门VIP推荐
         else if (KpnSiteMovieSearchFromEnum.VIP_RECOMMEND.getCode().equals(from)) {
-            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_MOVIEID_VV, sid, fromId);
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_MOVIEID_VV, sid);
 
             //倒序(默认)
             int startIndex = (currPage - 1) * pageSize;
@@ -482,7 +482,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         }
         //最新
         else if (KpnSiteMovieSearchFromEnum.LATEST.getCode().equals(from)) {
-            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ALL_MOVIEID_LATEST, sid, fromId);
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ALL_MOVIEID_LATEST, sid);
 
             //倒序(默认)
             int startIndex = (currPage - 1) * pageSize;

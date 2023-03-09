@@ -38,7 +38,7 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
             return this.lambdaQuery()
                     .eq(KpnSiteAdvertise::getSiteId, sid)
                     .eq(KpnSiteAdvertise::getStatus, true)
-                    .eq(KpnSiteAdvertise::getDevice, deviceType)
+                    .eq(KpnSiteAdvertise::getDevice, deviceType.toUpperCase())
                     .eq(KpnSiteAdvertise::getPosition, position)
 //                .ne(KpnSiteAdvertise::getPosition, SiteAdPositionEnum.TOPIC.getCode())
                     .le(KpnSiteAdvertise::getStartTime, new Date())

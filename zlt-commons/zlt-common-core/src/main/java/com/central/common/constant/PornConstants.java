@@ -123,7 +123,7 @@ public final class PornConstants {
         //缓存时间 1天
         public static final Long EXPIRE_TIME_1_DAYS = 1 * 24 * 60 * 60L;
 
-        //** 站点影片信息变动标识 默认0,有变动1
+        //- 站点影片信息变动标识 默认0,有变动1
         public static final String KPN_SITE_MOVIE_CHANGE_FLAG = "KPN:SITE:MOVIE:CHANGE:FLAG:{}";
 
         //- 缓存所有站点信息

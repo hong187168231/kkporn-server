@@ -2,7 +2,7 @@ package com.central.backend.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.central.backend.model.dto.KpnSiteMoviePayTpyeDto;
+import com.central.backend.model.dto.KpnSiteMoviePayTypeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.model.vo.KpnSiteMovieVO;
 import com.central.backend.service.IAsyncService;
@@ -118,45 +118,19 @@ public class KpnSiteMovieController {
         }
         return Result.succeed("保存成功");
     }
-    /**
-     * 批量发布上架下架
-     */
-    @ApiOperation(value = "批量设置付费类型",notes="@ApiImplicitParams({\n" +
-            "            @ApiImplicitParam(name = \"id\", value = \"站点影片ID\", required = true, dataType = \"Integer\"),\n" +
-            "            @ApiImplicitParam(name = \"payType\", value = \"付费类型 false:免费,true:付费\", required = true, dataType = \"Integer\")\n" +
-            "    })")
-    @ApiImplicitParams({
-    })
+
+
+    @ApiOperation(value = "批量设置付费类型")
     @PostMapping("/settingPayType")
-    public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMoviePayTpyeDto> kpnSiteMoviePayTpyeDtoList, @ApiIgnore @LoginUser SysUser user) {
-        if (ObjectUtil.isEmpty(kpnSiteMoviePayTpyeDtoList) || kpnSiteMoviePayTpyeDtoList.size() == 0) {
+    public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMoviePayTypeDto> kpnSiteMoviePayTypeDtoList, @ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(kpnSiteMoviePayTypeDtoList) || kpnSiteMoviePayTypeDtoList.size() == 0) {
             return Result.failed("请求参数不能为空");
         }
-        kpnSiteMovieService.updateBatchPayTypeById(kpnSiteMoviePayTpyeDtoList, user);
+        kpnSiteMovieService.updateBatchPayTypeById(kpnSiteMoviePayTypeDtoList, user);
 
         //add by year 删除站点影片缓存
-        List<Long> siteMovieIds = kpnSiteMoviePayTpyeDtoList.stream().map(KpnSiteMoviePayTpyeDto::getId).collect(Collectors.toList());
+        List<Long> siteMovieIds = kpnSiteMoviePayTypeDtoList.stream().map(KpnSiteMoviePayTypeDto::getId).collect(Collectors.toList());
         asyncService.deleteSiteMovieVoCacheById(siteMovieIds);
         return Result.succeed("保存成功");
     }
-
-//    /**
-//     * 新增or更新
-//     */
-//    @ApiOperation(value = "保存")
-//    @PostMapping
-//    public Result save(@RequestBody KpnSiteMovie kpnSiteMovie) {
-//        kpnSiteMovieService.saveOrUpdate(kpnSiteMovie);
-//        return Result.succeed("保存成功");
-//    }
-//
-//    /**
-//     * 删除
-//     */
-//    @ApiOperation(value = "删除")
-//    @DeleteMapping("/{id}")
-//    public Result delete(@PathVariable Long id) {
-//        kpnSiteMovieService.removeById(id);
-//        return Result.succeed("删除成功");
-//    }
 }

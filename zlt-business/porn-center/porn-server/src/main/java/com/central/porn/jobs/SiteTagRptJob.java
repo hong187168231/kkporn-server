@@ -1,5 +1,6 @@
 package com.central.porn.jobs;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSite;
@@ -46,19 +47,25 @@ public class SiteTagRptJob implements SimpleJob, CommandLineRunner {
                     String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_VV, sid, tagId);
                     List<Long> movieIdsByVvDesc = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_VV);
                     RedisRepository.delete(redisKey);
-                    RedisRepository.leftPushAll(redisKey, movieIdsByVvDesc.stream().map(String::valueOf).collect(Collectors.toList()));
+                    if (CollUtil.isNotEmpty(movieIdsByVvDesc)) {
+                        RedisRepository.leftPushAll(redisKey, movieIdsByVvDesc.stream().map(String::valueOf).collect(Collectors.toList()));
+                    }
 
                     //按影片时长高->低
                     redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_DURATION, sid, tagId);
                     List<Long> movieIdsByDuration = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_DURATION);
                     RedisRepository.delete(redisKey);
-                    RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
+                    if (CollUtil.isNotEmpty(movieIdsByDuration)) {
+                        RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
+                    }
 
                     //按影片创建时间新->旧
                     redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_LATEST, sid, tagId);
                     List<Long> movieIdsByCreateTime = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_CREATE_TIME);
                     RedisRepository.delete(redisKey);
-                    RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));
+                    if (CollUtil.isNotEmpty(movieIdsByCreateTime)) {
+                        RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));
+                    }
                 }
             }
         } catch (Exception e) {

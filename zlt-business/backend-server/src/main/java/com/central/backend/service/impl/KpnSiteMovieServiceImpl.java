@@ -1,7 +1,7 @@
 package com.central.backend.service.impl;
 
 import com.central.backend.mapper.KpnSiteMovieMapper;
-import com.central.backend.model.dto.KpnSiteMoviePayTpyeDto;
+import com.central.backend.model.dto.KpnSiteMoviePayTypeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.model.vo.KpnSiteMovieVO;
 import com.central.backend.service.IKpnSiteMovieService;
@@ -59,9 +59,9 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public void updateBatchPayTypeById(List<KpnSiteMoviePayTpyeDto> list, SysUser user){
+    public void updateBatchPayTypeById(List<KpnSiteMoviePayTypeDto> list, SysUser user){
         List<KpnSiteMovie> movieList = new ArrayList<>();
-        for (KpnSiteMoviePayTpyeDto dto : list){
+        for (KpnSiteMoviePayTypeDto dto : list){
             KpnSiteMovie movie = new KpnSiteMovie();
             BeanUtils.copyProperties(dto, movie);
             movie.setUpdateBy(null!=user?user.getUsername():"");
