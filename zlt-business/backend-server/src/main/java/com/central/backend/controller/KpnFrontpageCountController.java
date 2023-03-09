@@ -3,6 +3,7 @@ package com.central.backend.controller;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.model.vo.KpnFrontpageCountVO;
 import com.central.backend.service.IKpnFrontpageCountService;
 import com.central.common.annotation.LoginUser;
@@ -41,6 +42,9 @@ public class KpnFrontpageCountController {
     })
     @GetMapping
     public Result list(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
         KpnFrontpageCountVO kpnFrontpageCountVO = kpnFrontpageCountService.findSummaryData(params,user);
         return Result.succeed(kpnFrontpageCountVO, "查询成功");
     }
@@ -55,6 +59,9 @@ public class KpnFrontpageCountController {
     })
     @GetMapping("/dataTrend")
     public Result dataTrend(@RequestParam Map<String, Object> params,@ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(params)) {
+            return Result.failed("请求参数不能为空");
+        }
         List<KpnFrontpageCountVO> kpnFrontpageCountList = kpnFrontpageCountService.dataTrend(params,user);
         return Result.succeed(kpnFrontpageCountList, "查询成功");
     }
