@@ -8,11 +8,13 @@ import com.central.backend.service.IKpnSiteMovieService;
 import com.central.backend.vo.MovieVo;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.model.SysUser;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.central.common.model.PageResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.common.service.impl.SuperServiceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -45,20 +47,28 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
     @Override
     public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list,SysUser user){
+        List<KpnSiteMovie> movieList = new ArrayList<>();
         for (KpnSiteMovieStatusDto dto : list){
-            dto.setUpdateBy(null!=user?user.getUsername():dto.getUpdateBy());
-            dto.setUpdateTime(new Date());
+            KpnSiteMovie movie = new KpnSiteMovie();
+            BeanUtils.copyProperties(dto, movie);
+            movie.setUpdateBy(null!=user?user.getUsername():"");
+            movie.setUpdateTime(new Date());
+            movieList.add(movie);
         }
-        baseMapper.updateBatchStatusById(list);
+        baseMapper.updateBatchStatusById(movieList);
     }
 
     @Override
     public void updateBatchPayTypeById(List<KpnSiteMoviePayTpyeDto> list, SysUser user){
+        List<KpnSiteMovie> movieList = new ArrayList<>();
         for (KpnSiteMoviePayTpyeDto dto : list){
-            dto.setUpdateBy(null!=user?user.getUsername():dto.getUpdateBy());
-            dto.setUpdateTime(new Date());
+            KpnSiteMovie movie = new KpnSiteMovie();
+            BeanUtils.copyProperties(dto, movie);
+            movie.setUpdateBy(null!=user?user.getUsername():"");
+            movie.setUpdateTime(new Date());
+            movieList.add(movie);
         }
-        baseMapper.updateBatchPayTypeById(list);
+        baseMapper.updateBatchPayTypeById(movieList);
     }
 
     @Override

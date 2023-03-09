@@ -18,8 +18,4 @@ public class KpnSiteMovieStatusDto {
     private Long id;
     @ApiModelProperty(value = "状态 0待发布,1上架,2下架")
     private Integer status;
-    @ApiModelProperty(value = "更新人")
-    private String updateBy;
-    @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
 }
