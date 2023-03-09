@@ -1,14 +1,17 @@
 package com.central.backend.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnMovieTagService;
+import com.central.backend.service.IKpnSiteMovieService;
 import com.central.backend.service.IKpnSiteService;
 import com.central.common.KpnMovieTag;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSite;
+import com.central.common.model.KpnSiteMovie;
 import com.central.common.redis.template.RedisRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,9 +100,13 @@ public class AsyncServiceImpl implements IAsyncService {
     @Lazy
     private IKpnSiteService siteService;
 
+    @Autowired
+    @Lazy
+    private IKpnSiteMovieService siteMovieService;
+
     @Async
     @Override
-    public void deleteMovieVoCacheByTag(Long tagId) {
+    public void deleteSiteMovieVoCacheByTag(Long tagId) {
         try {
             if (ObjectUtil.isNotEmpty(tagId)) {
                 List<KpnSite> kpnSites = siteService.getList();
@@ -112,6 +119,49 @@ public class AsyncServiceImpl implements IAsyncService {
                     }
                 }
             }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void deleteSiteMovieVoCacheById(List<Long> siteMovieIds) {
+        try {
+            if (CollUtil.isNotEmpty(siteMovieIds)) {
+                List<KpnSiteMovie> siteMovies = siteMovieService.listByIds(siteMovieIds);
+                for (KpnSiteMovie siteMovie : siteMovies) {
+                    String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITEID_MOVIEID_VO_KEY, siteMovie.getSiteId(), siteMovie.getMovieId());
+                    RedisRepository.delete(redisKey);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void deleteSiteActorMovieNumCache(List<Long> siteMovieIds) {
+        try {
+            if (CollUtil.isNotEmpty(siteMovieIds)) {
+                List<KpnSiteMovie> siteMovies = siteMovieService.listByIds(siteMovieIds);
+                for (KpnSiteMovie siteMovie : siteMovies) {
+                    String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ACTOR_MOVIENUM_KEY, siteMovie.getSiteId(), siteMovie.getActorId());
+                    RedisRepository.delete(redisKey);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void deleteSitePlatformCache(Long sid) {
+        try {
+            String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_PLATFORM_CONFIG_KEY, sid);
+            RedisRepository.delete(redisKey);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

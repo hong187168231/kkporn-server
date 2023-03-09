@@ -1,6 +1,6 @@
 package com.central.backend.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.mapper.KpnActorMapper;
 import com.central.backend.model.vo.KpnActorVO;
 import com.central.backend.service.IAsyncService;
@@ -8,15 +8,14 @@ import com.central.backend.service.IKpnActorService;
 import com.central.backend.service.IKpnMovieService;
 import com.central.common.model.*;
 import com.central.common.service.impl.SuperServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections4.MapUtils;
-import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -48,24 +47,30 @@ public class KpnActorServiceImpl extends SuperServiceImpl<KpnActorMapper, KpnAct
         return PageResult.<KpnActorVO>builder().data(list).count(page.getTotal()).build();
     }
     @Override
-    public Result deleteKpnActor(Long id){
+    public Result deleteKpnActor(Long id) {
         Map<String, Object> params = new HashMap<>();
-        params.put("actorId",id);//演员ID
-        List<KpnMovie>  kpnMovieList = iKpnMovieService.getKpnMovie(params);
-        if(null!=kpnMovieList && kpnMovieList.size()>0) {
+        params.put("actorId", id);//演员ID
+        List<KpnMovie> kpnMovieList = iKpnMovieService.getKpnMovie(params);
+        if (null != kpnMovieList && kpnMovieList.size() > 0) {
             return Result.failed("该演员名下有关联影片，禁止删除");
         }
         this.removeById(id);
+
+        // add by year 删除演员信息缓存
+        asyncService.delActorCache(id);
         return Result.succeed("删除成功");
     }
+
     @Override
-    public Result saveOrUpdateKpnActor(KpnActor kpnActor,SysUser user){
-        if(null!=kpnActor.getId()&&0!=kpnActor.getId()){
-            kpnActor.setUpdateBy(null!=user?user.getUsername():kpnActor.getUpdateBy());
+    public Result saveOrUpdateKpnActor(KpnActor kpnActor, SysUser user) {
+        if (null != kpnActor.getId() && 0 != kpnActor.getId()) {
+            kpnActor.setUpdateBy(null != user ? user.getUsername() : kpnActor.getUpdateBy());
+
+            // add by year 删除演员信息缓存
             asyncService.delActorCache(kpnActor.getId());
-        }else {
-            kpnActor.setCreateBy(null!=user?user.getUsername():kpnActor.getCreateBy());
-            kpnActor.setUpdateBy(null!=user?user.getUsername():kpnActor.getCreateBy());
+        } else {
+            kpnActor.setCreateBy(null != user ? user.getUsername() : kpnActor.getCreateBy());
+            kpnActor.setUpdateBy(null != user ? user.getUsername() : kpnActor.getCreateBy());
         }
         this.saveOrUpdate(kpnActor);
         return Result.succeed("保存成功");

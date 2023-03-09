@@ -243,9 +243,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ACTOR_MOVIENUM_KEY, sid, actorId);
         Integer siteActorMovieNum = (Integer) RedisRepository.get(redisKey);
         if (ObjectUtil.isEmpty(siteActorMovieNum)) {
-            siteActorMovieNum = this.lambdaQuery().eq(KpnSiteMovie::getSiteId, sid).eq(KpnSiteMovie::getActorId, actorId).count();
-
-            RedisRepository.setExpire(redisKey, siteActorMovieNum, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+            siteActorMovieNum = this.lambdaQuery()
+                    .eq(KpnSiteMovie::getSiteId, sid)
+                    .eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus())
+                    .eq(KpnSiteMovie::getActorId, actorId)
+                    .count();
+            if (ObjectUtil.isNotEmpty(siteActorMovieNum)) {
+                RedisRepository.setExpire(redisKey, siteActorMovieNum, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+            }
         }
 
         return siteActorMovieNum.longValue();

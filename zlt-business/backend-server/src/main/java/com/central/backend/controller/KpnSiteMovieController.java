@@ -1,27 +1,28 @@
 package com.central.backend.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.model.dto.KpnSiteMoviePayTpyeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.model.vo.KpnSiteMovieVO;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSiteMovieService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSiteMovie;
+import com.central.common.model.PageResult;
+import com.central.common.model.Result;
 import com.central.common.model.SysUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-
-import com.central.common.model.PageResult;
-import com.central.common.model.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 站点影片
@@ -36,6 +37,9 @@ import springfox.documentation.annotations.ApiIgnore;
 public class KpnSiteMovieController {
     @Autowired
     private IKpnSiteMovieService kpnSiteMovieService;
+
+    @Autowired
+    private IAsyncService asyncService;
 
     /**
      * 列表
@@ -91,10 +95,16 @@ public class KpnSiteMovieController {
     @ApiOperation(value = "批量发布上架下架")
     @PostMapping("/settingStatus")
     public Result updateBatchStatusById(@RequestBody List<KpnSiteMovieStatusDto> kpnSiteMovieStatusDtoList,@ApiIgnore @LoginUser SysUser user) {
-        if (ObjectUtil.isEmpty(kpnSiteMovieStatusDtoList) || kpnSiteMovieStatusDtoList.size()==0) {
+        if (ObjectUtil.isEmpty(kpnSiteMovieStatusDtoList) || kpnSiteMovieStatusDtoList.size() == 0) {
             return Result.failed("请求参数不能为空");
         }
         kpnSiteMovieService.updateBatchStatusById(kpnSiteMovieStatusDtoList, user);
+
+        //add by year 删除站点影片缓存
+        List<Long> siteMovieIds = kpnSiteMovieStatusDtoList.stream().map(KpnSiteMovieStatusDto::getId).collect(Collectors.toList());
+        asyncService.deleteSiteMovieVoCacheById(siteMovieIds);
+        asyncService.deleteSiteActorMovieNumCache(siteMovieIds);
+
         return Result.succeed("保存成功");
     }
     /**
@@ -103,10 +113,14 @@ public class KpnSiteMovieController {
     @ApiOperation(value = "批量设置付费类型")
     @PostMapping("/settingPayType")
     public Result updateBatchPayTypeById(@RequestBody List<KpnSiteMoviePayTpyeDto> kpnSiteMoviePayTpyeDtoList, @ApiIgnore @LoginUser SysUser user) {
-        if (ObjectUtil.isEmpty(kpnSiteMoviePayTpyeDtoList) || kpnSiteMoviePayTpyeDtoList.size()==0) {
+        if (ObjectUtil.isEmpty(kpnSiteMoviePayTpyeDtoList) || kpnSiteMoviePayTpyeDtoList.size() == 0) {
             return Result.failed("请求参数不能为空");
         }
         kpnSiteMovieService.updateBatchPayTypeById(kpnSiteMoviePayTpyeDtoList, user);
+
+        //add by year 删除站点影片缓存
+        List<Long> siteMovieIds = kpnSiteMoviePayTpyeDtoList.stream().map(KpnSiteMoviePayTpyeDto::getId).collect(Collectors.toList());
+        asyncService.deleteSiteMovieVoCacheById(siteMovieIds);
         return Result.succeed("保存成功");
     }
 

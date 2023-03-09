@@ -8,14 +8,6 @@ import java.util.List;
 
 
 public interface IKpnTagService extends ISuperService<KpnTag> {
-    /**
-     * 查询标签信息
-     *
-     * @param tagId 标签id
-     * @return
-     */
-    KpnTagVo getByTagId(Long tagId);
-
 
     /**
      * 批量获取

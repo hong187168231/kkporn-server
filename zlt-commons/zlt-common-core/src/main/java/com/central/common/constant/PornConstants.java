@@ -122,11 +122,11 @@ public final class PornConstants {
         public static final Long EXPIRE_TIME_7_DAYS = 7 * 24 * 60 * 60L;
         //缓存时间 1天
         public static final Long EXPIRE_TIME_1_DAYS = 1 * 24 * 60 * 60L;
-        //-缓存所有站点信息
+        //- 缓存所有站点信息
         public static final String KPN_SITE_LIST_KEY = "KPN:SITE:LIST";
-        //-缓存站点信息 siteid
+        //- 缓存站点信息 siteid
         public static final String KPN_SITE_INFO_KEY = "KPN:SITE:INFO:{}";
-        //缓存站点平台配置 siteid
+        //- 缓存站点平台配置 siteid
         public static final String KPN_SITE_PLATFORM_CONFIG_KEY = "KPN:SITE:PLATFORM:CONFIG:{}";
         //缓存站点频道信息 siteid
 //        public static final String SITE_STASH_CHANNEL_KEY = "SITE:CHANNEL:{}";
@@ -136,17 +136,15 @@ public final class PornConstants {
         public static final String KPN_SITE_TOPIC_MOVIEID_SORT_KEY = "KPN:SITE:TOPIC:MOVIEID:SORT:{}:{}";
         //- 缓存影片VO信息 str siteid movieid
         public static final String KPN_SITEID_MOVIEID_VO_KEY = "KPN:SITEID:MOVIEID:VO:{}:{}";
-        //缓存影片标签信息 str actorid
+        //- 缓存影片标签信息 str actorid
         public static final String KPN_ACTOR_KEY = "KPN:ACTOR:{}";
-        //缓存标签信息 str tagid
-        public static final String KPN_TAGID_KEY = "KPN:TAGID:{}";
-        //缓存影片播放量 siteid,movieid
+        //! 缓存影片播放量 siteid,movieid
         public static final String KPN_SITE_MOVIE_VV_KEY = "KPN:SITEID:MOVIEID:VV:{}:{}";
         //缓存影片收藏量 siteid,movieid
         public static final String KPN_SITE_MOVIE_FAVORITES_KEY = "KPN:SITEID:MOVIEID:FAVORITES:{}:{}";
         //缓存站点演员收藏量 siteid,actorid
         public static final String KPN_SITE_ACTOR_FAVORITES_KEY = "KPN:SITEID:ACTORID:FAVORITES:{}:{}";
-        //缓存站点演员影片量 siteid,actorid
+        //- 缓存站点演员影片量 siteid,actorid
         public static final String KPN_SITE_ACTOR_MOVIENUM_KEY = "KPN:SITEID:ACTORID:MOVIENUM:{}:{}";
         //-缓存线路信息
         public static final String KPN_LINE = "KPN:LINE";
