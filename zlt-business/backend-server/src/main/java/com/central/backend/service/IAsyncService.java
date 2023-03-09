@@ -46,4 +46,11 @@ public interface IAsyncService {
      */
     void deleteLinesCache();
 
+    /**
+     * 删除标签相关影片缓存
+     *
+     * @param tagId
+     */
+    void deleteMovieVoCacheByTag(Long tagId);
+
 }

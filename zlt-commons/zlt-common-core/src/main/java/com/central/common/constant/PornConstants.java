@@ -134,7 +134,7 @@ public final class PornConstants {
         public static final String KPN_SITE_TOPIC_KEY = "KPN:SITE:TOPIC:{}";
         //- 缓存站点专题影片id信息 list类型  siteid,topicid
         public static final String KPN_SITE_TOPIC_MOVIEID_SORT_KEY = "KPN:SITE:TOPIC:MOVIEID:SORT:{}:{}";
-        //缓存影片VO信息 str siteid movieid
+        //- 缓存影片VO信息 str siteid movieid
         public static final String KPN_SITEID_MOVIEID_VO_KEY = "KPN:SITEID:MOVIEID:VO:{}:{}";
         //缓存影片标签信息 str actorid
         public static final String KPN_ACTOR_KEY = "KPN:ACTOR:{}";

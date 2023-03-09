@@ -4,13 +4,20 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.backend.service.IAsyncService;
+import com.central.backend.service.IKpnMovieTagService;
+import com.central.backend.service.IKpnSiteService;
+import com.central.common.KpnMovieTag;
 import com.central.common.constant.PornConstants;
+import com.central.common.model.KpnSite;
 import com.central.common.redis.template.RedisRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -77,6 +84,34 @@ public class AsyncServiceImpl implements IAsyncService {
     public void deleteLinesCache() {
         try {
             RedisRepository.delete(PornConstants.RedisKey.KPN_LINE);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Autowired
+    @Lazy
+    private IKpnMovieTagService movieTagService;
+
+    @Autowired
+    @Lazy
+    private IKpnSiteService siteService;
+
+    @Async
+    @Override
+    public void deleteMovieVoCacheByTag(Long tagId) {
+        try {
+            if (ObjectUtil.isNotEmpty(tagId)) {
+                List<KpnSite> kpnSites = siteService.getList();
+                for (KpnSite kpnSite : kpnSites) {
+                    Long sid = kpnSite.getId();
+                    List<KpnMovieTag> kpnMovieTags = movieTagService.lambdaQuery().select(KpnMovieTag::getMovieId).eq(KpnMovieTag::getTagId, tagId).list();
+                    for (KpnMovieTag kpnMovieTag : kpnMovieTags) {
+                        String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITEID_MOVIEID_VO_KEY, sid, kpnMovieTag.getMovieId());
+                        RedisRepository.delete(redisKey);
+                    }
+                }
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

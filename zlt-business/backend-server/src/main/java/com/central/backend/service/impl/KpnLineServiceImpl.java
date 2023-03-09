@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.KpnLineUpdateCo;
 import com.central.backend.mapper.KpnLineMapper;
+import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnLineService;
 import com.central.common.model.KpnLine;
 import com.central.common.model.PageResult;
@@ -11,7 +12,7 @@ import com.central.common.model.Result;
 import com.central.common.service.impl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
-import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -21,13 +22,15 @@ import java.util.Map;
 @Service
 public class KpnLineServiceImpl extends SuperServiceImpl<KpnLineMapper, KpnLine> implements IKpnLineService {
 
+    @Autowired
+    private IAsyncService asyncService;
 
     @Override
     public PageResult<KpnLine> findSiteList(Map<String, Object> params) {
         Page<KpnLine> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
-        LambdaQueryWrapper<KpnLine> wrapper=new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<KpnLine> wrapper = new LambdaQueryWrapper<>();
         Integer line = MapUtils.getInteger(params, "line");
-        if (line != null){
+        if (line != null) {
             wrapper.eq(KpnLine::getLine, line);
         }
         wrapper.orderByDesc(KpnLine::getCreateTime);
@@ -47,10 +50,6 @@ public class KpnLineServiceImpl extends SuperServiceImpl<KpnLineMapper, KpnLine>
                 //修改
                 insert = super.updateById(line);
             }
-        }
-        // add by year 删除线路缓存
-        if(insert){
-            asyncService.deleteSiteLines();
         }
         return insert;
     }

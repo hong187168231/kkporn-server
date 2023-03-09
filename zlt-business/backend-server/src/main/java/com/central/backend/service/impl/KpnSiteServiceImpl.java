@@ -1,5 +1,6 @@
 package com.central.backend.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.KpnSiteCo;
 import com.central.backend.co.KpnSiteUpdateCo;
@@ -9,14 +10,17 @@ import com.central.backend.service.IKpnSiteChannelService;
 import com.central.backend.service.IKpnSiteService;
 import com.central.backend.vo.KpnSiteListVo;
 import com.central.backend.vo.KpnSiteVo;
+import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSite;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -32,6 +36,19 @@ public class KpnSiteServiceImpl extends SuperServiceImpl<KpnSiteMapper, KpnSite>
 
     @Autowired
     private IAsyncService asyncService;
+
+    @Override
+    public List<KpnSite> getList() {
+        String redisKey = PornConstants.RedisKey.KPN_SITE_LIST_KEY;
+        List<KpnSite> kpnSites = (ArrayList) RedisRepository.get(redisKey);
+        if (CollectionUtil.isEmpty(kpnSites)) {
+            kpnSites = this.lambdaQuery().eq(KpnSite::getStatus, true).list();
+            if (CollectionUtil.isNotEmpty(kpnSites)) {
+                RedisRepository.setExpire(redisKey, kpnSites, PornConstants.RedisKey.EXPIRE_TIME_30_DAYS);
+            }
+        }
+        return kpnSites;
+    }
 
 
     @Override
