@@ -57,18 +57,19 @@ public class SiteTopicRptJob implements SimpleJob, CommandLineRunner {
 
                     //按影片时长高->低
                     redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_DURATION, sid, topicId);
-                    List<Long> movieIdsByDuration = siteTopicMovieService.getTopicMovieIdsSortedByColumn(sid, topicId, PornConstants.Sql.COLUMN_DURATION);
-                    RedisRepository.delete(redisKey);
-                    if (CollectionUtil.isNotEmpty(movieIdsByDuration)) {
-                        RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
+                    if (RedisRepository.length(redisKey) <= 0) {
+                        List<Long> movieIdsByDuration = siteTopicMovieService.getTopicMovieIdsSortedByColumn(sid, topicId, PornConstants.Sql.COLUMN_DURATION);
+                        if (CollectionUtil.isNotEmpty(movieIdsByDuration)) {
+                            RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
+                        }
                     }
-
                     //按影片创建时间新->旧
                     redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_LATEST, sid, topicId);
-                    List<Long> movieIdsByCreateTime = siteTopicMovieService.getTopicMovieIdsSortedByColumn(sid, topicId, PornConstants.Sql.COLUMN_CREATE_TIME);
-                    RedisRepository.delete(redisKey);
-                    if (CollectionUtil.isNotEmpty(movieIdsByCreateTime)) {
-                        RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));
+                    if (RedisRepository.length(redisKey) <= 0) {
+                        List<Long> movieIdsByCreateTime = siteTopicMovieService.getTopicMovieIdsSortedByColumn(sid, topicId, PornConstants.Sql.COLUMN_CREATE_TIME);
+                        if (CollectionUtil.isNotEmpty(movieIdsByCreateTime)) {
+                            RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));
+                        }
                     }
                 }
             }

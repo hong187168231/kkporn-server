@@ -53,18 +53,20 @@ public class SiteTagRptJob implements SimpleJob, CommandLineRunner {
 
                     //按影片时长高->低
                     redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_DURATION, sid, tagId);
-                    List<Long> movieIdsByDuration = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_DURATION);
-                    RedisRepository.delete(redisKey);
-                    if (CollUtil.isNotEmpty(movieIdsByDuration)) {
-                        RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
+                    if (RedisRepository.length(redisKey) <= 0) {
+                        List<Long> movieIdsByDuration = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_DURATION);
+                        if (CollUtil.isNotEmpty(movieIdsByDuration)) {
+                            RedisRepository.leftPushAll(redisKey, movieIdsByDuration.stream().map(String::valueOf).collect(Collectors.toList()));
+                        }
                     }
 
                     //按影片创建时间新->旧
                     redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_LATEST, sid, tagId);
-                    List<Long> movieIdsByCreateTime = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_CREATE_TIME);
-                    RedisRepository.delete(redisKey);
-                    if (CollUtil.isNotEmpty(movieIdsByCreateTime)) {
-                        RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));
+                    if (RedisRepository.length(redisKey) <= 0) {
+                        List<Long> movieIdsByCreateTime = movieTagService.getTagMovieIdsSortedByColumn(sid, tagId, PornConstants.Sql.COLUMN_CREATE_TIME);
+                        if (CollUtil.isNotEmpty(movieIdsByCreateTime)) {
+                            RedisRepository.leftPushAll(redisKey, movieIdsByCreateTime.stream().map(String::valueOf).collect(Collectors.toList()));
+                        }
                     }
                 }
             }

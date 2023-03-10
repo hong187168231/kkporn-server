@@ -484,24 +484,24 @@ public class SiteController {
         }
     }
 
-    @ApiOperation("获取图形验证码")
-    @GetMapping("/verifyCode")
-    public void getVerifyCode(HttpServletResponse response,
-                              @ApiParam(value = "图形验证码id") String verifyCodeId) throws IOException {
-        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(150, 50, 4, 50);
-        String code = lineCaptcha.getCode();
-        if (StrUtil.isBlank(verifyCodeId)) {
-            verifyCodeId = UUID.randomUUID().toString();
-        }
-        RedisRepository.setExpire(verifyCodeId, code, PornConstants.RedisKey.EXPIRE_TIME_7_DAYS);
-        response.setHeader(PornConstants.Str.VERIFY_CODE_ID, verifyCodeId);
-        response.setHeader(PornConstants.Str.VERIFY_CODE_SECONDS, String.valueOf(PornConstants.RedisKey.EXPIRE_TIME_7_DAYS));
-        try (ServletOutputStream outputStream = response.getOutputStream()) {
-            lineCaptcha.write(outputStream);
-        } catch (Exception e) {
-            log.error("获取验证码异常:" + e.getMessage(), e);
-        }
-    }
+//    @ApiOperation("获取图形验证码")
+//    @GetMapping("/verifyCode")
+//    public void getVerifyCode(HttpServletResponse response,
+//                              @ApiParam(value = "图形验证码id") String verifyCodeId) throws IOException {
+//        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(150, 50, 4, 50);
+//        String code = lineCaptcha.getCode();
+//        if (StrUtil.isBlank(verifyCodeId)) {
+//            verifyCodeId = UUID.randomUUID().toString();
+//        }
+//        RedisRepository.setExpire(verifyCodeId, code, PornConstants.RedisKey.EXPIRE_TIME_7_DAYS);
+//        response.setHeader(PornConstants.Str.VERIFY_CODE_ID, verifyCodeId);
+//        response.setHeader(PornConstants.Str.VERIFY_CODE_SECONDS, String.valueOf(PornConstants.RedisKey.EXPIRE_TIME_7_DAYS));
+//        try (ServletOutputStream outputStream = response.getOutputStream()) {
+//            lineCaptcha.write(outputStream);
+//        } catch (Exception e) {
+//            log.error("获取验证码异常:" + e.getMessage(), e);
+//        }
+//    }
 
     //todo lk
     @ApiOperation("登录")
@@ -618,9 +618,6 @@ public class SiteController {
         }
     }
 
-    /**
-     * token续期
-     */
 //    @ApiOperation(value = "token续期,每10分钟调用一次")
 //    @PostMapping("/refreshAccessToken")
 //    public Result<String> refreshAccessToken() {

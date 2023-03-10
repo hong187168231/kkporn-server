@@ -263,6 +263,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
         wrapper.select(KpnSiteMovie::getMovieId);
         wrapper.eq(KpnSiteMovie::getSiteId, sid);
         wrapper.eq(KpnSiteMovie::getActorId, actorId);
+        wrapper.eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus());
 
         if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.HOT.getType())) {
             wrapper.orderBy(true, KpnSortOrderEnum.isAsc(sortOrder), KpnSiteMovie::getVv);

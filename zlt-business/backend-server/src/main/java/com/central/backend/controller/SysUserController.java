@@ -119,7 +119,7 @@ public class SysUserController {
         }
         LoginAppUser loginAppUser = findByUsername(username);
         if (loginAppUser == null || !loginAppUser.getType().equals("BACKEND")) {
-            return Result.failed("用户名或密码错误");
+           return Result.failed("用户名或密码错误");
         }
         if (!loginAppUser.isEnabled()) {
             return Result.failed("该账号状态异常");
