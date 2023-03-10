@@ -70,6 +70,7 @@ public class SysRoleController {
         if (StringUtils.isBlank(sysRole.getCode())) {
             return Result.failed("code不能为空");
         }
+
         SysRole sysRoleByName = sysRoleService.findSysRoleByName(sysRole.getName());
         if (Objects.nonNull(sysRoleByName)) {
             return Result.failed("角色名称重复");

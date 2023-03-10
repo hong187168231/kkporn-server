@@ -2,6 +2,7 @@ package com.central.backend.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.model.dto.SysAdminUserDto;
+import com.central.backend.model.dto.SysAdminUserEnabledDto;
 import com.central.backend.model.dto.SysAdminUserPasswordDto;
 import com.central.backend.service.IAdminUserService;
 import com.central.common.annotation.LoginUser;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Map;
-
-;
 
 /**
  * @author yixiu
@@ -98,6 +97,7 @@ public class SysAdminUserController {
      * 管理员用户自己修改密码
      */
     @PutMapping(value = "/password")
+    @ApiOperation("管理员用户自己修改密码")
     public Result updatePassword(@RequestBody SysAdminUserPasswordDto passwordDto) {
         if (ObjectUtil.isEmpty(passwordDto)) {
             return Result.failed("请求参数不能为空");
@@ -117,9 +117,24 @@ public class SysAdminUserController {
         iAdminUserService.updatePassword(passwordDto.getId(), passwordDto.getOldPassword(), passwordDto.getNewPassword());
         return Result.succeed("重置成功");
     }
-
-
-
+    @PutMapping(value = "/enabled")
+    @ApiOperation("管理员用户状态，启用或者禁用")
+    public Result updateEnabled(@RequestBody SysAdminUserEnabledDto enabledDto) {
+        if (ObjectUtil.isEmpty(enabledDto)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(enabledDto.getId())) {
+            return Result.failed("管理员ID不能为空");
+        }
+        if (ObjectUtil.isEmpty(enabledDto.getEnabled())) {
+            return Result.failed("状态不能为空");
+        }
+        if (checkAdmin(enabledDto.getId())) {
+            return Result.failed(ADMIN_CHANGE_MSG);
+        }
+        iAdminUserService.updateEnabled(enabledDto);
+        return Result.succeed("重置成功");
+    }
 
     /**
      * 新增or更新

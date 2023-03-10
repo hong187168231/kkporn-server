@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.co.*;
 import com.central.backend.mapper.SysUserMapper;
 import com.central.backend.model.dto.SysAdminUserDto;
+import com.central.backend.model.dto.SysAdminUserEnabledDto;
 import com.central.backend.model.enums.RoleEnum;
 import com.central.backend.service.*;
 import com.central.backend.util.PasswordUtil;
@@ -131,6 +132,20 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
     }
 
     /**
+     * 修改用户状态
+     * @param enabledDto
+     * @return
+     */
+    @Transactional
+    @Override
+    public Result updateEnabled(SysAdminUserEnabledDto enabledDto) {
+        SysUser sysUser = baseMapper.selectById(enabledDto.getId());
+        sysUser.setEnabled(enabledDto.getEnabled());
+        baseMapper.updateById(sysUser);
+        return Result.succeed("修改成功");
+    }
+
+    /**
      * 给用户设置角色
      */
     @Transactional(rollbackFor = Exception.class)
@@ -163,7 +178,7 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
         BeanUtils.copyProperties(adminUserVo, user);
         boolean insert =false;
         //新增
-        if (user.getId() == null) {
+        if (adminUserVo.getId() == null || adminUserVo.getId()==0) {
             LambdaQueryWrapper<SysUser> wrapper=new LambdaQueryWrapper<>();
             if (StringUtils.isNotBlank(user.getUsername())){
                 wrapper.eq(SysUser::getUsername, user.getUsername());
@@ -190,6 +205,12 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
             }
             if(b){//商户管理员
                 user.setRoleSites(JSONObject.toJSONString(adminUserVo.getSiteIds()));
+                //站点id
+                user.setSiteId(0L);
+                //站点编码
+                user.setSiteCode("0");
+                //站点名称
+                user.setSiteName("0");
             }else {
                 if(null==adminUserVo.getSiteIds()||adminUserVo.getSiteIds().size()==0){
                     return Result.failed("站点权限不能为空");

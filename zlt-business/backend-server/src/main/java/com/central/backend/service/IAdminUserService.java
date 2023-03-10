@@ -1,6 +1,7 @@
 package com.central.backend.service;
 
 import com.central.backend.model.dto.SysAdminUserDto;
+import com.central.backend.model.dto.SysAdminUserEnabledDto;
 import com.central.common.model.*;
 import com.central.common.service.ISuperService;
 
@@ -20,4 +21,5 @@ public interface IAdminUserService extends ISuperService<SysUser> {
 	SysUser selectById(Long id);
 	String resetUpdatePassword(Long id);
 	Result updatePassword(Long id, String oldPassword, String newPassword);
+	Result updateEnabled(SysAdminUserEnabledDto enabledDto);
 }
