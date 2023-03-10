@@ -79,7 +79,7 @@ public final class PornConstants {
         public static final String COUNTRY = "country";
         public static final String SHOOTING = "shooting";
         public static final String SUBTITLE = "subtitle";
-        public static final String PAY = "pay";
+        public static final String PAY_TYPE = "payType";
         public static final String ACCESS_TOKEN = "access_token";
         public static final String IPHONE = "iPhone";
         public static final String ANDROID = "Android";
@@ -170,9 +170,9 @@ public final class PornConstants {
         public static final String KPN_SITE_TAG_MOVIEID_LATEST = "KPN:SITE:TAG:MOVIEID:LATEST:{}:{}";
         //缓存站点专题影片id排序 播放量排序 高->低  SITEID,TOPICID
         public static final String KPN_SITE_TOPIC_MOVIEID_VV = "KPN:SITE:TOPIC:MOVIEID:VV:{}:{}";
-        //缓存站点专题影片id排序 时长排序 长->短 SITEID,TOPICID
+        //- 缓存站点专题影片id排序 时长排序 长->短 SITEID,TOPICID
         public static final String KPN_SITE_TOPIC_MOVIEID_DURATION = "KPN:SITE:TOPIC:MOVIEID:DURATION:{}:{}";
-        //缓存站点专题影片id排序 创建时间 新->旧 SITEID,TOPICID
+        //- 缓存站点专题影片id排序 创建时间 新->旧 SITEID,TOPICID
         public static final String KPN_SITE_TOPIC_MOVIEID_LATEST = "KPN:SITE:TOPIC:MOVIEID:LATEST:{}:{}";
         //缓存站点频道影片播放量排序 高->低  SITEID,CHANNELID
         public static final String KPN_SITE_CHANNEL_MOVIEID_VV = "KPN:SITE:CHANNEL:MOVIEID:VV:{}:{}";
@@ -184,7 +184,7 @@ public final class PornConstants {
         public static final String KPN_SITE_ALL_MOVIEID_LATEST = "KPN:SITE:ALL:MOVIEID:LATEST:{}";
         //缓存站点最热影片 播放量排序 高->低  SITEID
         public static final String KPN_SITE_ALL_MOVIEID_VV = "KPN:SITE:ALL:MOVIEID:VV:{}";
-        //缓存站点最热影片 播放量排序 高->低  SITEID
+        //缓存站点最热VIP影片 播放量排序 高->低  SITEID
         public static final String KPN_SITE_VIP_MOVIEID_VV = "KPN:SITE:VIP:MOVIEID:VV:{}";
 
         //缓存会员频道信息 userid

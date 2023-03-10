@@ -1,7 +1,7 @@
 package com.central.backend.controller;
 
 import com.central.common.model.Result;
-import com.central.common.model.enums.KpnMovieSearchTypeCountryEnum;
+import com.central.common.model.enums.KpnMovieCountryEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class CountryController {
     @ApiOperation(value = "查询国家列表")
     @GetMapping
     public Result<Map<Integer, String>> list() {
-        return Result.succeed(KpnMovieSearchTypeCountryEnum.getOptions(Boolean.FALSE));
+        return Result.succeed(KpnMovieCountryEnum.getOptions());
     }
 
 }

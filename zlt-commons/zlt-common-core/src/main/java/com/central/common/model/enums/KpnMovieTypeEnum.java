@@ -1,6 +1,7 @@
 package com.central.common.model.enums;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import com.central.common.language.LanguageEnum;
 import com.central.common.language.LanguageThreadLocal;
 
@@ -27,6 +28,10 @@ public enum KpnMovieTypeEnum {
         this.nameKh = nameKh;
     }
 
+    public static Map<Integer, String> getOptions() {
+        return getOptions(Boolean.TRUE);
+    }
+
     public static Map<Integer, String> getOptions(Boolean needAll) {
         final String language = LanguageThreadLocal.getLanguage();
 
@@ -49,5 +54,9 @@ public enum KpnMovieTypeEnum {
             }
             return o.nameEn;
         }));
+    }
+
+    public static boolean isAll(Integer code) {
+        return ObjectUtil.isEmpty(code) || All.code.equals(code);
     }
 }
