@@ -23,14 +23,28 @@ public enum KpnSiteMovieSearchFromEnum {
         return TOPIC.code.equals(code);
     }
 
-    /**
-     * 是否找片
-     *
-     * @param code 编码
-     * @return
-     */
     public static boolean isSearch(Integer code) {
         return SEARCH.code.equals(code);
+    }
+
+    public static boolean isTag(Integer code) {
+        return TAG.code.equals(code);
+    }
+
+    public static boolean isChannel(Integer code) {
+        return CHANNEL.code.equals(code);
+    }
+
+    public static boolean isVipRecommend(Integer code) {
+        return VIP_RECOMMEND.code.equals(code);
+    }
+
+    public static boolean isLatest(Integer code) {
+        return LATEST.code.equals(code);
+    }
+
+    public static boolean isHottest(Integer code) {
+        return HOTTEST.code.equals(code);
     }
 
 

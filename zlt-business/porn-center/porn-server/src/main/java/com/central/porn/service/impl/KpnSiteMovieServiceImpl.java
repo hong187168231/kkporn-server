@@ -350,7 +350,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
         List<Long> movieIds = new ArrayList<>();
         Long total = 0L;
-        if (KpnSiteMovieSearchFromEnum.SEARCH.getCode().equals(from)) {
+        if (KpnSiteMovieSearchFromEnum.isSearch(from)) {
             LambdaQueryWrapper<KpnSiteMovie> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(KpnSiteMovie::getSiteId, sid);
             //国家
@@ -393,8 +393,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                 } else {
                     wrapper.orderByDesc(KpnSiteMovie::getDuration);
                 }
-            }
-            else {
+            } else {
                 wrapper.orderByDesc(KpnSiteMovie::getVv);
             }
             Page<KpnSiteMovie> list = baseMapper.selectPage(page, wrapper);
@@ -402,7 +401,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             movieIds = list.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
         }
         //标签
-        else if (KpnSiteMovieSearchFromEnum.TAG.getCode().equals(from)) {
+        else if (KpnSiteMovieSearchFromEnum.isTag(from)) {
             //最热 默认
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TAG_MOVIEID_VV, sid, fromId);
             //最新
@@ -435,7 +434,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             total = RedisRepository.length(redisKey);
         }
         //主题 TOPIC
-        else if (KpnSiteMovieSearchFromEnum.TOPIC.getCode().equals(from)) {
+        else if (KpnSiteMovieSearchFromEnum.isTopic(from)) {
             //最热 默认
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_TOPIC_MOVIEID_VV, sid, fromId);
             //最新
@@ -468,7 +467,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             total = RedisRepository.length(redisKey);
         }
         //频道
-        else if (KpnSiteMovieSearchFromEnum.CHANNEL.getCode().equals(from)) {
+        else if (KpnSiteMovieSearchFromEnum.isChannel(from)) {
             //最热 默认
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_CHANNEL_MOVIEID_VV, sid, fromId);
             //最新
@@ -501,7 +500,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             total = RedisRepository.length(redisKey);
         }
         //热门VIP推荐
-        else if (KpnSiteMovieSearchFromEnum.VIP_RECOMMEND.getCode().equals(from)) {
+        else if (KpnSiteMovieSearchFromEnum.isVipRecommend(from)) {
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_VIP_MOVIEID_VV, sid);
 
             //倒序(默认)
@@ -525,7 +524,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             total = RedisRepository.length(redisKey);
         }
         //最新
-        else if (KpnSiteMovieSearchFromEnum.LATEST.getCode().equals(from)) {
+        else if (KpnSiteMovieSearchFromEnum.isLatest(from)) {
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ALL_MOVIEID_LATEST, sid);
 
             //倒序(默认)
@@ -549,7 +548,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
             total = RedisRepository.length(redisKey);
         }
         //最热
-        else if (KpnSiteMovieSearchFromEnum.HOTTEST.getCode().equals(from)) {
+        else if (KpnSiteMovieSearchFromEnum.isHottest(from)) {
             //最热 默认
             String redisKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_ALL_MOVIEID_VV, sid, fromId);
 
