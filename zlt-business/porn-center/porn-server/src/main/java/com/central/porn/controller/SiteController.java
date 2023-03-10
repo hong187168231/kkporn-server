@@ -1,7 +1,5 @@
 package com.central.porn.controller;
 
-import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -9,15 +7,13 @@ import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
 import com.central.common.language.LanguageUtil;
 import com.central.common.model.*;
-import com.central.common.model.enums.CodeEnum;
+import com.central.common.model.enums.*;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.utils.I18nUtil;
 import com.central.porn.entity.PornPageResult;
+import com.central.porn.entity.dto.MovieSearchConditionDto;
 import com.central.porn.entity.vo.*;
-import com.central.porn.enums.KpnActorSortTypeEnum;
-import com.central.porn.enums.KpnMovieSortTypeEnum;
-import com.central.porn.enums.KpnSortOrderEnum;
-import com.central.porn.enums.KpnStableChannelEnum;
+import com.central.porn.enums.*;
 import com.central.porn.service.*;
 import com.central.user.feign.UaaService;
 import com.central.user.feign.UserService;
@@ -31,14 +27,11 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -411,28 +404,62 @@ public class SiteController {
     }
 
     /**
+     * 找片-搜索选项
+     *
+     * @return
+     */
+    @GetMapping("/search/options")
+    @ApiOperation(value = "找片-搜索选项")
+    public Result<Map<String, Map<Integer, String>>> getSearchOptions() {
+        try {
+            //todo key走语言包返回.
+            Map<String, Map<Integer, String>> searchOptionMap = new TreeMap<>();
+            searchOptionMap.put(PornConstants.Str.COUNTRY, KpnMovieCountryEnum.getOptions());
+            searchOptionMap.put(PornConstants.Str.TYPE, KpnMovieTypeEnum.getOptions());
+            searchOptionMap.put(PornConstants.Str.PAY_TYPE, KpnMoviePayTypeEnum.getOptions());
+            searchOptionMap.put(PornConstants.Str.SHOOTING, KpnMovieShootingEnum.getOptions());
+            searchOptionMap.put(PornConstants.Str.SUBTITLE, KpnMovieSubtitleEnum.getOptions());
+
+            return Result.succeed(searchOptionMap, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+    /**
      * 搜索影片库
      */
     @GetMapping("/search/depot")
     @ApiOperation(value = "搜索影片库")
-
     public Result<PornPageResult<KpnSiteMovieBaseVo>> searchDepot(@RequestHeader("sid") Long sid,
                                                                   @ApiParam("0:找片,1:标签,2:专题,3:频道,4:热门VIP推荐,5:最新,6:最热") Integer from,
                                                                   @ApiParam("标签/专题/频道 ID") Long fromId,
                                                                   @ApiParam("排序字段 HOT:最热,LATEST:最新,DURATION:时长") String sortType,
+//                                                                  @ApiParam("找片搜索条件,只在找片时使用") @RequestBody MovieSearchConditionCo searchConditionCo,
+                                                                  @ApiParam("找片 国家 -1:全部,0:日本,1:中国大陆,2:中国台湾,3:韩国,4:欧美,5:东南亚,6:其他地区") Integer country,
+                                                                  @ApiParam("找片 影片类型: -1:全部,0:无码,1有码") Integer type,
+                                                                  @ApiParam("找片 付费类型: -1:全部,0:免费,1:vip") Integer payType,
+                                                                  @ApiParam("找片 拍摄类型: -1:全部,0:专业拍摄,1:偷拍,2:自拍,3:其他") Integer shooting,
+                                                                  @ApiParam("找片 字幕类型: -1:全部,0:无字幕,1:中文字幕,2:英文字幕,3:中英文字幕,4:其他字幕") Integer subtitle,
                                                                   @ApiParam("排序顺序 0:ASC,1:DESC") Integer sortOrder,
                                                                   @ApiParam("当前页") Integer currPage,
                                                                   @ApiParam("每页条数") Integer pageSize) {
         try {
-            if(StrUtil.isBlank(sortType) || !KpnMovieSortTypeEnum.isLegalType(sortType)){
+            if (StrUtil.isBlank(sortType) || !KpnMovieSortTypeEnum.isLegalType(sortType.toUpperCase())) {
                 sortType = KpnMovieSortTypeEnum.HOT.getType();
             }
 
-            if(ObjectUtil.isNull(sortOrder) || !KpnSortOrderEnum.isLegalCode(sortOrder)){
+            if (ObjectUtil.isNull(sortOrder) || !KpnSortOrderEnum.isLegalCode(sortOrder)) {
                 sortOrder = KpnSortOrderEnum.DESC.getCode();
             }
+            //找片
+            MovieSearchConditionDto searchConditionDto = null;
+            if (KpnSiteMovieSearchFromEnum.isSearch(from)) {
+                searchConditionDto = MovieSearchConditionDto.builder().country(country).type(type).payType(payType).shooting(shooting).subtitle(subtitle).build();
+            }
 
-            PornPageResult<KpnSiteMovieBaseVo> kpnSiteMoviePageResult = siteMovieService.searchDepot(sid, from, fromId, sortType, sortOrder, currPage, pageSize);
+            PornPageResult<KpnSiteMovieBaseVo> kpnSiteMoviePageResult = siteMovieService.searchDepot(sid, from, fromId, sortType, sortOrder, searchConditionDto, currPage, pageSize);
             return Result.succeed(kpnSiteMoviePageResult, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);

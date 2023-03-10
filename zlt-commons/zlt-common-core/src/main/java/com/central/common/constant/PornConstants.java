@@ -79,7 +79,7 @@ public final class PornConstants {
         public static final String COUNTRY = "country";
         public static final String SHOOTING = "shooting";
         public static final String SUBTITLE = "subtitle";
-        public static final String PAY = "pay";
+        public static final String PAY_TYPE = "payType";
         public static final String ACCESS_TOKEN = "access_token";
         public static final String IPHONE = "iPhone";
         public static final String ANDROID = "Android";
@@ -184,7 +184,7 @@ public final class PornConstants {
         public static final String KPN_SITE_ALL_MOVIEID_LATEST = "KPN:SITE:ALL:MOVIEID:LATEST:{}";
         //缓存站点最热影片 播放量排序 高->低  SITEID
         public static final String KPN_SITE_ALL_MOVIEID_VV = "KPN:SITE:ALL:MOVIEID:VV:{}";
-        //缓存站点最热影片 播放量排序 高->低  SITEID
+        //缓存站点最热VIP影片 播放量排序 高->低  SITEID
         public static final String KPN_SITE_VIP_MOVIEID_VV = "KPN:SITE:VIP:MOVIEID:VV:{}";
 
         //缓存会员频道信息 userid

@@ -20,13 +20,19 @@ public enum KpnSiteMovieSearchFromEnum {
     }
 
     public static boolean isTopic(Integer code) {
-        for (KpnSiteMovieSearchFromEnum e : values()) {
-            if (e.code.equals(code)) {
-                return true;
-            }
-        }
-        return false;
+        return TOPIC.code.equals(code);
     }
+
+    /**
+     * 是否找片
+     *
+     * @param code 编码
+     * @return
+     */
+    public static boolean isSearch(Integer code) {
+        return SEARCH.code.equals(code);
+    }
+
 
     public Integer getCode() {
         return code;

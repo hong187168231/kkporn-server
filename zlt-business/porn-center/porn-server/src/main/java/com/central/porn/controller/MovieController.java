@@ -153,27 +153,4 @@ public class MovieController {
         }
     }
 
-    /**
-     * 找片-搜索选项
-     *
-     * @return
-     */
-    @GetMapping("/search/options")
-    @ApiOperation(value = "找片-搜索选项")
-    public Result<Map<String, Map<Integer, String>>> getSearchOptions() {
-        try {
-            Map<String, Map<Integer, String>> searchOptionMap = new TreeMap<>();
-            searchOptionMap.put(PornConstants.Str.TYPE, KpnMovieTypeEnum.getOptions(Boolean.FALSE));
-            searchOptionMap.put(PornConstants.Str.COUNTRY, KpnMovieSearchTypeCountryEnum.getOptions(Boolean.FALSE));
-            searchOptionMap.put(PornConstants.Str.SUBTITLE, KpnMovieSearchTypeSubtitleEnum.getOptions(Boolean.FALSE));
-            searchOptionMap.put(PornConstants.Str.SHOOTING, KpnMovieSearchTypeShootingEnum.getOptions(Boolean.FALSE));
-            searchOptionMap.put(PornConstants.Str.PAY, KpnMovieSearchTypePayEnum.getOptions(Boolean.FALSE));
-
-            return Result.succeed(searchOptionMap, "succeed");
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return Result.failed("failed");
-        }
-    }
-
 }

@@ -13,12 +13,13 @@ import com.central.common.language.LanguageUtil;
 import com.central.common.model.KpnMovie;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.model.KpnSiteUserMovieFavorites;
-import com.central.common.model.enums.SiteMovieStatusEnum;
+import com.central.common.model.enums.*;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MovieSearchParamCo;
+import com.central.porn.entity.dto.MovieSearchConditionDto;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
@@ -33,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -65,7 +67,7 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     @Autowired
     private IRptSiteMovieDateService rptSiteMovieDateService;
 
-    @Autowired
+    @Resource
     private TaskExecutor taskExecutor;
 
     @Override
@@ -343,17 +345,58 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer from, Long fromId, String sortType, Integer sortOrder, Integer currPage, Integer pageSize) {
+    public PornPageResult<KpnSiteMovieBaseVo> searchDepot(Long sid, Integer from, Long fromId, String sortType, Integer sortOrder, MovieSearchConditionDto searchConditionDto, Integer currPage, Integer pageSize) {
         Page<KpnSiteMovie> page = new Page<>(currPage, pageSize);
 
         List<Long> movieIds = new ArrayList<>();
         Long total = 0L;
-        //找片
         if (KpnSiteMovieSearchFromEnum.SEARCH.getCode().equals(from)) {
             LambdaQueryWrapper<KpnSiteMovie> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(KpnSiteMovie::getSiteId, sid);
-            wrapper.orderByDesc(KpnSiteMovie::getVv);
-
+            //国家
+            if (!KpnMovieCountryEnum.isAll(searchConditionDto.getCountry())) {
+                wrapper.eq(KpnSiteMovie::getCountry, searchConditionDto.getCountry());
+            }
+            //影片类型
+            if (!KpnMovieTypeEnum.isAll(searchConditionDto.getType())) {
+                wrapper.eq(KpnSiteMovie::getType, searchConditionDto.getType());
+            }
+            //付费类型
+            if (!KpnMoviePayTypeEnum.isAll(searchConditionDto.getPayType())) {
+                wrapper.eq(KpnSiteMovie::getPayType, searchConditionDto.getPayType());
+            }
+            //拍摄性质
+            if (!KpnMovieShootingEnum.isAll(searchConditionDto.getShooting())) {
+                wrapper.eq(KpnSiteMovie::getShootingType, searchConditionDto.getShooting());
+            }
+            //字幕类型
+            if (!KpnMovieSubtitleEnum.isAll(searchConditionDto.getSubtitle())) {
+                wrapper.eq(KpnSiteMovie::getSubtitleType, searchConditionDto.getSubtitle());
+            }
+            if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.HOT.getType())) {
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    wrapper.orderByAsc(KpnSiteMovie::getVv);
+                } else {
+                    wrapper.orderByDesc(KpnSiteMovie::getVv);
+                }
+            }
+            else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.LATEST.getType())) {
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    wrapper.orderByAsc(KpnSiteMovie::getCreateTime);
+                } else {
+                    wrapper.orderByDesc(KpnSiteMovie::getCreateTime);
+                }
+            }
+            else if (sortType.equalsIgnoreCase(KpnMovieSortTypeEnum.DURATION.getType())) {
+                if (KpnSortOrderEnum.isAsc(sortOrder)) {
+                    wrapper.orderByAsc(KpnSiteMovie::getDuration);
+                } else {
+                    wrapper.orderByDesc(KpnSiteMovie::getDuration);
+                }
+            }
+            else {
+                wrapper.orderByDesc(KpnSiteMovie::getVv);
+            }
             Page<KpnSiteMovie> list = baseMapper.selectPage(page, wrapper);
             total = page.getTotal();
             movieIds = list.getRecords().stream().map(KpnSiteMovie::getMovieId).collect(Collectors.toList());
