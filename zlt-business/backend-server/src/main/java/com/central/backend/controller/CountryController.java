@@ -29,7 +29,7 @@ public class CountryController {
     @ApiOperation(value = "查询国家列表")
     @GetMapping
     public Result<Map<Integer, String>> list() {
-        return Result.succeed(KpnMovieSearchTypeCountryEnum.getOptions(Boolean.TRUE));
+        return Result.succeed(KpnMovieSearchTypeCountryEnum.getOptions(Boolean.FALSE));
     }
 
 }
