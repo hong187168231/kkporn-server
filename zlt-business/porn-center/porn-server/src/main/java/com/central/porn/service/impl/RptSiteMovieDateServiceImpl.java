@@ -7,7 +7,6 @@ import com.central.common.constant.PornConstants;
 import com.central.common.model.RptSiteMovieDate;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
-import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.mapper.RptSiteMovieDateMapper;
 import com.central.porn.service.IKpnSiteMovieService;
@@ -48,8 +47,7 @@ public class RptSiteMovieDateServiceImpl extends SuperServiceImpl<RptSiteMovieDa
             List<Long> movieIds = rptSiteMovieDates.stream().map(RptSiteMovieDate::getMovieId).collect(Collectors.toList());
             siteMonthMovies = siteMovieService.getSiteMovieByIds(sid, movieIds,false);
             if (siteMonthMovies.size() < 10) {
-                MovieSearchParamCo movieSearchParam = MovieSearchParamCo.builder().build();
-                List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.getFillingSiteMovie(sid, movieSearchParam, movieIds);
+                List<KpnSiteMovieBaseVo> kpnSiteMovieBaseVos = siteMovieService.getFillingSiteMovie(sid, movieIds);
                 siteMonthMovies.addAll(kpnSiteMovieBaseVos);
             }
 

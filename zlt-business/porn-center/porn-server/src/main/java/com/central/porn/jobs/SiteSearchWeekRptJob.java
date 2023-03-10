@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.elasticjob.api.ShardingContext;
 import org.apache.shardingsphere.elasticjob.simple.job.SimpleJob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class SiteSearchWeekRptJob implements SimpleJob {
+public class SiteSearchWeekRptJob implements SimpleJob, CommandLineRunner {
 
     @Autowired
     private IKpnSiteService siteService;
@@ -28,6 +29,10 @@ public class SiteSearchWeekRptJob implements SimpleJob {
     @Override
     public void execute(ShardingContext shardingContext) {
         log.info("SiteSearchWeekRptJob -> params:{}, time:{}", shardingContext.getJobParameter(), LocalDateTime.now());
+        cache();
+    }
+
+    private void cache() {
         try {
             List<KpnSite> kpnSites = siteService.getList();
             for (KpnSite kpnSite : kpnSites) {
@@ -39,5 +44,10 @@ public class SiteSearchWeekRptJob implements SimpleJob {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        cache();
     }
 }

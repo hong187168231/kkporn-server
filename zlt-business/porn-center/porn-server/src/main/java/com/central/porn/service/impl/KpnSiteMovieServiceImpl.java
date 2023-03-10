@@ -18,7 +18,6 @@ import com.central.common.redis.lock.RedissLockUtil;
 import com.central.common.redis.template.RedisRepository;
 import com.central.common.service.impl.SuperServiceImpl;
 import com.central.porn.entity.PornPageResult;
-import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.dto.MovieSearchConditionDto;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
@@ -32,6 +31,7 @@ import com.central.porn.utils.PornUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -170,11 +170,13 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     public Long addSiteMovieVv(Long sid, Long topicId, Long movieId) {
         String siteMovieVvKey = StrUtil.format(PornConstants.RedisKey.KPN_SITE_MOVIE_VV_KEY, sid, movieId);
         cacheSiteMovieVv(siteMovieVvKey, sid, movieId);
-
-        addSiteMovieVv(sid, movieId);
-        siteTopicMovieService.addTopicMovieVv(sid, topicId, movieId);
-        movieService.addMovieVv(movieId);
-
+        taskExecutor.execute(() -> {
+            addSiteMovieVv(sid, movieId);
+            if (ObjectUtil.isNotEmpty(topicId)) {
+                siteTopicMovieService.addTopicMovieVv(sid, topicId, movieId);
+            }
+            movieService.addMovieVv(movieId);
+        });
         return RedisRepository.incr(siteMovieVvKey);
     }
 
@@ -291,14 +293,14 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
     }
 
     @Override
-    public List<KpnSiteMovieBaseVo> getFillingSiteMovie(Long sid, MovieSearchParamCo searchParam, List<Long> movieIds) {
+    public List<KpnSiteMovieBaseVo> getFillingSiteMovie(Long sid, List<Long> movieIds) {
         LambdaQueryChainWrapper<KpnSiteMovie> lambdaQueryChainWrapper = this.lambdaQuery();
         lambdaQueryChainWrapper.select(KpnSiteMovie::getMovieId);
         lambdaQueryChainWrapper.eq(KpnSiteMovie::getSiteId, sid);
         lambdaQueryChainWrapper.eq(KpnSiteMovie::getStatus, SiteMovieStatusEnum.ON_SHELF.getStatus());
-        if (ObjectUtil.isNotEmpty(searchParam.getPayType())) {
-            lambdaQueryChainWrapper.eq(KpnSiteMovie::getPayType, searchParam.getPayType());
-        }
+//        if (ObjectUtil.isNotEmpty(searchParam.getPayType())) {
+//            lambdaQueryChainWrapper.eq(KpnSiteMovie::getPayType, searchParam.getPayType());
+//        }
         if (CollectionUtil.isNotEmpty(movieIds)) {
             lambdaQueryChainWrapper.notIn(KpnSiteMovie::getMovieId, movieIds);
         }

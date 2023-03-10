@@ -5,12 +5,12 @@ import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSite;
 import com.central.common.redis.template.RedisRepository;
 import com.central.porn.service.IKpnSiteService;
-import com.central.porn.service.IRptSiteSearchDateService;
 import com.central.porn.service.IRptSiteSearchTotalService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.elasticjob.api.ShardingContext;
 import org.apache.shardingsphere.elasticjob.simple.job.SimpleJob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class SiteSearchTotalRptJob implements SimpleJob {
+public class SiteSearchTotalRptJob implements SimpleJob, CommandLineRunner {
 
     @Autowired
     private IKpnSiteService siteService;
@@ -29,6 +29,10 @@ public class SiteSearchTotalRptJob implements SimpleJob {
     @Override
     public void execute(ShardingContext shardingContext) {
         log.info("SiteSearchTotalRpt -> params:{}, time:{}", shardingContext.getJobParameter(), LocalDateTime.now());
+        cache();
+    }
+
+    private void cache() {
         try {
             List<KpnSite> kpnSites = siteService.getList();
 
@@ -41,5 +45,10 @@ public class SiteSearchTotalRptJob implements SimpleJob {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        cache();
     }
 }
