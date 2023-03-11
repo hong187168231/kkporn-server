@@ -1,6 +1,5 @@
 package com.central.backend.mapper;
 
-import com.central.backend.model.vo.KpnSiteMovieVO;
 import com.central.backend.vo.MovieVo;
 import com.central.common.model.KpnSiteMovie;
 import com.central.db.mapper.SuperMapper;
@@ -19,13 +18,13 @@ import java.util.Map;
  */
 @Mapper
 public interface KpnSiteMovieMapper extends SuperMapper<KpnSiteMovie> {
-    /**
-     * 分页查询用户列表
-     * @param page
-     * @param params
-     * @return
-     */
-    List<KpnSiteMovieVO> findList(Page<KpnSiteMovieVO> page, @Param("p") Map<String, Object> params);
+//    /**
+//     * 分页查询用户列表
+//     * @param page
+//     * @param params
+//     * @return
+//     */
+//    List<KpnSiteMovieVO> findList(Page<KpnSiteMovieVO> page, @Param("p") Map<String, Object> params);
 
     int updateBatchStatusById(List<KpnSiteMovie> list);
     int updateBatchPayTypeById(List<KpnSiteMovie> list);

@@ -3,7 +3,6 @@ package com.central.porn.service;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.service.ISuperService;
 import com.central.porn.entity.PornPageResult;
-import com.central.porn.entity.co.MovieSearchParamCo;
 import com.central.porn.entity.dto.MovieSearchConditionDto;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
@@ -95,10 +94,9 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * 补足 1.月播放量排行榜 2.
      *
      * @param sid         站点id
-     * @param searchParam 查询参数
      * @param movieIds    已经存在的影片id
      */
-    List<KpnSiteMovieBaseVo> getFillingSiteMovie(Long sid, MovieSearchParamCo searchParam, List<Long> movieIds);
+    List<KpnSiteMovieBaseVo> getFillingSiteMovie(Long sid, List<Long> movieIds);
 
 
     /**

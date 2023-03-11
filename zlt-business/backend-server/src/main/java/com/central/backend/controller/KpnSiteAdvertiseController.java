@@ -5,12 +5,14 @@ import com.central.backend.co.KpnSiteAdvertiseCo;
 import com.central.backend.co.KpnSiteAdvertiseUpdateCo;
 import com.central.backend.service.IKpnSiteAdvertiseService;
 import com.central.common.annotation.LoginUser;
+import com.central.common.constant.PornConstants;
 import com.central.common.model.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
 @RestController
 @Api(tags = "广告配置api")
 @Validated
+@RefreshScope
 @RequestMapping("/advertise")
 public class KpnSiteAdvertiseController {
 
@@ -43,7 +46,7 @@ public class KpnSiteAdvertiseController {
         PageResult<KpnSiteAdvertise> kpnSiteAdvertiseList = advertiseService.findAdvertiseList(params);
         kpnSiteAdvertiseList.getData().stream().forEach(info->{
             if (info.getUrl()!=null){
-                info.setUrl(externalEndpoint+"/"+info.getUrl());
+                info.setUrl(externalEndpoint+ PornConstants.Symbol.FORWARD_SLASH +info.getUrl());
             }
         });
         return Result.succeed(kpnSiteAdvertiseList);

@@ -7,6 +7,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
 import com.central.common.constant.PornConstants;
+import com.central.common.language.LanguageUtil;
 import com.central.common.model.*;
 import com.central.common.model.enums.CodeEnum;
 import com.central.common.model.pay.KpnSiteBankCard;
@@ -14,7 +15,6 @@ import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.redis.lock.RedissLockUtil;
 import com.central.oss.model.ObjectInfo;
 import com.central.oss.template.MinioTemplate;
-import com.central.common.language.LanguageUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.*;
@@ -614,7 +614,7 @@ public class MemberController {
                 memberChannelVo.setChannelId(kpnSiteChannel.getId());
                 BeanUtil.copyProperties(kpnSiteChannel, memberChannelVo);
                 memberChannelVo.setName(LanguageUtil.getLanguageName(memberChannelVo));
-                memberChannelVo.setIcon(externalEndpoint + kpnSiteChannel.getIcon());
+                memberChannelVo.setIcon(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnSiteChannel.getIcon());
                 return memberChannelVo;
             }).collect(Collectors.toList());
 

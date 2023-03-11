@@ -6,7 +6,10 @@ import com.central.backend.service.IKpnSiteChannelService;
 import com.central.backend.service.IKpnTagService;
 import com.central.backend.vo.CategoryVo;
 import com.central.backend.vo.KpnTagVo;
-import com.central.common.model.*;
+import com.central.common.constant.PornConstants;
+import com.central.common.model.KpnSiteChannel;
+import com.central.common.model.PageResult;
+import com.central.common.model.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -14,13 +17,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,7 +57,7 @@ public class KpnSiteChannelController {
         Map<Long, KpnTagVo> map = tagList.stream().collect(Collectors.toMap(KpnTagVo::getId, (p) -> p));
         list.getData().stream().forEach(info->{
             if (info.getIcon()!=null){
-                info.setIcon(externalEndpoint+"/"+info.getIcon());
+                info.setIcon(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + info.getIcon());
             }
             //关联标签
             if (info.getTags()!=null){

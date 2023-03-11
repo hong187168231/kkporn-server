@@ -4,13 +4,13 @@ import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSite;
 import com.central.common.redis.template.RedisRepository;
-import com.central.porn.service.IKpnSiteMovieService;
 import com.central.porn.service.IKpnSiteService;
 import com.central.porn.service.IRptSiteMovieDateService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.elasticjob.api.ShardingContext;
 import org.apache.shardingsphere.elasticjob.simple.job.SimpleJob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -18,10 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class SiteMovieMonthVvRptJob implements SimpleJob {
-
-    @Autowired
-    private IKpnSiteMovieService siteMovieService;
+public class SiteMovieMonthVvRptJob implements SimpleJob, CommandLineRunner {
 
     @Autowired
     private IKpnSiteService siteService;
@@ -32,6 +29,10 @@ public class SiteMovieMonthVvRptJob implements SimpleJob {
     @Override
     public void execute(ShardingContext shardingContext) {
         log.info("SiteMovieMonthVvRpt -> params:{}, time:{}", shardingContext.getJobParameter(), LocalDateTime.now());
+        cache();
+    }
+
+    private void cache() {
         try {
             List<KpnSite> kpnSites = siteService.getList();
             for (KpnSite kpnSite : kpnSites) {
@@ -43,5 +44,10 @@ public class SiteMovieMonthVvRptJob implements SimpleJob {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        cache();
     }
 }

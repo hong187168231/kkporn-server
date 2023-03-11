@@ -13,11 +13,11 @@
 
     <select id="searchSiteMovieMonth" resultType="com.central.common.model.RptSiteMovieDate">
         select site_id,movie_id,sum(vv) vv
-        from rpt_site_movie_date
+        from rpt_site_movie_date a
         where site_id = #{sid}
-        and status = 1
         and `date` &gt;= #{startDate}
         and `date` &lt;= #{endDate}
+        and exists(select id from kpn_site_movie b where b.movie_id = a.movie_id and b.status = 1)
         group by site_id, movie_id
         order by sum(vv) desc
     </select>

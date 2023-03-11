@@ -1,8 +1,9 @@
 package com.central.backend.service;
 
+import com.central.backend.controller.movie.KpnSiteMovieVO;
+import com.central.backend.controller.movie.QueryMovieCo;
 import com.central.backend.model.dto.KpnSiteMoviePayTypeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
-import com.central.backend.model.vo.KpnSiteMovieVO;
 import com.central.backend.vo.MovieVo;
 import com.central.common.model.KpnSiteMovie;
 import com.central.common.model.PageResult;
@@ -14,17 +15,16 @@ import java.util.Map;
 
 /**
  * 站点影片
- *
- * @author yixiu
- * @date 2023-02-20 17:00:56
  */
 public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
     /**
-     * 列表
-     * @param params
+     * 搜索列表
+     *
+     * @param queryMovieCo 搜索条件
+     * @param siteId       站点id
      * @return
      */
-    PageResult<KpnSiteMovieVO> findList(Map<String, Object> params, SysUser user);
+    PageResult<KpnSiteMovieVO> list(QueryMovieCo queryMovieCo, Long siteId);
 
     public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list,SysUser user);
 

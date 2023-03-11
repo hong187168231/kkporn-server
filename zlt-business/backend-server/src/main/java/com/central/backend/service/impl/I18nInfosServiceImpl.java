@@ -88,7 +88,6 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         initI18nSourceRedis();
     }
 
-    @Override
     public void initI18nSourceRedis() {
         List<I18nInfo> infos = list();
 

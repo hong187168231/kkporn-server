@@ -22,6 +22,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +44,7 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
     @Autowired
     private IKpnSiteMovieService siteMovieService;
 
-    @Autowired
+    @Resource
     private TaskExecutor taskExecutor;
 
     @Value("${zlt.minio.externalEndpoint}")
@@ -57,10 +58,10 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
         BeanUtil.copyProperties(kpnActor, kpnActorVo);
         kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
         if (StrUtil.isNotBlank(kpnActorVo.getAvatarUrl())) {
-            kpnActorVo.setAvatarUrl(externalEndpoint + kpnActorVo.getAvatarUrl());
+            kpnActorVo.setAvatarUrl(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnActorVo.getAvatarUrl());
         }
         if (StrUtil.isNotBlank(kpnActorVo.getPortraitUrl())) {
-            kpnActorVo.setPortraitUrl(externalEndpoint + kpnActorVo.getPortraitUrl());
+            kpnActorVo.setPortraitUrl(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnActorVo.getPortraitUrl());
         }
         //站点演员收藏量
         Long siteActorFavorites = getSiteActorFavorites(sid, kpnActor.getId());
@@ -131,10 +132,10 @@ public class KpnSiteActorServiceImpl extends SuperServiceImpl<KpnSiteActorMapper
             BeanUtil.copyProperties(kpnActor, kpnActorVo);
             kpnActorVo.setName(LanguageUtil.getLanguageName(kpnActorVo));
             if (StrUtil.isNotBlank(kpnActorVo.getAvatarUrl())) {
-                kpnActorVo.setAvatarUrl(externalEndpoint + kpnActorVo.getAvatarUrl());
+                kpnActorVo.setAvatarUrl(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnActorVo.getAvatarUrl());
             }
             if (StrUtil.isNotBlank(kpnActorVo.getPortraitUrl())) {
-                kpnActorVo.setPortraitUrl(externalEndpoint + kpnActorVo.getPortraitUrl());
+                kpnActorVo.setPortraitUrl(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnActorVo.getPortraitUrl());
             }
             resultActorVos.add(kpnActorVo);
         }

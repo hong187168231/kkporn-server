@@ -27,6 +27,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -95,7 +96,7 @@ public class SiteController {
     @Value("${zlt.minio.externalEndpoint}")
     private String externalEndpoint;
 
-    @Autowired
+    @Resource
     private TaskExecutor taskExecutor;
 
     @Autowired
@@ -222,7 +223,7 @@ public class SiteController {
                 if (kpnSiteChannelVo.getIsStable() && KpnStableChannelEnum.POPULAR.getSort().equals(kpnSiteChannelVo.getSort())) {
                     kpnSiteChannelVo.setIsHottest(true);
                 }
-                kpnSiteChannelVo.setIcon(externalEndpoint + kpnSiteChannelVo.getIcon());
+                kpnSiteChannelVo.setIcon(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnSiteChannelVo.getIcon());
 
                 return kpnSiteChannelVo;
             }).collect(Collectors.toList());
@@ -268,6 +269,7 @@ public class SiteController {
                 KpnSiteAdvertiseVo adVo = new KpnSiteAdvertiseVo();
                 BeanUtil.copyProperties(ad, adVo);
                 adVo.setName(LanguageUtil.getLanguageName(adVo));
+                adVo.setUrl(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + adVo.getUrl());
                 return adVo;
             }).collect(Collectors.toList());
 

@@ -32,8 +32,4 @@ public class RptSiteMovieDate implements Serializable {
 
     @ApiModelProperty(value = "影片站点收藏量")
     private Long favorites;
-
-    @ApiModelProperty(value = "状态 0待发布,1上架,2下架")
-    private Integer status;
-
 }
