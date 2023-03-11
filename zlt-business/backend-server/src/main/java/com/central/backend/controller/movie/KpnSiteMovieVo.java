@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel("站点影片")
-public class KpnSiteMovieVO {
+public class KpnSiteMovieVo {
     @ApiModelProperty(value = "站点影片ID")
     private Long id;
     @ApiModelProperty("播放地址")

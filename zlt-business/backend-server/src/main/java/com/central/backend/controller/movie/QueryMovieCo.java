@@ -3,11 +3,16 @@ package com.central.backend.controller.movie;
 import com.central.common.model.co.PageCo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
+@Data
 @ApiModel("影片搜索")
 public class QueryMovieCo extends PageCo implements Serializable {
+
+    @ApiModelProperty("站点id")
+    private Long siteId;
 
     @ApiModelProperty("搜索条件 0:影片名,1:影片ID,2:演员名")
     private Integer searchId;

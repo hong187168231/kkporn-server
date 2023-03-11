@@ -34,7 +34,7 @@ public enum KpnMovieCountryEnum {
     }
 
     public static Map<Integer, String> getOptions() {
-        return getOptions(Boolean.TRUE);
+        return getOptions(Boolean.FALSE);
     }
 
     public static Map<Integer, String> getOptions(Boolean needAll) {

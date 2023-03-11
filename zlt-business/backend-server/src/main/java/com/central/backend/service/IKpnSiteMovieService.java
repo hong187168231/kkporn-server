@@ -1,6 +1,6 @@
 package com.central.backend.service;
 
-import com.central.backend.controller.movie.KpnSiteMovieVO;
+import com.central.backend.controller.movie.KpnSiteMovieVo;
 import com.central.backend.controller.movie.QueryMovieCo;
 import com.central.backend.model.dto.KpnSiteMoviePayTypeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
@@ -21,10 +21,9 @@ public interface IKpnSiteMovieService extends ISuperService<KpnSiteMovie> {
      * 搜索列表
      *
      * @param queryMovieCo 搜索条件
-     * @param siteId       站点id
      * @return
      */
-    PageResult<KpnSiteMovieVO> list(QueryMovieCo queryMovieCo, Long siteId);
+    PageResult<KpnSiteMovieVo> list(QueryMovieCo queryMovieCo);
 
     public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list,SysUser user);
 

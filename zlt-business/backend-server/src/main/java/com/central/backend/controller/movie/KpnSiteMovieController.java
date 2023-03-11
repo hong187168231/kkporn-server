@@ -8,6 +8,7 @@ import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSiteMovieService;
 import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSiteMovie;
+import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import io.swagger.annotations.Api;
@@ -34,14 +35,14 @@ public class KpnSiteMovieController {
     @Autowired
     private IAsyncService asyncService;
 
-//    /**
-//     * 列表
-//     */
-//    @ApiOperation(value = "查询列表")
-//    @GetMapping("list")
-//    public Result<PageResult<KpnSiteMovieVO>> list(@RequestBody QueryMovieCo queryMovieCo, @ApiIgnore @LoginUser SysUser user) {
-//        return Result.succeed(siteMovieService.findList(queryMovieCo, user));
-//    }
+    /**
+     * 列表
+     */
+    @ApiOperation(value = "查询列表")
+    @GetMapping("list")
+    public Result<PageResult<KpnSiteMovieVo>> list(@RequestBody QueryMovieCo queryMovieCo, @ApiIgnore @LoginUser SysUser user) {
+        return Result.succeed(siteMovieService.list(queryMovieCo));
+    }
 
     /**
      * 查询
