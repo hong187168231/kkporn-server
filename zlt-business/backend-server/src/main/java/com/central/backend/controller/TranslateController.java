@@ -45,7 +45,7 @@ public class TranslateController {
         if (Objects.isNull(param.getFromOf())) {
             return Result.failed("参数必传");
         }
-        param.setOperator(sysUser.getUsername());
+        param.setOperator(null!=sysUser?sysUser.getUsername():"");
         if (!i18nInfosService.updateI18nInfo(param.getFromOf(), param)) {
             return Result.failed("数据重复");
         }
@@ -59,7 +59,7 @@ public class TranslateController {
         if (Objects.isNull(param.getFromOf())) {
             return Result.failed("参数必传");
         }
-        param.setOperator(sysUser.getUsername());
+        param.setOperator(null!=sysUser?sysUser.getUsername():"");
         if (!i18nInfosService.updateI18nInfo(param.getFromOf(), param)) {
             return Result.failed("数据重复");
         }
@@ -95,7 +95,7 @@ public class TranslateController {
     @ApiOperation(value = "新增后台国际化字典")
     public Result<String> backendSave(@Validated({SaveI18nInfoCo.Save.class}) @RequestBody SaveI18nInfoCo param,
         @ApiIgnore @LoginUser SysUser sysUser) {
-        param.setOperator(sysUser.getUsername());
+        param.setOperator(null!=sysUser?sysUser.getUsername():"");
         return this.saveI18nInfo(param);
     }
 
@@ -103,7 +103,7 @@ public class TranslateController {
     @ApiOperation(value = "新增前台国际化字典")
     public Result<String> frontSave(@Validated(SaveI18nInfoCo.Save.class) @RequestBody SaveI18nInfoCo param,
         @ApiIgnore @LoginUser SysUser sysUser) {
-        param.setOperator(sysUser.getUsername());
+        param.setOperator(null!=sysUser?sysUser.getUsername():"");
         return this.saveI18nInfo(param);
     }
 

@@ -296,6 +296,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                 .set(khmChange, I18nInfo::getKhm, param.getKhm()).set(thChange, I18nInfo::getTh, param.getTh()).set(viChange, I18nInfo::getVi, param.getVi())
                     .set(myChange, I18nInfo::getMy, param.getMy())
                 .set(StrUtil.isNotBlank(param.getOperator()), I18nInfo::getOperator, param.getOperator())
+                    .set(I18nInfo::getUpdateBy, param.getOperator())
                 .set(I18nInfo::getUpdateTime, new Date());
         int count = mapper.update(null, update);
         boolean succeed = count > 0;
@@ -316,6 +317,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         I18nInfo info = new I18nInfo();
         BeanUtil.copyProperties(param, info);
         info.setFromOf(from);
+        info.setCreateBy(param.getOperator());
         List<I18nInfo> listByZhCn = findListByZhCn(from, param.getZhCn());
         if (CollUtil.isNotEmpty(listByZhCn) && listByZhCn.size() >= 1) {
             return false;
