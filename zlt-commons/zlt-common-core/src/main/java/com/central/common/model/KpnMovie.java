@@ -13,10 +13,10 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @TableName("kpn_movie")
 public class KpnMovie extends SuperEntity {
-    @ApiModelProperty("播放地址")
-    private String url;
     @ApiModelProperty("唯一编码 20位")
     private String code;
+    @ApiModelProperty("播放地址")
+    private String url;
     @ApiModelProperty("播放地址")
     private String coverUrl;
     @ApiModelProperty("中文名称")

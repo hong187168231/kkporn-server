@@ -64,7 +64,6 @@ public class KpnSiteChannelServiceImpl extends SuperServiceImpl<KpnSiteChannelMa
         if (CollectionUtil.isNotEmpty(channelIds)) {
             List<KpnSiteChannel> kpnSiteChannels = listByIds(channelIds);
             kpnSiteChannels.sort(Comparator.comparingLong(KpnSiteChannel::getSort).thenComparing(KpnSiteChannel::getId).reversed());
-
             siteChannels.addAll(kpnSiteChannels);
         }
         return siteChannels;
