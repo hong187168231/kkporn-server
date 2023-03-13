@@ -1,12 +1,18 @@
 package com.central.common.vo;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
-public abstract class LanguageNameMulti implements Serializable {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class LanguageNameMulti implements Serializable {
 
     //    @JsonIgnore
     @ApiModelProperty(value = "名称(中文)")

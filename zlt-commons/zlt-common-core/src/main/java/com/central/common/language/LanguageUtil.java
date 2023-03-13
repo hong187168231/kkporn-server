@@ -50,6 +50,27 @@ public class LanguageUtil {
         return name;
     }
 
+    //保留多语言
+    public static String getLanguageName2(LanguageNameMulti languageNameVo) {
+        final String language = LanguageThreadLocal.getLanguage();
+        String name = languageNameVo.getNameEn();
+        if (language.equalsIgnoreCase(LanguageEnum.ZH.name().toLowerCase())) {
+            name = languageNameVo.getNameZh();
+        }
+
+        else if (language.equalsIgnoreCase(LanguageEnum.EN.name().toLowerCase())) {
+            name = languageNameVo.getNameEn();
+        }
+
+        else if (language.equalsIgnoreCase(LanguageEnum.KH.name().toLowerCase())) {
+            name = languageNameVo.getNameKh();
+        }
+        if(StrUtil.isBlank(name)){
+            name = languageNameVo.getNameZh();
+        }
+        return name;
+    }
+
 //    private static Map<String, String> getLanguageMap(LanguageEnum language) {
 //        switch (language) {
 //            case ZH:

@@ -17,4 +17,12 @@
             </if>
         </where>
     </select>
+
+    <select id="getTagByMovieId" resultType="com.central.common.model.KpnTag">
+        select c.*
+        from kpn_site_movie a
+                 left join kpn_movie_tag b on a.movie_id = b.movie_id
+                 left join kpn_tag c on c.id = b.tag_id
+        where a.movie_id = #{movieId}
+    </select>
 </mapper>

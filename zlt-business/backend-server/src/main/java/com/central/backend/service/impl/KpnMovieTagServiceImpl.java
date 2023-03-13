@@ -3,6 +3,7 @@ package com.central.backend.service.impl;
 import com.central.backend.mapper.KpnMovieTagMapper;
 import com.central.backend.service.IKpnMovieTagService;
 import com.central.common.KpnMovieTag;
+import com.central.common.model.KpnTag;
 import com.central.common.service.impl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,12 @@ public class KpnMovieTagServiceImpl extends SuperServiceImpl<KpnMovieTagMapper, 
     @Override
     public List<KpnMovieTag> getKpnMovieTag(Map<String, Object> params){
         return baseMapper.findList(params);
+    }
+
+    @Override
+    public List<KpnTag> getTagByMovieId(Long movieId) {
+
+        return baseMapper.getTagByMovieId(movieId);
     }
 }
 

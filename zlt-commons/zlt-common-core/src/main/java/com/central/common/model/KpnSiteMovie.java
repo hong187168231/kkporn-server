@@ -52,6 +52,8 @@ public class KpnSiteMovie extends SuperEntity {
     @ApiModelProperty(value = "状态 0待发布,1上架,2下架")
     private Integer status;
     @ApiModelProperty("播放地址")
+    private String url;
+    @ApiModelProperty("封面地址")
     private String coverUrl;
     @ApiModelProperty("影片所属国家 0:日本,1:中国大陆,2:中国台湾,3:韩国,4:欧美,5:东南亚,6:其他地区")
     private Integer country;

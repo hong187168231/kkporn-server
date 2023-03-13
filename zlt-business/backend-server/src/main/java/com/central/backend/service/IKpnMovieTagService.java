@@ -1,6 +1,7 @@
 package com.central.backend.service;
 
 import com.central.common.KpnMovieTag;
+import com.central.common.model.KpnTag;
 import com.central.common.service.ISuperService;
 
 import java.util.List;
@@ -16,4 +17,11 @@ public interface IKpnMovieTagService extends ISuperService<KpnMovieTag> {
      */
     List<KpnMovieTag> getKpnMovieTag(Map<String, Object> params);
 
+    /**
+     * 获取影片标签
+     *
+     * @param movieId 影片id
+     * @return
+     */
+    List<KpnTag> getTagByMovieId(Long movieId);
 }

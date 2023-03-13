@@ -39,8 +39,8 @@ public class KpnSiteMovieController {
      * 列表
      */
     @ApiOperation(value = "查询列表")
-    @GetMapping("list")
-    public Result<PageResult<KpnSiteMovieVo>> list(@RequestBody QueryMovieCo queryMovieCo, @ApiIgnore @LoginUser SysUser user) {
+    @PostMapping("list")
+    public Result<PageResult<KpnSiteMovieVo>> list(@RequestBody QueryMovieCo queryMovieCo) {
         return Result.succeed(siteMovieService.list(queryMovieCo));
     }
 

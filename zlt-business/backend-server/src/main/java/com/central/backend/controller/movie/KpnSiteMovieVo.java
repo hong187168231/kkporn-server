@@ -1,5 +1,6 @@
 package com.central.backend.controller.movie;
 
+import com.central.common.vo.LanguageNameMulti;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -9,12 +10,11 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel("站点影片")
-public class KpnSiteMovieVo {
+public class KpnSiteMovieVo extends LanguageNameMulti {
     @ApiModelProperty(value = "站点影片ID")
     private Long id;
     @ApiModelProperty("播放地址")
@@ -35,7 +35,7 @@ public class KpnSiteMovieVo {
     private Long actorId;
     @ApiModelProperty(value = "演员名(多语言)")
     private String actorName;
-    //    @ApiModelProperty(value = "演员中文名")
+//    @ApiModelProperty(value = "演员中文名")
 //    private String actorNameZh;
 //    @ApiModelProperty(value = "演员英文名")
 //    private String actorNameEn;
