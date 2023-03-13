@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("站点产品")

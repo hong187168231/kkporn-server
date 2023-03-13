@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("站点影片基本信息")

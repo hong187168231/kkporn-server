@@ -3,7 +3,6 @@ package com.central.porn.controller;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.annotation.LoginUser;
-import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSiteUserActorFavorites;
 import com.central.common.model.KpnSiteUserMovieFavorites;
 import com.central.common.model.Result;
@@ -14,7 +13,6 @@ import com.central.porn.entity.vo.KpnActorVo;
 import com.central.porn.entity.vo.KpnMovieVo;
 import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.enums.KpnMovieSortTypeEnum;
-import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,9 +24,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * 影片相关

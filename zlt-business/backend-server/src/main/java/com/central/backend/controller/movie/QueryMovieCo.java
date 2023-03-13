@@ -50,6 +50,9 @@ public class QueryMovieCo extends PageCo implements Serializable {
     @ApiModelProperty("付费类型(-1:全部,0:免费,1:vip)")
     private Integer payType;
 
+    @ApiModelProperty("排序 0:正序,1:倒序(默认)")
+    private Integer sort = 1;
+
 }
 
 

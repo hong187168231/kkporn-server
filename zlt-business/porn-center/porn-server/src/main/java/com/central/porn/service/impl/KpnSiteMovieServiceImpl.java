@@ -24,14 +24,12 @@ import com.central.porn.entity.vo.KpnSiteMovieBaseVo;
 import com.central.porn.entity.vo.KpnTagVo;
 import com.central.porn.enums.KpnMovieSortTypeEnum;
 import com.central.porn.enums.KpnSiteMovieSearchFromEnum;
-import com.central.porn.enums.KpnSortOrderEnum;
 import com.central.porn.mapper.KpnSiteMovieMapper;
 import com.central.porn.service.*;
 import com.central.porn.utils.PornUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

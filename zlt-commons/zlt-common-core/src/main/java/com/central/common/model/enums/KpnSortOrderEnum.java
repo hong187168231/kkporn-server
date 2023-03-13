@@ -1,4 +1,6 @@
-package com.central.porn.enums;
+package com.central.common.model.enums;
+
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 通用排序规则
@@ -37,7 +39,7 @@ public enum KpnSortOrderEnum {
     }
 
     public static boolean isAsc(Integer code) {
-        return code.equals(ASC.code);
+        return ObjectUtil.isEmpty(code) || ASC.code.equals(code);
     }
 
     public Integer getCode() {

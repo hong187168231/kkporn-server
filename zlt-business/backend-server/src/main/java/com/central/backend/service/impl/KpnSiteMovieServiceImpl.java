@@ -135,6 +135,8 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                 ;
             }
         }
+        //播放量排序
+        wrapper.orderBy(true, KpnSortOrderEnum.isAsc(queryMovieCo.getSort()), KpnSiteMovie::getVv);
 
         Page<KpnSiteMovie> pageResult = baseMapper.selectPage(page, wrapper);
 
