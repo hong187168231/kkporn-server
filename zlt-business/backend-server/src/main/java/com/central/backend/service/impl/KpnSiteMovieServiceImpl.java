@@ -63,6 +63,10 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
     private static final Integer ALL = -1;
 
+
+
+
+
     @SneakyThrows
     @Override
     public PageResult<KpnSiteMovieVo> list(QueryMovieCo queryMovieCo) {
@@ -176,6 +180,9 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
 
         return PageResult.<KpnSiteMovieVo>builder().data(siteMovieVos).count(page.getTotal()).build();
     }
+
+
+
 
     @Override
     public void updateBatchStatusById(List<KpnSiteMovieStatusDto> list,SysUser user){

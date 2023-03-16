@@ -15,13 +15,13 @@ public class I18nSourceDTO implements Serializable {
     private static final long serialVersionUID = 448547528757858758L;
 
     @ApiModelProperty("中文国际化资源")
-    private Map<String, String> zhCn;
+    private Map<String, String> zh;
 
     @ApiModelProperty("英文国际化资源")
-    private Map<String, String> enUs;
+    private Map<String, String> en;
 
     @ApiModelProperty("高棉语国际化资源")
-    private Map<String, String> khm;
+    private Map<String, String> kh;
 
     @ApiModelProperty("泰语国际化资源")
     private Map<String, String> th;

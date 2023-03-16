@@ -55,17 +55,17 @@ public interface I18nKeys {
         /**
          * 简体中文
          */
-        String ZH_CN = "zh_cn";
+        String ZH = "zh";
 
         /**
          * 英文
          */
-        String EN_US = "en_us";
+        String EN = "en";
 
         /**
          * 高棉语
          */
-        String KHM = "khm";
+        String KH = "kh";
 
         /**
          * 泰语
@@ -82,27 +82,25 @@ public interface I18nKeys {
         String MY = "my";
     }
 
+//     //语种代码
+//    interface LocaleCode {
+//        int ZH = 0;
+//        int EN = 1;
+//        int KH = 2;
+//        int TH = 3;
+//        int VI = 4;
+//        int MY = 5;
+//    }
 
-    // 语种代码
-    interface LocaleCode {
-        int ZH_CN = 0;
-        int EN_US = 1;
-        int KHM = 2;
-        int TH = 3;
-        int VI = 4;
-        int MY = 5;
-    }
-
-    // 语种代码
-    interface LocaleCodeEn {
-        String ZH = "zh";
-
-        String EN = "en";
-        String KM = "km";
-        String TH = "th";
-        String VI = "vi";
-        String MY = "my";
-    }
+//    // 语种代码
+//    interface LocaleCodeEn {
+//        String ZH = "zh";
+//        String EN = "en";
+//        String KM = "km";
+//        String TH = "th";
+//        String VI = "vi";
+//        String MY = "my";
+//    }
 
     interface Redis {
         // 前台PC
@@ -110,16 +108,16 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_CN_KEY = "i18n:source:zh_cn:hash:" + I18nKeys.FRONT_PC;
+            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.FRONT_PC;
             /**
              * 英文国际化 key
              */
-            String EN_US_KEY = "i18n:source:en_us:hash:" + I18nKeys.FRONT_PC;
+            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.FRONT_PC;
 
             /**
              * 高棉语国际化 key
              */
-            String KHM_KEY = "i18n:source:khm:hash:" + I18nKeys.FRONT_PC;
+            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.FRONT_PC;
 
             /**
              * 泰语国际化 key
@@ -141,16 +139,16 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_CN_KEY = "i18n:source:zh_cn:hash:" + I18nKeys.FRONT_APP;
+            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.FRONT_APP;
             /**
              * 英文国际化 key
              */
-            String EN_US_KEY = "i18n:source:en_us:hash:" + I18nKeys.FRONT_APP;
+            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.FRONT_APP;
 
             /**
              * 高棉语国际化 key
              */
-            String KHM_KEY = "i18n:source:khm:hash:" + I18nKeys.FRONT_APP;
+            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.FRONT_APP;
 
             /**
              * 泰语国际化 key
@@ -172,16 +170,16 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_CN_KEY = "i18n:source:zh_cn:hash:" + I18nKeys.FRONT_MESSAGE;
+            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.FRONT_MESSAGE;
             /**
              * 英文国际化 key
              */
-            String EN_US_KEY = "i18n:source:en_us:hash:" + I18nKeys.FRONT_MESSAGE;
+            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.FRONT_MESSAGE;
 
             /**
              * 高棉语国际化 key
              */
-            String KHM_KEY = "i18n:source:khm:hash:" + I18nKeys.FRONT_MESSAGE;
+            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.FRONT_MESSAGE;
 
             /**
              * 泰语国际化 key
@@ -204,16 +202,16 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_CN_KEY = "i18n:source:zh_cn:hash:" + I18nKeys.BACKEND;
+            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.BACKEND;
             /**
              * 英文国际化 key
              */
-            String EN_US_KEY = "i18n:source:en_us:hash:" + I18nKeys.BACKEND;
+            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.BACKEND;
 
             /**
              * 高棉语国际化 key
              */
-            String KHM_KEY = "i18n:source:khm:hash:" + I18nKeys.BACKEND;
+            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.BACKEND;
 
             /**
              * 泰语国际化 key
@@ -235,16 +233,16 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_CN_KEY = "i18n:source:zh_cn:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.BACKEND_MESSAGE;
             /**
              * 英文国际化 key
              */
-            String EN_US_KEY = "i18n:source:en_us:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.BACKEND_MESSAGE;
 
             /**
              * 高棉语国际化 key
              */
-            String KHM_KEY = "i18n:source:khm:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.BACKEND_MESSAGE;
 
             /**
              * 泰语国际化 key

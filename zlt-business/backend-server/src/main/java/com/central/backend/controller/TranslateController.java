@@ -5,7 +5,9 @@ import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.model.co.QueryI18nInfoPageCo;
 import com.central.backend.model.co.SaveI18nInfoCo;
 import com.central.backend.model.co.UpdateI18nInfoCo;
+import com.central.backend.service.II18nInfosService;
 import com.central.common.annotation.LoginUser;
+import com.central.common.dto.I18nSourceDTO;
 import com.central.common.model.I18nInfo;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
@@ -13,10 +15,7 @@ import com.central.common.model.SysUser;
 import com.central.common.utils.I18nUtil;
 import com.central.common.vo.I18nInfoPageVO;
 import com.central.common.vo.LanguageLabelVO;
-import com.central.backend.service.II18nInfosService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -147,11 +146,11 @@ public class TranslateController {
         return Result.succeed(i18nInfosService.findInfos(param));
     }
 
-    // @GetMapping("/backendFullSource")
-    // @ApiOperation(value = "获取所有的后台国际化资源")
-    // public Result<I18nSourceDTO> backendFullSource() {
-    // return Result.succeed(i18nInfosService.getBackendFullI18nSource());
-    // }
+    @GetMapping("/backendFullSource")
+    @ApiOperation(value = "获取所有的后台国际化资源")
+    public Result<I18nSourceDTO> backendFullSource() {
+        return Result.succeed(i18nInfosService.getBackendFullI18nSource());
+    }
 
     @GetMapping("/languageLabel")
     @ApiOperation(value = "获取语言标签")

@@ -30,8 +30,6 @@ public class IpBlackCheckInterceptor implements HandlerInterceptor {
     ISysSysIpSwitchButtonService iSysSysIpSwitchButtonService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String language = ServletUtil.getHeader(request, PornConstants.Str.LANGUAGE, Charset.defaultCharset());
-        LanguageThreadLocal.setLanguage(language);
         List<SysIpSwitchButton> buttonList = iSysSysIpSwitchButtonService.findList();
         for(SysIpSwitchButton switchButton : buttonList){
             if(StatusEnum.ONE_FALSE.getStatus()==switchButton.getWhiteipSwithcButton()){//白名单开关为1

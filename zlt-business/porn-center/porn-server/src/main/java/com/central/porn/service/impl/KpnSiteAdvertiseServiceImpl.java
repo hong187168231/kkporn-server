@@ -32,7 +32,6 @@ public class KpnSiteAdvertiseServiceImpl extends SuperServiceImpl<KpnSiteAdverti
 
     @Override
     public List<KpnSiteAdvertise> getSiteAdvertise(Long sid, String deviceType, Integer position) {
-
         //非专题广告
         if (!SiteAdPositionEnum.isTopicAd(position)) {
             return this.lambdaQuery()

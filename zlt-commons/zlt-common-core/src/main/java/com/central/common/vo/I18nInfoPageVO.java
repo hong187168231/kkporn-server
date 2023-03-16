@@ -22,14 +22,14 @@ public class I18nInfoPageVO {
     @ApiModelProperty("高棉语")
     private String khm;
 
-    @ApiModelProperty("泰文")
-    private String th;
-
-    @ApiModelProperty("越南语")
-    private String vi;
-
-    @ApiModelProperty("马来语")
-    private String my;
+//    @ApiModelProperty("泰文")
+//    private String th;
+//
+//    @ApiModelProperty("越南语")
+//    private String vi;
+//
+//    @ApiModelProperty("马来语")
+//    private String my;
 
     @ApiModelProperty("操作人")
     private String operator;

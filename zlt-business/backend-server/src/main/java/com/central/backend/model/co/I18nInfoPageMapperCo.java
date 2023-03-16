@@ -8,22 +8,21 @@ import java.io.Serializable;
 @Data
 public class I18nInfoPageMapperCo implements Serializable {
 
-    private static final long serialVersionUID = 3258468554578L;
-
     @ApiModelProperty(value = "中文")
-    private String zhCn;
+    private String zh;
 
     @ApiModelProperty(value = "英文")
-    private String enUs;
+    private String en;
 
     @ApiModelProperty(value = "高棉语")
-    private String khm;
+    private String kh;
 
     @ApiModelProperty(value = "泰文")
     private String th;
 
     @ApiModelProperty(value = "越南语")
     private String vi;
+
     @ApiModelProperty(value = "马来语")
     private String my;
 

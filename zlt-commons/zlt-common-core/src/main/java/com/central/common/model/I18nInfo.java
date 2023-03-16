@@ -25,13 +25,13 @@ public class I18nInfo extends SuperEntity {
     private Integer fromOf;
 
     @ApiModelProperty(value = "中文-简体")
-    private String zhCn;
+    private String zh;
 
     @ApiModelProperty(value = "英语-美国")
-    private String enUs;
+    private String en;
 
     @ApiModelProperty(value = "高棉语")
-    private String khm;
+    private String kh;
 
     @ApiModelProperty(value = "泰语")
     private String th;

@@ -1,16 +1,19 @@
 package com.central.backend.controller.movie;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.central.backend.model.dto.KpnSiteMoviePayTypeDto;
 import com.central.backend.model.dto.KpnSiteMovieStatusDto;
 import com.central.backend.service.IAsyncService;
+import com.central.backend.service.IKpnMovieTagService;
 import com.central.backend.service.IKpnSiteMovieService;
+import com.central.backend.service.IKpnTagCategoryService;
 import com.central.common.annotation.LoginUser;
-import com.central.common.model.KpnSiteMovie;
-import com.central.common.model.PageResult;
-import com.central.common.model.Result;
-import com.central.common.model.SysUser;
+import com.central.common.model.*;
+import com.central.common.model.enums.KpnMovieCountryEnum;
+import com.central.common.utils.I18nUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +37,32 @@ public class KpnSiteMovieController {
     private IKpnSiteMovieService siteMovieService;
 
     @Autowired
+    private IKpnMovieTagService movieTagService;
+
+    @Autowired
+    private IKpnTagCategoryService tagCategoryService;
+
+    @Autowired
     private IAsyncService asyncService;
+
+    @ApiOperation(value = "国家下拉框")
+    @GetMapping("/getCountryOptions")
+    private Result<Map<Integer, String>> getCountryOptions() {
+        Map<Integer, String> optionMap = KpnMovieCountryEnum.getOptions(Boolean.TRUE);
+
+        return Result.succeed(MapUtil.sort(optionMap));
+    }
+
+//    @ApiOperation(value = "标签分类下拉框")
+//    @GetMapping("/getTagCategoryOptions")
+//    private Result<Map<Integer, String>> getTagCategoryOptions() {
+//        // TODO 按角色筛选
+//        List<KpnTagCategory> tagCategoryList = tagCategoryService.getOptions();
+//        Map<Long, String> collect = tagCategoryList.stream().collect(Collectors.toMap(c -> c.getId(), c -> c.getName(), (o, o2) -> o2));
+//        collect.put(-1L, I18nUtil.))
+//        return Result.succeed(MapUtil.sort(optionMap));
+//    }
+
 
     /**
      * 列表

@@ -1,24 +1,24 @@
 package com.central.backend.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.central.backend.mapper.KpnTagCategoryMapper;
 import com.central.backend.model.vo.KpnTagCategoryVO;
 import com.central.backend.service.IKpnMovieTagService;
 import com.central.backend.service.IKpnTagCategoryService;
 import com.central.common.KpnMovieTag;
 import com.central.common.model.KpnTagCategory;
+import com.central.common.model.PageResult;
 import com.central.common.model.Result;
 import com.central.common.model.SysUser;
 import com.central.common.service.impl.SuperServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.central.common.model.PageResult;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections4.MapUtils;
-import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -54,23 +54,29 @@ public class KpnTagCategoryServiceImpl extends SuperServiceImpl<KpnTagCategoryMa
     @Override
     public Result deleteKpnTagCategory(Long id){
         Map<String, Object> params = new HashMap<>();
-        params.put("tagCategoryId",id);//标签类型ID
+        params.put("tagCategoryId", id);//标签类型ID
         List<KpnMovieTag> kpnMovieTagList = iKpnMovieTagService.getKpnMovieTag(params);
-        if(null!=kpnMovieTagList && kpnMovieTagList.size()>0) {
+        if (null != kpnMovieTagList && kpnMovieTagList.size() > 0) {
             return Result.failed("当前分类有关联影片，不可删除");
         }
         this.removeById(id);
         return Result.succeed("删除成功");
     }
+
     @Override
-    public Result saveOrUpdateKpnTagCategory(KpnTagCategory kpnTagCategory, SysUser user){
-        if(null!=kpnTagCategory.getId()&&0!=kpnTagCategory.getId()){
-            kpnTagCategory.setUpdateBy(null!=user?user.getUsername():kpnTagCategory.getUpdateBy());
-        }else {
-            kpnTagCategory.setCreateBy(null!=user?user.getUsername():kpnTagCategory.getCreateBy());
-            kpnTagCategory.setUpdateBy(null!=user?user.getUsername():kpnTagCategory.getCreateBy());
+    public Result saveOrUpdateKpnTagCategory(KpnTagCategory kpnTagCategory, SysUser user) {
+        if (null != kpnTagCategory.getId() && 0 != kpnTagCategory.getId()) {
+            kpnTagCategory.setUpdateBy(null != user ? user.getUsername() : kpnTagCategory.getUpdateBy());
+        } else {
+            kpnTagCategory.setCreateBy(null != user ? user.getUsername() : kpnTagCategory.getCreateBy());
+            kpnTagCategory.setUpdateBy(null != user ? user.getUsername() : kpnTagCategory.getCreateBy());
         }
         this.saveOrUpdate(kpnTagCategory);
         return Result.succeed("保存成功");
+    }
+
+    @Override
+    public List<KpnTagCategory> getOptions() {
+        return this.lambdaQuery().select(KpnTagCategory::getId, KpnTagCategory::getName).list();
     }
 }

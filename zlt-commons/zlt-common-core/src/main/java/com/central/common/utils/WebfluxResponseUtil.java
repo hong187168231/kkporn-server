@@ -2,8 +2,8 @@ package com.central.common.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import com.central.common.constant.I18nKeys;
-import com.central.common.model.enums.CodeEnum;
 import com.central.common.model.Result;
+import com.central.common.model.enums.CodeEnum;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -30,7 +30,7 @@ public class WebfluxResponseUtil {
 
     public static Mono<Void> responseFailed(ServerWebExchange exchange, int httpStatus, String msg) {
         List<String> headerList = exchange.getRequest().getHeaders().get(I18nKeys.LANGUAGE);
-        String language = CollUtil.isEmpty(headerList) ? I18nKeys.Locale.EN_US : headerList.get(0);
+        String language = CollUtil.isEmpty(headerList) ? I18nKeys.Locale.EN : headerList.get(0);
         String originalMsg = I18nUtil.translate(language, "请求地址或参数异常",null);
         String dataMsg = I18nUtil.translate(language, msg,null);
         Result result = Result.failed(CodeEnum.ERROR_AUTH_SECURITY.getCode(), originalMsg, dataMsg);

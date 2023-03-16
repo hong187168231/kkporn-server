@@ -1,26 +1,38 @@
 package com.central.common.language;
 
 public enum LanguageEnum {
-    EN("en", "en_us", "英文"),
-    ZH("zh", "zh_cn", "中文"),
-    KH("kh", "khm", "高棉语"),
-    TH("th", "th", "泰语"),
-    VI("vi", "vi", "越南语");
+    ZH(0, "zh", "zh", "中文"),
+    EN(1, "en", "en", "英文"),
+    KH(2, "kh", "kh", "高棉语"),
+    TH(3, "th", "th", "泰语"),
+    VI(4, "vi", "vi", "越南语"),
+    MY(5, "my", "my", "马来语");
 
+    private Integer code;
     private String value;
     private String packageKey;
     private String description;
 
-    LanguageEnum(String value, String packageKey, String description) {
+    LanguageEnum(Integer code, String value, String packageKey, String description) {
+        this.code = code;
         this.value = value;
         this.packageKey = packageKey;
         this.description = description;
     }
 
+    public static LanguageEnum getByCode(Integer code) {
+        for (LanguageEnum e : LanguageEnum.values()) {
+            if (e.code.equals(code)) {
+                return e;
+            }
+        }
+        return EN;
+    }
+
     public static LanguageEnum getByValue(String value) {
-        for (LanguageEnum languageEnum : LanguageEnum.values()) {
-            if (languageEnum.value.equalsIgnoreCase(value)) {
-                return languageEnum;
+        for (LanguageEnum e : LanguageEnum.values()) {
+            if (e.value.equalsIgnoreCase(value)) {
+                return e;
             }
         }
         return EN;
@@ -33,6 +45,9 @@ public enum LanguageEnum {
         return false;
     }
 
+    public Integer getCode() {
+        return code;
+    }
 
     public String getValue() {
         return value;

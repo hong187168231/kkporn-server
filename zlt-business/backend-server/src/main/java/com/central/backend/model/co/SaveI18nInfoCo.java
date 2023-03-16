@@ -9,15 +9,15 @@ import lombok.Data;
 public class SaveI18nInfoCo {
 
     @ApiModelProperty(value = "中文")
-    private String zhCn;
+    private String zh;
 
     @ApiModelProperty(value = "英文")
 //    @NotNull(message = "英文不能为空", groups = {Save.class})
-    private String enUs;
+    private String en;
 
     @ApiModelProperty(value = "高棉语")
 //    @NotNull(message = "高棉语不能为空", groups = {Save.class})
-    private String khm;
+    private String kh;
 
     @ApiModelProperty(value = "泰文")
 //    @NotNull(message = "泰文不能为空", groups = {Save.class})
