@@ -241,7 +241,7 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
                 }else {//站点管理员
                     Set<Long> siteIds = adminUserVo.getSiteIds();
                     Iterator s = siteIds.iterator();
-                    while (it.hasNext()) {
+                    while (s.hasNext()) {
                         KpnSite kpnSite = iKpnSiteService.getById((Long)s.next());
                         //站点id
                         user.setSiteId(kpnSite.getId());
@@ -297,7 +297,7 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
                 }else {//站点管理员
                     Set<Long> siteIds = adminUserVo.getSiteIds();
                     Iterator s = siteIds.iterator();
-                    while (it.hasNext()) {
+                    while (s.hasNext()) {
                         KpnSite kpnSite = iKpnSiteService.getById((Long)s.next());
                         //站点id
                         userInfo.setSiteId(kpnSite.getId());
