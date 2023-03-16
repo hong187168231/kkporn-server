@@ -31,6 +31,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author 作者 owen E-mail: 624191343@qq.com
@@ -48,6 +50,7 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
     private ISysRoleUserService roleUserService;
     @Resource
     private IKpnSiteService iKpnSiteService;
+    private String passRegex = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$";
     @Override
     public PageResult<SysUser> findList(Map<String, Object> params, SysUser user){
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>();
@@ -116,6 +119,13 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
     @Transactional
     @Override
     public Result updatePassword(Long id, String oldPassword, String newPassword) {
+        //1.创建匹配模式
+        Pattern pattern = Pattern.compile(passRegex);//6-16位字母和数字组合
+        //2.选择匹配对象
+        Matcher usermatcher = pattern.matcher(newPassword);
+        if(!usermatcher.matches()){
+            return Result.failed("密码必须是6-16位字母和数字组合");
+        }
         SysUser sysUser = baseMapper.selectById(id);
         if (StrUtil.isNotBlank(oldPassword)) {
             if (!passwordEncoder.matches(oldPassword, sysUser.getPassword())) {
@@ -179,6 +189,13 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
         boolean insert =false;
         //新增
         if (adminUserVo.getId() == null || adminUserVo.getId()==0) {
+            //1.创建匹配模式
+            Pattern pattern = Pattern.compile(passRegex);//6-16位字母和数字组合
+            //2.选择匹配对象
+            Matcher usermatcher = pattern.matcher(user.getUsername());
+            if(!usermatcher.matches()){
+                return Result.failed("用户账号必须是6-16位字母和数字组合");
+            }
             LambdaQueryWrapper<SysUser> wrapper=new LambdaQueryWrapper<>();
             if (StringUtils.isNotBlank(user.getUsername())){
                 wrapper.eq(SysUser::getUsername, user.getUsername());
@@ -192,6 +209,11 @@ public class SysAdminUserServiceImpl extends SuperServiceImpl<SysUserMapper, Sys
             if (StringUtils.isBlank(user.getPassword())) {
                 user.setPassword(passwordEncoder.encode(CommonConstant.DEF_USER_PASSWORD));
             } else {
+                //2.选择匹配对象
+                Matcher matcher = pattern.matcher(user.getPassword());
+                if(!matcher.matches()){
+                    return Result.failed("密码必须是6-16位字母和数字组合");
+                }
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
             Set<Long> roleIds = adminUserVo.getRoleIds();
