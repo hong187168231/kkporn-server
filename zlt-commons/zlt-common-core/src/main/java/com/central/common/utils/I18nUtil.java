@@ -2,7 +2,9 @@ package com.central.common.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.I18nKeys;
+import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
+import com.central.common.language.LanguageEnum;
 import com.central.common.language.LanguageThreadLocal;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -34,15 +36,14 @@ public class I18nUtil implements ApplicationContextAware {
     /**
      * 翻译
      *
-     * @param language 语言
-     * @param key 待翻译文本
+     * @param languageValue 语言简写
+     * @param key           待翻译文本
      * @return {@link String} 出参释义
      * @author lance
      * @since 2022 -01-25 18:18:28
      */
-    public static String translate(String language, String key,String requestSource) {
-
-        if (I18nKeys.Locale.ZH.equalsIgnoreCase(language)) {
+    public static String translate(String languageValue, String key, String requestSource) {
+        if (LanguageEnum.ZH.getValue().equalsIgnoreCase(languageValue)) {
             return key;
         }
         if (null == redisTemplate) {
@@ -51,7 +52,7 @@ public class I18nUtil implements ApplicationContextAware {
         if (StrUtil.isBlank(key)) {
             return key;
         }
-        String value = redisTemplate.<String, String>opsForHash().get(keyOf(language,requestSource), key);
+        String value = redisTemplate.<String, String>opsForHash().get(keyOf(languageValue, requestSource), key);
         if (StringUtils.isBlank(value)) {
             return key;
         }
@@ -95,36 +96,36 @@ public class I18nUtil implements ApplicationContextAware {
     }
 
     // 找到对应语言的redis key
-    private static String keyOf(String language, String requestSource) {
-        if (StrUtil.isBlank(language)) {
+    private static String keyOf(String languageValue, String requestSource) {
+        if (StrUtil.isBlank(languageValue)) {
             return I18nKeys.Redis.BackendMessage.EN_KEY;
         }
         if (I18nKeys.FRONT.equals(requestSource)) {
-            switch (language.toLowerCase()) {
-                case I18nKeys.Locale.ZH:
+            switch (LanguageEnum.getByValue(languageValue)) {
+                case ZH:
                     return I18nKeys.Redis.FrontMessage.ZH_KEY;
-                case I18nKeys.Locale.KH:
+                case KH:
                     return I18nKeys.Redis.FrontMessage.KH_KEY;
-                case I18nKeys.Locale.TH:
+                case TH:
                     return I18nKeys.Redis.FrontMessage.TH_KEY;
-                case I18nKeys.Locale.VI:
+                case VI:
                     return I18nKeys.Redis.FrontMessage.VI_KEY;
-                case I18nKeys.Locale.MY:
-                    return I18nKeys.Redis.FrontMessage.TH_KEY;
+                case MY:
+                    return I18nKeys.Redis.FrontMessage.MY_KEY;
                 default:
                     return I18nKeys.Redis.FrontMessage.EN_KEY;
             }
         } else {
-            switch (language.toLowerCase()) {
-                case I18nKeys.Locale.ZH:
+            switch (LanguageEnum.getByValue(languageValue)) {
+                case ZH:
                     return I18nKeys.Redis.BackendMessage.ZH_KEY;
-                case I18nKeys.Locale.KH:
+                case KH:
                     return I18nKeys.Redis.BackendMessage.KH_KEY;
-                case I18nKeys.Locale.TH:
+                case TH:
                     return I18nKeys.Redis.BackendMessage.TH_KEY;
-                case I18nKeys.Locale.VI:
+                case VI:
                     return I18nKeys.Redis.BackendMessage.VI_KEY;
-                case I18nKeys.Locale.MY:
+                case MY:
                     return I18nKeys.Redis.BackendMessage.MY_KEY;
                 default:
                     return I18nKeys.Redis.BackendMessage.EN_KEY;
@@ -213,9 +214,10 @@ public class I18nUtil implements ApplicationContextAware {
         if (Objects.isNull(request)) {
             return key;
         }
-        String language = request.getHeader(I18nKeys.LANGUAGE);
+//        String language = request.getHeader(I18nKeys.LANGUAGE);
+        String language = request.getHeader(PornConstants.Str.LANGUAGE);
 
-        if (StrUtil.isBlank(language) || I18nKeys.Locale.ZH.equalsIgnoreCase(language) || Objects.isNull(redisTemplate) || StrUtil.isBlank(key)) {
+        if (StrUtil.isBlank(language) || LanguageEnum.ZH.getValue().equalsIgnoreCase(language) || Objects.isNull(redisTemplate) || StrUtil.isBlank(key)) {
             return key;
         }
         String value = redisTemplate.<String, String>opsForHash().get(getRedisKey(language), key);
@@ -226,19 +228,20 @@ public class I18nUtil implements ApplicationContextAware {
     }
 
     // 找到对应语言的redis key
-    private static String getRedisKey(String language) {
-        switch (language.toLowerCase()) {
-            case I18nKeys.Locale.ZH:
+    private static String getRedisKey(String languageValue) {
+        LanguageEnum languageEnum = LanguageEnum.getByValue(languageValue);
+        switch (languageEnum) {
+            case ZH:
                 return I18nKeys.Redis.Backend.ZH_KEY;
-            case I18nKeys.Locale.EN:
+            case EN:
                 return I18nKeys.Redis.Backend.EN_KEY;
-            case I18nKeys.Locale.KH:
+            case KH:
                 return I18nKeys.Redis.Backend.KH_KEY;
-            case I18nKeys.Locale.TH:
+            case TH:
                 return I18nKeys.Redis.Backend.TH_KEY;
-            case I18nKeys.Locale.VI:
+            case VI:
                 return I18nKeys.Redis.Backend.VI_KEY;
-            case I18nKeys.Locale.MY:
+            case MY:
                 return I18nKeys.Redis.Backend.MY_KEY;
         }
         return I18nKeys.Redis.Backend.EN_KEY;

@@ -65,6 +65,7 @@ public class LanguageUtil {
         else if (language.equalsIgnoreCase(LanguageEnum.KH.name().toLowerCase())) {
             name = languageNameVo.getNameKh();
         }
+
         if(StrUtil.isBlank(name)){
             name = languageNameVo.getNameZh();
         }

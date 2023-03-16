@@ -35,7 +35,7 @@ public class FeignHttpInterceptorConfig {
 //        requestHeaders.add(SecurityConstants.USER_PARENT_HEADER);
         requestHeaders.add(SecurityConstants.ROLE_HEADER);
         requestHeaders.add(CommonConstant.Z_L_T_VERSION);
-        requestHeaders.add(I18nKeys.LANGUAGE);
+        requestHeaders.add(PornConstants.Str.LANGUAGE);
         requestHeaders.add(PornConstants.Str.LOGIN_IP);
     }
 

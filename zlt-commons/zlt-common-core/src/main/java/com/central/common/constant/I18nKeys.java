@@ -1,5 +1,7 @@
 package com.central.common.constant;
 
+import com.central.common.language.LanguageFromEnum;
+
 /**
  * 国际化Keys
  *
@@ -8,10 +10,10 @@ package com.central.common.constant;
  */
 public interface I18nKeys {
 
-    /**
-     * header 选择语言
-     */
-    String LANGUAGE = "language";
+//    /**
+//     * header 选择语言
+//     */
+//    String LANGUAGE = "language";
 
     /**
      * header 请求来源
@@ -23,84 +25,31 @@ public interface I18nKeys {
      */
     String FRONT = "front";
 
-    /**
-     * 前台PC
-     */
-    Integer FRONT_PC = 0;
-
-    /**
-     * 后台
-     */
-    Integer BACKEND = 1;
-
-    /**
-     * 前台PC
-     */
-    Integer FRONT_APP = 2;
-
-
-    /**
-     * 前台MESSAGE
-     */
-    Integer FRONT_MESSAGE = 3;
-
-    /**
-     * 后台MESSAGE
-     */
-    Integer BACKEND_MESSAGE = 4;
-    /**
-     * 语种
-     */
-    interface Locale {
-        /**
-         * 简体中文
-         */
-        String ZH = "zh";
-
-        /**
-         * 英文
-         */
-        String EN = "en";
-
-        /**
-         * 高棉语
-         */
-        String KH = "kh";
-
-        /**
-         * 泰语
-         */
-        String TH = "th";
-
-        /**
-         * 越南语
-         */
-        String VI = "vi";
-        /**
-         * 马来语
-         */
-        String MY = "my";
-    }
-
-//     //语种代码
-//    interface LocaleCode {
-//        int ZH = 0;
-//        int EN = 1;
-//        int KH = 2;
-//        int TH = 3;
-//        int VI = 4;
-//        int MY = 5;
-//    }
-
-//    // 语种代码
-//    interface LocaleCodeEn {
-//        String ZH = "zh";
-//        String EN = "en";
-//        String KM = "km";
-//        String TH = "th";
-//        String VI = "vi";
-//        String MY = "my";
-//    }
+//    /**
+//     * 前台PC
+//     */
+//    Integer FRONT_PC = 0;
+//
+//    /**
+//     * 后台
+//     */
+//    Integer BACKEND = 1;
+//
+//    /**
+//     * H5/APP
+//     */
+//    Integer FRONT_APP = 2;
+//
+//
+//    /**
+//     * 前台MESSAGE
+//     */
+//    Integer FRONT_MESSAGE = 3;
+//
+//    /**
+//     * 后台MESSAGE
+//     */
+//    Integer BACKEND_MESSAGE = 4;
 
     interface Redis {
         // 前台PC
@@ -108,30 +57,30 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.FRONT_PC;
+            String ZH_KEY = "i18n:source:zh:hash:" + LanguageFromEnum.FRONT_PC.getCode();
             /**
              * 英文国际化 key
              */
-            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.FRONT_PC;
+            String EN_KEY = "i18n:source:en:hash:" + LanguageFromEnum.FRONT_PC.getCode();
 
             /**
              * 高棉语国际化 key
              */
-            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.FRONT_PC;
+            String KH_KEY = "i18n:source:kh:hash:" + LanguageFromEnum.FRONT_PC.getCode();
 
             /**
              * 泰语国际化 key
              */
-            String TH_KEY = "i18n:source:th:hash:" + I18nKeys.FRONT_PC;
+            String TH_KEY = "i18n:source:th:hash:" + LanguageFromEnum.FRONT_PC.getCode();
 
             /**
              * 越南语国际化 key
              */
-            String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.FRONT_PC;
+            String VI_KEY = "i18n:source:vi:hash:" + LanguageFromEnum.FRONT_PC.getCode();
             /**
              * 马来语国际化 key
              */
-            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.FRONT_PC;
+            String MY_KEY = "i18n:source:my:hash:" + LanguageFromEnum.FRONT_PC.getCode();
         }
 
         // 前台移动端
@@ -139,30 +88,30 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.FRONT_APP;
+            String ZH_KEY = "i18n:source:zh:hash:" + LanguageFromEnum.FRONT_APP.getCode();
             /**
              * 英文国际化 key
              */
-            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.FRONT_APP;
+            String EN_KEY = "i18n:source:en:hash:" + LanguageFromEnum.FRONT_APP.getCode();
 
             /**
              * 高棉语国际化 key
              */
-            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.FRONT_APP;
+            String KH_KEY = "i18n:source:kh:hash:" + LanguageFromEnum.FRONT_APP.getCode();
 
             /**
              * 泰语国际化 key
              */
-            String TH_KEY = "i18n:source:th:hash:" + I18nKeys.FRONT_APP;
+            String TH_KEY = "i18n:source:th:hash:" + LanguageFromEnum.FRONT_APP.getCode();
 
             /**
              * 越南语国际化 key
              */
-            String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.FRONT_APP;
+            String VI_KEY = "i18n:source:vi:hash:" + LanguageFromEnum.FRONT_APP.getCode();
             /**
              * 马来语国际化 key
              */
-            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.FRONT_APP;
+            String MY_KEY = "i18n:source:my:hash:" + LanguageFromEnum.FRONT_APP.getCode();
         }
 
         // 前台message
@@ -170,31 +119,30 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.FRONT_MESSAGE;
+            String ZH_KEY = "i18n:source:zh:hash:" + LanguageFromEnum.FRONT_MESSAGE.getCode();
             /**
              * 英文国际化 key
              */
-            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.FRONT_MESSAGE;
+            String EN_KEY = "i18n:source:en:hash:" + LanguageFromEnum.FRONT_MESSAGE.getCode();
 
             /**
              * 高棉语国际化 key
              */
-            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.FRONT_MESSAGE;
+            String KH_KEY = "i18n:source:kh:hash:" + LanguageFromEnum.FRONT_MESSAGE.getCode();
 
             /**
              * 泰语国际化 key
              */
-            String TH_KEY = "i18n:source:th:hash:" + I18nKeys.FRONT_MESSAGE;
-
+            String TH_KEY = "i18n:source:th:hash:" + LanguageFromEnum.FRONT_MESSAGE.getCode();
 
             /**
              * 越南语国际化 key
              */
-            String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.FRONT_MESSAGE;
+            String VI_KEY = "i18n:source:vi:hash:" + LanguageFromEnum.FRONT_MESSAGE.getCode();
             /**
              * 马来语国际化 key
              */
-            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.FRONT_MESSAGE;
+            String MY_KEY = "i18n:source:my:hash:" + LanguageFromEnum.FRONT_MESSAGE.getCode();
         }
 
         // 后台
@@ -202,30 +150,30 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.BACKEND;
+            String ZH_KEY = "i18n:source:zh:hash:" + LanguageFromEnum.BACKEND.getCode();
             /**
              * 英文国际化 key
              */
-            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.BACKEND;
+            String EN_KEY = "i18n:source:en:hash:" + LanguageFromEnum.BACKEND.getCode();
 
             /**
              * 高棉语国际化 key
              */
-            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.BACKEND;
+            String KH_KEY = "i18n:source:kh:hash:" + LanguageFromEnum.BACKEND.getCode();
 
             /**
              * 泰语国际化 key
              */
-            String TH_KEY = "i18n:source:th:hash:" + I18nKeys.BACKEND;
+            String TH_KEY = "i18n:source:th:hash:" + LanguageFromEnum.BACKEND.getCode();
 
             /**
              * 越南语国际化 key
              */
-            String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.BACKEND;
+            String VI_KEY = "i18n:source:vi:hash:" + LanguageFromEnum.BACKEND.getCode();
             /**
              * 马来语国际化 key
              */
-            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.BACKEND;
+            String MY_KEY = "i18n:source:my:hash:" + LanguageFromEnum.BACKEND.getCode();
         }
 
         // 后台Message
@@ -233,30 +181,30 @@ public interface I18nKeys {
             /**
              * 中文国际化 key
              */
-            String ZH_KEY = "i18n:source:zh:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String ZH_KEY = "i18n:source:zh:hash:" + LanguageFromEnum.BACKEND_MESSAGE.getCode();
             /**
              * 英文国际化 key
              */
-            String EN_KEY = "i18n:source:en:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String EN_KEY = "i18n:source:en:hash:" + LanguageFromEnum.BACKEND_MESSAGE.getCode();
 
             /**
              * 高棉语国际化 key
              */
-            String KH_KEY = "i18n:source:kh:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String KH_KEY = "i18n:source:kh:hash:" + LanguageFromEnum.BACKEND_MESSAGE.getCode();
 
             /**
              * 泰语国际化 key
              */
-            String TH_KEY = "i18n:source:th:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String TH_KEY = "i18n:source:th:hash:" + LanguageFromEnum.BACKEND_MESSAGE.getCode();
 
             /**
              * 越南语国际化 key
              */
-            String VI_KEY = "i18n:source:vi:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String VI_KEY = "i18n:source:vi:hash:" + LanguageFromEnum.BACKEND_MESSAGE.getCode();
             /**
              * 马来语国际化 key
              */
-            String MY_KEY = "i18n:source:my:hash:" + I18nKeys.BACKEND_MESSAGE;
+            String MY_KEY = "i18n:source:my:hash:" + LanguageFromEnum.BACKEND_MESSAGE.getCode();
         }
     }
 

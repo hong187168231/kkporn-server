@@ -15,6 +15,7 @@ import com.central.backend.service.II18nInfosService;
 import com.central.common.constant.I18nKeys;
 import com.central.common.dto.I18nSourceDTO;
 import com.central.common.language.LanguageEnum;
+import com.central.common.language.LanguageFromEnum;
 import com.central.common.model.I18nInfo;
 import com.central.common.model.PageResult;
 import com.central.common.redis.template.RedisRepository;
@@ -70,9 +71,10 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
 
     @Override
     public I18nSourceDTO getFrontFullI18nSource(Integer fromOf) {
-        if (fromOf == I18nKeys.FRONT_APP) {
-            return I18nUtil. getFrontAppFullSource();
-        } else if (fromOf == I18nKeys.FRONT_MESSAGE) {
+//        if (fromOf == I18nKeys.FRONT_APP) {
+        if (Objects.equals(fromOf, LanguageFromEnum.FRONT_APP.getCode())) {
+            return I18nUtil.getFrontAppFullSource();
+        } else if (Objects.equals(fromOf, LanguageFromEnum.FRONT_MESSAGE.getCode())) {
             return I18nUtil.getFrontMessageFullSource();
         } else {
             return I18nUtil.getFrontFullSource();
@@ -91,7 +93,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         RedisRepository.getRedisTemplate()
                 .executePipelined((RedisCallback<?>)c -> {
             for (I18nInfo f : infos) {
-                if (I18nKeys.BACKEND.equals(f.getFromOf())) {
+                if (LanguageFromEnum.BACKEND.getCode().equals(f.getFromOf())) {
                     // 中文国际化
                     c.hSet(I18nKeys.Redis.Backend.ZH_KEY.getBytes(StandardCharsets.UTF_8),
                             f.getZh().getBytes(StandardCharsets.UTF_8), f.getZh().getBytes(StandardCharsets.UTF_8));
@@ -123,7 +125,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                         c.hSet(I18nKeys.Redis.Backend.MY_KEY.getBytes(StandardCharsets.UTF_8),
                                 f.getZh().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
                     }
-                } else if (I18nKeys.FRONT_PC.equals(f.getFromOf())) {
+                } else if (LanguageFromEnum.FRONT_PC.getCode().equals(f.getFromOf())) {
 
                     // 中文国际化
                     c.hSet(I18nKeys.Redis.FrontPc.ZH_KEY.getBytes(StandardCharsets.UTF_8),
@@ -156,7 +158,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                         c.hSet(I18nKeys.Redis.FrontPc.MY_KEY.getBytes(StandardCharsets.UTF_8),
                                 f.getZh().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
                     }
-                } else if (I18nKeys.FRONT_APP.equals(f.getFromOf())) {
+                } else if (LanguageFromEnum.FRONT_APP.getCode().equals(f.getFromOf())) {
 
                     // 中文国际化
                     c.hSet(I18nKeys.Redis.FrontApp.ZH_KEY.getBytes(StandardCharsets.UTF_8),
@@ -190,7 +192,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                         c.hSet(I18nKeys.Redis.FrontApp.MY_KEY.getBytes(StandardCharsets.UTF_8),
                                 f.getZh().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
                     }
-                } else if (I18nKeys.FRONT_MESSAGE.equals(f.getFromOf())) {
+                } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(f.getFromOf())) {
 
                     // 中文国际化
                     c.hSet(I18nKeys.Redis.FrontMessage.ZH_KEY.getBytes(StandardCharsets.UTF_8),
@@ -224,7 +226,7 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
                         c.hSet(I18nKeys.Redis.FrontMessage.MY_KEY.getBytes(StandardCharsets.UTF_8),
                                 f.getZh().getBytes(StandardCharsets.UTF_8), f.getMy().getBytes(StandardCharsets.UTF_8));
                     }
-                }else if (I18nKeys.BACKEND_MESSAGE.equals(f.getFromOf())) {
+                } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(f.getFromOf())) {
 
                     // 中文国际化
                     c.hSet(I18nKeys.Redis.BackendMessage.ZH_KEY.getBytes(StandardCharsets.UTF_8),
@@ -267,8 +269,8 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
 
     @Override
     public boolean updateI18nInfo(Integer from, UpdateI18nInfoCo param) {
-        boolean zhcnChange = Objects.nonNull(param.getZh());
-        boolean enusChange = Objects.nonNull(param.getEn());
+        boolean zhChange = Objects.nonNull(param.getZh());
+        boolean enChange = Objects.nonNull(param.getEn());
         boolean khmChange = Objects.nonNull(param.getKh());
         boolean thChange = Objects.nonNull(param.getTh());
         boolean viChange = Objects.nonNull(param.getVi());
@@ -287,8 +289,11 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
         LambdaUpdateWrapper<I18nInfo> update =
                 Wrappers.lambdaUpdate(I18nInfo.class).eq(I18nInfo::getId, param.getId()).eq(I18nInfo::getFromOf, from)
-                        .set(zhcnChange, I18nInfo::getZh, param.getZh()).set(enusChange, I18nInfo::getEn, param.getEn())
-                        .set(khmChange, I18nInfo::getKh, param.getKh()).set(thChange, I18nInfo::getTh, param.getTh()).set(viChange, I18nInfo::getVi, param.getVi())
+                        .set(zhChange, I18nInfo::getZh, param.getZh())
+                        .set(enChange, I18nInfo::getEn, param.getEn())
+                        .set(khmChange, I18nInfo::getKh, param.getKh())
+                        .set(thChange, I18nInfo::getTh, param.getTh())
+                        .set(viChange, I18nInfo::getVi, param.getVi())
                         .set(myChange, I18nInfo::getMy, param.getMy())
                         .set(StrUtil.isNotBlank(param.getOperator()), I18nInfo::getOperator, param.getOperator())
                         .set(I18nInfo::getUpdateBy, param.getOperator())
@@ -353,13 +358,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         String redisKey = "";
         // 更新中文key
         i18nKey = param.getZh();
-        if (I18nKeys.FRONT_PC.equals(from)) {
+        if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontPc.ZH_KEY;
-        } else if (I18nKeys.FRONT_APP.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontApp.ZH_KEY;
-        } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontMessage.ZH_KEY;
-        } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.BackendMessage.ZH_KEY;
         } else {
             redisKey = I18nKeys.Redis.Backend.ZH_KEY;
@@ -375,13 +380,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
 
         // 更新英文国际化
-        if (I18nKeys.FRONT_PC.equals(from)) {
+        if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontPc.EN_KEY;
-        } else if (I18nKeys.FRONT_APP.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontApp.EN_KEY;
-        } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontMessage.EN_KEY;
-        } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.BackendMessage.EN_KEY;
         } else {
             redisKey = I18nKeys.Redis.Backend.EN_KEY;
@@ -396,13 +401,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
 
         // 更新高棉语国际化
-        if (I18nKeys.FRONT_PC.equals(from)) {
+        if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontPc.KH_KEY;
-        } else if (I18nKeys.FRONT_APP.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontApp.KH_KEY;
-        } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontMessage.KH_KEY;
-        } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.BackendMessage.KH_KEY;
         } else {
             redisKey = I18nKeys.Redis.Backend.KH_KEY;
@@ -417,13 +422,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
 
         // 更新泰语国际化
-        if (I18nKeys.FRONT_PC.equals(from)) {
+        if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontPc.TH_KEY;
-        } else if (I18nKeys.FRONT_APP.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontApp.TH_KEY;
-        } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontMessage.TH_KEY;
-        } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.BackendMessage.TH_KEY;
         } else {
             redisKey = I18nKeys.Redis.Backend.TH_KEY;
@@ -438,13 +443,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
 
         // 更新越南语国际化
-        if (I18nKeys.FRONT_PC.equals(from)) {
+        if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontPc.VI_KEY;
-        } else if (I18nKeys.FRONT_APP.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontApp.VI_KEY;
-        } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontMessage.VI_KEY;
-        } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.BackendMessage.VI_KEY;
         } else {
             redisKey = I18nKeys.Redis.Backend.VI_KEY;
@@ -458,13 +463,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
             I18nUtil.deleteByKey(redisKey, oldKey);
         }
         // 更新马来语国际化
-        if (I18nKeys.FRONT_PC.equals(from)) {
+        if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontPc.MY_KEY;
-        } else if (I18nKeys.FRONT_APP.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontApp.MY_KEY;
-        } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.FrontMessage.MY_KEY;
-        } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+        } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
             redisKey = I18nKeys.Redis.BackendMessage.MY_KEY;
         } else {
             redisKey = I18nKeys.Redis.Backend.MY_KEY;
@@ -494,13 +499,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         if (zhcnChange) {
             // 更新中文key
             i18nKey = info.getZh();
-            if (I18nKeys.FRONT_PC.equals(from)) {
+            if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontPc.ZH_KEY;
-            } else if (I18nKeys.FRONT_APP.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontApp.ZH_KEY;
-            } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontMessage.ZH_KEY;
-            } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.BackendMessage.ZH_KEY;
             } else {
                 redisKey = I18nKeys.Redis.Backend.ZH_KEY;
@@ -509,13 +514,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
         if (enusChange) {
             // 更新英文国际化
-            if (I18nKeys.FRONT_PC.equals(from)) {
+            if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontPc.EN_KEY;
-            } else if (I18nKeys.FRONT_APP.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontApp.EN_KEY;
-            } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontMessage.EN_KEY;
-            } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.BackendMessage.EN_KEY;
             } else {
                 redisKey = I18nKeys.Redis.Backend.EN_KEY;
@@ -524,13 +529,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
         if (khmChange) {
             // 更新高棉语国际化
-            if (I18nKeys.FRONT_PC.equals(from)) {
+            if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontPc.KH_KEY;
-            } else if (I18nKeys.FRONT_APP.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontApp.KH_KEY;
-            } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontMessage.KH_KEY;
-            } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.BackendMessage.KH_KEY;
             } else {
                 redisKey = I18nKeys.Redis.Backend.KH_KEY;
@@ -539,13 +544,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
         if (thChange) {
             // 更新泰语国际化
-            if (I18nKeys.FRONT_PC.equals(from)) {
+            if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontPc.TH_KEY;
-            } else if (I18nKeys.FRONT_APP.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontApp.TH_KEY;
-            } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontMessage.TH_KEY;
-            } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.BackendMessage.TH_KEY;
             } else {
                 redisKey = I18nKeys.Redis.Backend.TH_KEY;
@@ -554,13 +559,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
         if (viChange) {
             // 更新越南语国际化
-            if (I18nKeys.FRONT_PC.equals(from)) {
+            if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontPc.VI_KEY;
-            } else if (I18nKeys.FRONT_APP.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontApp.VI_KEY;
-            } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontMessage.VI_KEY;
-            } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.BackendMessage.VI_KEY;
             } else {
                 redisKey = I18nKeys.Redis.Backend.VI_KEY;
@@ -569,13 +574,13 @@ public class I18nInfosServiceImpl extends SuperServiceImpl<I18nInfoMapper, I18nI
         }
         if (myChange) {
             // 更新越南语国际化
-            if (I18nKeys.FRONT_PC.equals(from)) {
+            if (LanguageFromEnum.FRONT_PC.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontPc.MY_KEY;
-            } else if (I18nKeys.FRONT_APP.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_APP.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontApp.MY_KEY;
-            } else if (I18nKeys.FRONT_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.FRONT_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.FrontMessage.MY_KEY;
-            } else if (I18nKeys.BACKEND_MESSAGE.equals(from)) {
+            } else if (LanguageFromEnum.BACKEND_MESSAGE.getCode().equals(from)) {
                 redisKey = I18nKeys.Redis.BackendMessage.MY_KEY;
             } else {
                 redisKey = I18nKeys.Redis.Backend.MY_KEY;
