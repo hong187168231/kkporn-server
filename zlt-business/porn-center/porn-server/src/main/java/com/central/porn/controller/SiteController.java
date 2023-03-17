@@ -105,6 +105,9 @@ public class SiteController {
     @Autowired
     private IKpnSitePlatformService sitePlatformService;
 
+    @Autowired
+    private IKpnSiteServeService siteServeService;
+
     public static final String AUTHENTICATION_MODE = "password_code";
 
     /**
@@ -665,7 +668,7 @@ public class SiteController {
      * 语言包-H5
      */
     @ApiOperation(value = "语言包-H5")
-    @PostMapping("/h5FullSource")
+    @GetMapping("/h5FullSource")
     public Result<FullSourceVo> h5FullSource() {
         try {
             FullSourceVo fullSourceVo = new FullSourceVo();
@@ -683,7 +686,7 @@ public class SiteController {
      * 语言包-PC
      */
     @ApiOperation(value = "语言包-pc")
-    @PostMapping("/pcFullSource")
+    @GetMapping("/pcFullSource")
     public Result<FullSourceVo> pcFullSource() {
         try {
             FullSourceVo fullSourceVo = new FullSourceVo();
@@ -696,4 +699,31 @@ public class SiteController {
             return Result.failed("failed");
         }
     }
+
+    /**
+     * 获取站点客服信息
+     */
+    @ApiOperation(value = "站点客服信息")
+    @GetMapping("/getSiteServes")
+    public Result<List<KpnSiteServeVo>> getSiteServes(@RequestHeader(value = "sid") Long sid) {
+        try {
+            List<KpnSiteServe> siteServes = siteServeService.getBySid(sid);
+
+            List<KpnSiteServeVo> siteServeVos = siteServes.stream().map(kpnSiteServe -> {
+                KpnSiteServeVo siteServeVo = new KpnSiteServeVo();
+                siteServeVo.setPlatform(kpnSiteServe.getPlatform());
+                siteServeVo.setServeAccount(kpnSiteServe.getServeAccount());
+                siteServeVo.setPcIconUrl(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnSiteServe.getPcIconUrl());
+                siteServeVo.setPcIconUrl(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnSiteServe.getAppIconUrl());
+                return siteServeVo;
+            }).collect(Collectors.toList());
+
+            return Result.succeed(siteServeVos, "succeed");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.failed("failed");
+        }
+    }
+
+
 }
