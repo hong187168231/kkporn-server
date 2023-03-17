@@ -13,7 +13,10 @@ import com.central.common.utils.I18nUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.dto.MovieSearchConditionDto;
 import com.central.porn.entity.vo.*;
-import com.central.porn.enums.*;
+import com.central.porn.enums.KpnActorSortTypeEnum;
+import com.central.porn.enums.KpnMovieSortTypeEnum;
+import com.central.porn.enums.KpnSiteMovieSearchFromEnum;
+import com.central.porn.enums.KpnStableChannelEnum;
 import com.central.porn.service.*;
 import com.central.user.feign.UaaService;
 import com.central.user.feign.UserService;
@@ -136,7 +139,7 @@ public class SiteController {
             KpnSiteVo kpnSiteVo = new KpnSiteVo();
             kpnSiteVo.setSid(site.getId());
             kpnSiteVo.setCurrencyCode(site.getCurrencyCode());
-            kpnSiteVo.setLogoUrl(site.getLogoUrl());
+            kpnSiteVo.setLogoUrl(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + site.getLogoUrl());
 //            kpnSiteVo.setChannels(channelVos);
 //            kpnSiteVo.setTopics(topicVos);
 
