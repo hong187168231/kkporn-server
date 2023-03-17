@@ -1,6 +1,7 @@
 package com.central.backend.controller;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.central.backend.co.GaBindCo;
 import com.central.backend.model.dto.SysAdminUserDto;
 import com.central.backend.model.dto.SysAdminUserEnabledDto;
 import com.central.backend.model.dto.SysAdminUserPasswordDto;
@@ -172,5 +173,50 @@ public class SysAdminUserController {
         }
         return iAdminUserService.saveOrUpdateAdminInfo(adminUserVo,sysUser);
     }
+    /**
+     * 谷歌验证码是否校验状态修改
+     */
+    @ApiOperation(value = "谷歌验证码是否校验状态修改")
+    @PutMapping(value = "/users/{id}/updateVerify")
+    public Result updateVerify(@PathVariable Long id) {
+        if (checkAdmin(id)) {
+            return Result.failed(ADMIN_CHANGE_MSG);
+        }
+//        cacheEvictUser(id);
+        return iAdminUserService.updateVerify(id);
+    }
 
+    /**
+     * 重置谷歌验证码
+     */
+    @ApiOperation(value = "重置谷歌验证码")
+    @PutMapping(value = "/users/{id}/resetGoogleCode")
+    public Result resetGoogleCode(@PathVariable Long id) {
+        GaBindCo param = new GaBindCo();
+        param.setId(id);
+        param.setGaBind(2);
+
+//        cacheEvictUser(param.getId());
+
+        Result result = iAdminUserService.updateGaBind(param);
+        if (result != null && result.getResp_code() == 0) {
+            return Result.succeed();
+        }
+        return Result.failed("重置失败");
+    }
+    /**
+     * 删除用户
+     *
+     * @param id
+     */
+    @DeleteMapping(value = "/users/delete/{id}")
+    @ApiOperation(value = "删除用户")
+    public Result delete(@PathVariable Long id) {
+        if (checkAdmin(id)) {
+            return Result.failed(ADMIN_CHANGE_MSG);
+        }
+//        cacheEvictUser(id);
+        iAdminUserService.delUser(id);
+        return Result.succeed("删除成功");
+    }
 }

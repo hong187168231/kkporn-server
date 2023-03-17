@@ -1,5 +1,6 @@
 package com.central.backend.service;
 
+import com.central.backend.co.GaBindCo;
 import com.central.backend.model.dto.SysAdminUserDto;
 import com.central.backend.model.dto.SysAdminUserEnabledDto;
 import com.central.common.model.*;
@@ -22,4 +23,7 @@ public interface IAdminUserService extends ISuperService<SysUser> {
 	String resetUpdatePassword(Long id);
 	Result updatePassword(Long id, String oldPassword, String newPassword);
 	Result updateEnabled(SysAdminUserEnabledDto enabledDto);
+	Result updateVerify(Long id);
+	Result updateGaBind(GaBindCo params);
+	boolean delUser(Long id);
 }
