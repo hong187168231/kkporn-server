@@ -21,13 +21,13 @@ import java.util.Date;
 public class KpnSiteServe extends SuperEntity {
     private static final long serialVersionUID=1L;
     @ApiModelProperty(value = "站点id")
-    private Integer siteId;
+    private Long siteId;
     @ApiModelProperty(value = "站点编码")
     private String siteCode;
     @ApiModelProperty(value = "站点名称")
     private String siteName;
     @ApiModelProperty(value = "平台(Skype,QQ,Wechat,Telegram,WhatsApp,手机号)")
-    private String plateform;
+    private String platform;
     @ApiModelProperty(value = "平台客服账号")
     private String serveAccount;
     @ApiModelProperty(value = "状态 0关闭,1启用")

@@ -56,7 +56,7 @@ public class KpnSiteServeServiceImpl extends SuperServiceImpl<KpnSiteServeMapper
             if (null!=user){
                 wrapper.eq(KpnSiteServe::getSiteId,user.getSiteId());
             }
-            wrapper.eq(KpnSiteServe::getPlateform,kpnSiteServe.getPlateform());
+            wrapper.eq(KpnSiteServe::getPlatform,kpnSiteServe.getPlatform());
             wrapper.eq(KpnSiteServe::getServeAccount,kpnSiteServe.getServeAccount());
             List<KpnSiteServe> list  =  baseMapper.selectList(wrapper);
             if(null!=list&&list.size()>0){

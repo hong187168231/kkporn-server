@@ -83,7 +83,7 @@ public class KpnSiteServeController {
         if (ObjectUtil.isEmpty(kpnSiteServe)) {
             return Result.failed("请求参数不能为空");
         }
-        if (ObjectUtil.isEmpty(kpnSiteServe.getPlateform())) {
+        if (ObjectUtil.isEmpty(kpnSiteServe.getPlatform())) {
             return Result.failed("平台不能为空");
         }
         if (ObjectUtil.isEmpty(kpnSiteServe.getServeAccount())) {
