@@ -264,7 +264,7 @@ public class SiteController {
      *
      * @return
      */
-    @GetMapping("/ads")
+    @GetMapping("/pictures")
     @ApiOperation(value = "获取站点广告")
     public Result<List<KpnSiteAdvertiseVo>> getSiteAdvertise(@RequestHeader(value = "sid") Long sid,
                                                              @ApiParam(value = "设备类型 H5/PC", required = true) String deviceType,
