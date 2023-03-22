@@ -28,7 +28,8 @@ public class KpnMemberChannelVo extends LanguageNameMulti implements Serializabl
     @ApiModelProperty(value = "频道图标")
     private String icon;
 
-
     @ApiModelProperty(value = "排序(越大越靠前)")
     private Long sort;
+    @ApiModelProperty(value = "是否固定频道 0/false自定义,1/true内置固定")
+    private Boolean isStable;
 }
