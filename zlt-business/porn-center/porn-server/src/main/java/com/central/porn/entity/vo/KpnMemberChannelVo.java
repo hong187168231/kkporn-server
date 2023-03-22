@@ -11,7 +11,7 @@ import java.io.Serializable;
 @ApiModel("会员频道")
 public class KpnMemberChannelVo extends LanguageNameMulti implements Serializable {
     @ApiModelProperty(value = "频道id")
-    private Long channelId;
+    private Long id;
 
     @ApiModelProperty(value = "频道名称(多语言)")
     private String name;

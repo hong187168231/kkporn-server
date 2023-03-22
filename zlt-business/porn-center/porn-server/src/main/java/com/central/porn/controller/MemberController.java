@@ -611,7 +611,6 @@ public class MemberController {
 
             List<KpnMemberChannelVo> memberChannelVos = memberChannels.stream().map(kpnSiteChannel -> {
                 KpnMemberChannelVo memberChannelVo = new KpnMemberChannelVo();
-                memberChannelVo.setChannelId(kpnSiteChannel.getId());
                 BeanUtil.copyProperties(kpnSiteChannel, memberChannelVo);
                 memberChannelVo.setName(LanguageUtil.getLanguageName(memberChannelVo));
                 memberChannelVo.setIcon(externalEndpoint + PornConstants.Symbol.FORWARD_SLASH + kpnSiteChannel.getIcon());
