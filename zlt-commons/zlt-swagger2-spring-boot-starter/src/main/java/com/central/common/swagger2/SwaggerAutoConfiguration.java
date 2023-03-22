@@ -49,7 +49,6 @@ import java.util.stream.Collectors;
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerAutoConfiguration implements BeanFactoryAware {
     private static final String AUTH_KEY = "Authorization";
-    private static final String LANGUAGE = "language";
 
     private BeanFactory beanFactory;
 
@@ -215,8 +214,6 @@ public class SwaggerAutoConfiguration implements BeanFactoryAware {
         List<ApiKey> apiKeys = new ArrayList<>(1);
         ApiKey apiKey = new ApiKey(AUTH_KEY, AUTH_KEY, "header");
         apiKeys.add(apiKey);
-        ApiKey apiKey1 = new ApiKey(LANGUAGE, LANGUAGE, "header");
-        apiKeys.add(apiKey1);
         return apiKeys;
     }
 
