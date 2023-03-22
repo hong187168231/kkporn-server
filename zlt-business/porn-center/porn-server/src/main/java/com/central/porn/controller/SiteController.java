@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.central.common.constant.PornConstants;
 import com.central.common.dto.I18nSourceDTO;
+import com.central.common.language.LanguageEnum;
 import com.central.common.language.LanguageUtil;
 import com.central.common.model.*;
 import com.central.common.model.enums.*;
@@ -663,6 +664,14 @@ public class SiteController {
 //            return Result.failed("failed");
 //        }
 //    }
+    /**
+     * 列表
+     */
+    @ApiOperation(value = "语言列表列表")
+    @GetMapping("/language")
+    public Result<Map<String, String>> languageList() {
+        return Result.succeed(LanguageEnum.getOptions());
+    }
 
     /**
      * 语言包-H5

@@ -1,12 +1,18 @@
 package com.central.common.language;
 
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public enum LanguageEnum {
-    ZH(0, "zh", "zh", "中文"),
-    EN(1, "en", "en", "英文"),
-    KH(2, "kh", "kh", "高棉语"),
-    TH(3, "th", "th", "泰语"),
-    VI(4, "vi", "vi", "越南语"),
-    MY(5, "my", "my", "马来语");
+    ZH(0, "zh", "zh", "中文"),//中文
+    EN(1, "en", "en", "English"),//英文
+    KH(2, "kh", "kh", "ខ្មែរ"),//高棉语
+    TH(3, "th", "th", "ภาษาไทย"),//泰语
+    VI(4, "vi", "vi", "Tiếng Việt"),//越南语
+    MY(5, "my", "my", "bahasa melayu");//马来语
 
     private Integer code;
     private String value;
@@ -43,6 +49,12 @@ public enum LanguageEnum {
             return true;
         }
         return false;
+    }
+    public static Map<String, String> getOptions() {
+
+        Stream<LanguageEnum> stream = Arrays.stream(values());
+
+        return stream.collect(Collectors.toMap(o -> o.value, o -> o.description));
     }
 
     public Integer getCode() {
