@@ -38,7 +38,7 @@ public class ConfigController {
      * 语言包-PC
      */
     @ApiOperation(value = "管理后台语言包")
-    @GetMapping("/pcFullSource")
+    @GetMapping("/language")
     public Result<FullSourceVo> pcFullSource() {
         try {
             FullSourceVo fullSourceVo = new FullSourceVo();
