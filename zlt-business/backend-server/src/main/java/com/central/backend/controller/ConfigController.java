@@ -42,7 +42,7 @@ public class ConfigController {
     public Result<FullSourceVo> pcFullSource() {
         try {
             FullSourceVo fullSourceVo = new FullSourceVo();
-            I18nSourceDTO frontFullSource = I18nUtil.getFrontFullSource();
+            I18nSourceDTO frontFullSource = I18nUtil.getBackendFullSource();
             BeanUtil.copyProperties(frontFullSource, fullSourceVo);
 
             return Result.succeed(fullSourceVo, "succeed");
