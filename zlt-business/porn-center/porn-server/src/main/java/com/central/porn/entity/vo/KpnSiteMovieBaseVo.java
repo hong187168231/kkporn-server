@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -55,6 +56,8 @@ public class KpnSiteMovieBaseVo extends LanguageNameMulti implements Serializabl
 
     @ApiModelProperty("影片标签")
     protected List<KpnTagVo> tagVos;
+    @ApiModelProperty(value = "更新时间")
+    private Date updateTime;
 
     public int compareByVv(KpnSiteMovieBaseVo kpnSiteMovieBaseVo) {
         return (int) (this.vv - kpnSiteMovieBaseVo.vv);
