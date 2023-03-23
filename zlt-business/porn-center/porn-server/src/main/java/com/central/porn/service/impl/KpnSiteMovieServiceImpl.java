@@ -100,7 +100,6 @@ public class KpnSiteMovieServiceImpl extends SuperServiceImpl<KpnSiteMovieMapper
                     KpnSiteMovie siteMovie = getSiteMovieVvFavorites(sid, kpnMovie.getId());
                     kpnMovieVo.setVv(siteMovie.getVv());
                     kpnMovieVo.setFavorites(siteMovie.getFavorites());
-                    kpnMovieVo.setUpdateTime(kpnMovie.getUpdateTime());
 
                     cachedKpnMovieVos.add(kpnMovieVo);
                 }
