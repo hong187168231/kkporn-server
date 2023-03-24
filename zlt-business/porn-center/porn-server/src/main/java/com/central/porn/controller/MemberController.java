@@ -164,7 +164,7 @@ public class MemberController {
             BigDecimal productPrice = product.getPrice();
             //K币
             if (!PornUtil.isDecimalGeThan(userKBalance, productPrice)) {
-                return Result.of("余额不足", CodeEnum.KB_NOT_ENOUGH.getCode(), "failed");
+                return Result.failed(CodeEnum.KB_NOT_ENOUGH.getCode(), "余额不足",null);
             }
 
             Boolean isVip = sysUser.getVip();
