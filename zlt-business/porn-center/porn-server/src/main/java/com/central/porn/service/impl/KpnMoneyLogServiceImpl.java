@@ -97,6 +97,7 @@ public class KpnMoneyLogServiceImpl extends SuperServiceImpl<KpnMoneyLogMapper, 
             KbChangeRecordVo changeRecordVo = new KbChangeRecordVo();
             changeRecordVo.setDateTime(moneyLogPageRecord.getCreateTime());
             changeRecordVo.setKbs(moneyLogPageRecord.getMoney());
+            changeRecordVo.setOrderType(moneyLogPageRecord.getOrderType());
             changeRecordVo.setAddOrSubType(KbChangeTypeExtendEnum.getLanguageAddOrSubNameByType(moneyLogPageRecord.getOrderType()));
             if (KbChangeTypeExtendEnum.isSub(moneyLogPageRecord.getOrderType())) {
                 changeRecordVo.setItemName(KbChangeTypeExtendEnum.getLanguageNameByType(moneyLogPageRecord.getOrderType()));

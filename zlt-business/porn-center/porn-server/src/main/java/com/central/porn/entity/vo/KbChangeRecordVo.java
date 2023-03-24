@@ -20,6 +20,9 @@ public class KbChangeRecordVo {
     @ApiModelProperty("账变项目(多语言)")
     private String itemName;
 
+    @ApiModelProperty(value = "账变类型")
+    private Integer orderType;
+
     @ApiModelProperty("账变K币数")
     private BigDecimal kbs;
 }
