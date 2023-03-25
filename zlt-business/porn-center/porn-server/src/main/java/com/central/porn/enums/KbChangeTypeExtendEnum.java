@@ -47,7 +47,7 @@ public enum KbChangeTypeExtendEnum {
         return !getKbChangeTypeEnumByType(changeType).getType().equals(KbChangeTypeExtendEnum.OPEN_VIP.getType());
     }
 
-    private static KbChangeTypeExtendEnum getKbChangeTypeEnumByType(Integer changeType) {
+    public static KbChangeTypeExtendEnum getKbChangeTypeEnumByType(Integer changeType) {
         for (KbChangeTypeExtendEnum typeEnum : values()) {
             if (typeEnum.getType().equals(changeType)) {
                 return typeEnum;
