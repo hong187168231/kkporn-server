@@ -36,6 +36,9 @@ public class SysUserVo implements Serializable {
     @ApiModelProperty("vip到期时间")
     private String vipExpire;
 
+    @ApiModelProperty("剩余天数")
+    private Long between;
+
     @ApiModelProperty("k币余额")
     private BigDecimal kBalance;
 

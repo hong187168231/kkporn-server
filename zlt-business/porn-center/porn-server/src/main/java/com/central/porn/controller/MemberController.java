@@ -2,6 +2,7 @@ package com.central.porn.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
+//import com.central.common.utils.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -145,6 +146,7 @@ public class MemberController {
                     .promotionCode(userInfo.getPromotionCode())
                     .vip(userInfo.getVip())
                     .vipExpire(DateUtil.formatDate(userInfo.getVipExpire()))
+                    .between(DateUtil.betweenDay(new Date(),userInfo.getVipExpire(),true))
                     .kBalance(userInfo.getKBalance().setScale(2, RoundingMode.FLOOR))
                     .build();
             return Result.succeed(sysUserVo, "succeed");
