@@ -462,14 +462,13 @@ public class MemberController {
             return Result.failed("failed");
         }
     }
-
     /**
      * 签到
      */
     @ApiOperation(value = "签到")
     @PostMapping("/sign")
     public Result<KpnSiteUserSignResultVo> sign(@ApiIgnore @LoginUser SysUser user,
-                                                @ApiParam("签到日期") String date) {
+                                                @ApiParam("签到日期(yyyy-MM-dd)") String date) {
 
         String lockKey = StrUtil.format(PornConstants.Lock.USER_SIGN_LOCK, user.getId());
         try {
@@ -478,7 +477,7 @@ public class MemberController {
                 throw new RuntimeException("加锁失败");
             }
             //只有当天可以签到
-            if (!(DateUtil.formatDate(new Date()).equalsIgnoreCase(date))) {
+            if (!(DateUtil.formatDate(new Date()).equalsIgnoreCase(DateUtil.formatDate(DateUtil.parseDate(date))))) {
                 log.error("签到日期:{}", date);
                 return Result.failed("只有今日可以签到");
             }
