@@ -21,9 +21,7 @@ import com.central.porn.entity.co.MemberChannelSortCo;
 import com.central.porn.entity.vo.*;
 import com.central.porn.service.*;
 import com.central.porn.utils.PornUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -113,6 +111,9 @@ public class MemberController {
 
     @Autowired
     private ISysUserService sysUserService;
+
+    @Autowired
+    private IKpnSiteSignService iKpnSiteSignService;
 
     /**
      * 上传头像
@@ -425,7 +426,13 @@ public class MemberController {
             return Result.failed("failed");
         }
     }
-
+    @ApiOperation("查询签到配置列表")
+    @ResponseBody
+    @GetMapping("/findSignList")
+    public Result< List<KpnSiteSign>> findSignList(@RequestHeader("sid") Long sid) {
+        List<KpnSiteSign> signList = iKpnSiteSignService.findSignList(sid);
+        return Result.succeed(signList);
+    }
     /**
      * 获取月份签到信息
      */

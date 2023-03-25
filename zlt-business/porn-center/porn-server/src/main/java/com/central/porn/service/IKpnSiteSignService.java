@@ -15,4 +15,11 @@ public interface IKpnSiteSignService extends ISuperService<KpnSiteSign> {
      */
     List<KpnSiteSign> getBySiteId(Long sid);
 
+    /**
+     * 查询签到列表
+     * @param siteId
+     * @return
+     */
+    List<KpnSiteSign> findSignList(Long siteId);
+
 }

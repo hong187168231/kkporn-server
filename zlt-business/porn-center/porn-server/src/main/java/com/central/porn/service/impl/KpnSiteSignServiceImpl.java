@@ -2,6 +2,7 @@ package com.central.porn.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSiteSign;
 import com.central.common.redis.template.RedisRepository;
@@ -31,5 +32,13 @@ public class KpnSiteSignServiceImpl extends SuperServiceImpl<KpnSiteSignMapper, 
             }
         }
         return kpnSiteSigns;
+    }
+    @Override
+    public List<KpnSiteSign> findSignList(Long siteId) {
+        LambdaQueryWrapper<KpnSiteSign> wrapper=new LambdaQueryWrapper<>();
+        if (siteId!=null){
+            wrapper.eq(KpnSiteSign::getSiteId,siteId);
+        }
+        return baseMapper.selectList(wrapper);
     }
 }
