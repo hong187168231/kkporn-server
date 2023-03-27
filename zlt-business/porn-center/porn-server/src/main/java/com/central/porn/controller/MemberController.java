@@ -501,15 +501,18 @@ public class MemberController {
     @PostMapping("/sign")
     public Result<KpnSiteUserSignResultVo> sign(@ApiIgnore @LoginUser SysUser user,
                                                 @ApiParam("签到日期(yyyy-MM-dd)") String date) {
-
+        if (ObjectUtil.isEmpty(date)) {
+            return Result.failed("签到日期不能为空");
+        }
         String lockKey = StrUtil.format(PornConstants.Lock.USER_SIGN_LOCK, user.getId());
         try {
             boolean lockedSuccess = RedissLockUtil.tryLock(lockKey, PornConstants.Lock.WAIT_TIME, PornConstants.Lock.LEASE_TIME);
             if (!lockedSuccess) {
                 throw new RuntimeException("加锁失败");
             }
+            date = DateUtil.formatDate(DateUtil.parseDate(date));
             //只有当天可以签到
-            if (!(DateUtil.formatDate(new Date()).equalsIgnoreCase(DateUtil.formatDate(DateUtil.parseDate(date))))) {
+            if (!(DateUtil.formatDate(new Date()).equalsIgnoreCase(date))) {
                 log.error("签到日期:{}", date);
                 return Result.failed("只有今日可以签到");
             }

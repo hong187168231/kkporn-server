@@ -54,13 +54,16 @@ public class KpnSiteSignDetailServiceImpl extends SuperServiceImpl<KpnSiteSignDe
 
         //累计
         KpnSiteSignDetail lastSign = this.lambdaQuery()
-                .select(KpnSiteSignDetail::getDays)
+                .select(KpnSiteSignDetail::getDays,KpnSiteSignDetail::getSignMonth)
                 .eq(KpnSiteSignDetail::getUserId, sysUser.getId())
                 .orderByDesc(KpnSiteSignDetail::getId)
                 .last(PornConstants.Sql.LIMIT_ONLY_ONE).one();
         Integer signDays = 1;
         if (ObjectUtil.isNotEmpty(lastSign)) {
-            signDays = lastSign.getDays() + 1;
+            //到一个月重新计算
+            if(StrUtil.subBefore(date, PornConstants.Symbol.ARRIVE, true).equals(lastSign.getSignMonth())){
+                signDays = lastSign.getDays() + 1;
+            }
         }
 
         //获取中奖记录
