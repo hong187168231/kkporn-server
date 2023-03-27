@@ -4,24 +4,27 @@
 <mapper namespace="com.central.porn.mapper.KpnSiteAnnouncementMapper">
     <select id="findList" resultType="com.central.porn.entity.vo.AnnouncementUserVo">
         select t.id as id,
-               t.title_zh as titleZh,t.content_zh as contentZh,
-               t.title_en as titleEn,t.content_en as contentEn,
-               t.title_kh as titleKh,t.content_kh as contentKh,
-               t.status as status,t.update_time as annTime,
+        t.title_zh as titleZh,t.content_zh as contentZh,
+        t.title_en as titleEn,t.content_en as contentEn,
+        t.title_kh as titleKh,t.content_kh as contentKh,
+        t.status as status,t.update_time as annTime,
         u.user_id as userId,ifnull(u.is_read,0) as isRead,u.create_time as readTime from kpn_site_announcement t
-        LEFT JOIN kpn_site_announcement_user u
+        LEFT JOIN
+        (select * from kpn_site_announcement_user where 1=1
+        <if test="p.userId != null and  p.userId != '' and p.userId != 0">
+            and user_id = #{p.userId}
+        </if>
+        ) u
         ON t.id=u.ann_id
         <where>
             1=1
             <if test="p.siteId != null and  p.siteId != '' and p.siteId != 0">
                 and t.site_id = #{p.siteId}
             </if>
-            <if test="p.status != null and  p.status != '' and p.status != 0">
+            <if test="p.status != null and  p.status != ''">
                 and t.status = #{p.status}
             </if>
-            <if test="p.userId != null and  p.userId != '' and p.userId != 0">
-                and u.user_id = #{p.userId}
-            </if>
+
         </where>
         ORDER BY t.sort ASC
     </select>

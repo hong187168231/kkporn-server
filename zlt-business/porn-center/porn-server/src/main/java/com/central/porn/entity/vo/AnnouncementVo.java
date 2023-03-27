@@ -39,6 +39,12 @@ public class AnnouncementVo implements Serializable {
     public AnnouncementVo(AnnouncementUserVo kpnSiteAnnouncement) {
         setTitle(kpnSiteAnnouncement);
         setContent(kpnSiteAnnouncement);
+        setId(kpnSiteAnnouncement);
+        setStatus(kpnSiteAnnouncement);
+        setUserId(kpnSiteAnnouncement);
+        setIsRead(kpnSiteAnnouncement);
+        setAnnTime(kpnSiteAnnouncement);
+        setReadTime(kpnSiteAnnouncement);
     }
 
     public void setTitle(AnnouncementUserVo kpnSiteAnnouncement) {
@@ -71,28 +77,28 @@ public class AnnouncementVo implements Serializable {
         }
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(AnnouncementUserVo kpnSiteAnnouncement) {
+        this.id = kpnSiteAnnouncement.getId();
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setStatus(AnnouncementUserVo kpnSiteAnnouncement) {
+        this.status = kpnSiteAnnouncement.getStatus();
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserId(AnnouncementUserVo kpnSiteAnnouncement) {
+        this.userId = kpnSiteAnnouncement.getUserId();
     }
 
-    public void setIsRead(Integer isRead) {
-        this.isRead = isRead;
+    public void setIsRead(AnnouncementUserVo kpnSiteAnnouncement) {
+        this.isRead = kpnSiteAnnouncement.getIsRead();
     }
 
-    public void setAnnTime(Date annTime) {
-        this.annTime = annTime;
+    public void setAnnTime(AnnouncementUserVo kpnSiteAnnouncement) {
+        this.annTime = kpnSiteAnnouncement.getAnnTime();
     }
 
-    public void setReadTime(Date readTime) {
-        this.readTime = readTime;
+    public void setReadTime(AnnouncementUserVo kpnSiteAnnouncement) {
+        this.readTime = kpnSiteAnnouncement.getReadTime();
     }
 
 }
