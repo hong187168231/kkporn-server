@@ -75,7 +75,7 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
 
                 countDownLatch.countDown();
             });
-
+            userOrderVo.setStatus(userOrder.getStatus());
             userOrderVo.setResult(OrderStatusEnum.getNameByCode(userOrder.getStatus()));
             userOrderVo.setRemark(userOrder.getRemark());
             userOrderVos.add(userOrderVo);

@@ -32,4 +32,7 @@ public class KpnSiteUserOrderVo implements Serializable {
     @ApiModelProperty("备注")
     private String remark;
 
+    @ApiModelProperty(value = "状态 0待审核,1审核通过,2审核拒绝")
+    private Integer status;
+
 }
