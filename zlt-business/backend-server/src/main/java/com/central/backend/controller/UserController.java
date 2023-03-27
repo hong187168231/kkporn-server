@@ -69,12 +69,14 @@ public class UserController {
     @PostMapping("/saveOrUpdateUserInfo")
     public Result saveOrUpdateUserInfo(@RequestBody SysUser user, @LoginUser SysUser sysUser) {
 
-    /*    if (user.getId() == null) {
-            user.setUpdateBy(sysUser.getUsername());
-            user.setCreateBy(sysUser.getUsername());
-        }else {
-            user.setUpdateBy(sysUser.getUsername());
-        }*/
+        if (sysUser!=null){
+            if (user.getId() == null) {
+                user.setUpdateBy(sysUser.getUsername());
+                user.setCreateBy(sysUser.getUsername());
+            }else {
+                user.setUpdateBy(sysUser.getUsername());
+            }
+        }
         return userService.saveOrUpdateUserInfo(user);
     }
 
@@ -95,7 +97,9 @@ public class UserController {
     @ApiOperation(value = "修改会员状态")
     @GetMapping("/updateEnabled")
     public Result updateEnabled(@Valid @ModelAttribute EnabledUserCo params, @LoginUser SysUser sysUser) {
-        // params.setUpdateBy(sysUser.getUsername());
+        if (sysUser!=null){
+            params.setUpdateBy(sysUser.getUsername());
+        }
         Result result = userService.updateEnabled(params);
         return result;
     }

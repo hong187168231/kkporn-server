@@ -55,14 +55,15 @@ public class KpnSiteAdvertiseController {
 
     @ApiOperation(value = "新增or更新广告")
     @PostMapping(value = "/saveOrUpdateAdvertise")
-    public Result saveOrUpdateAdvertise(@RequestBody  KpnSiteAdvertise advertise)  {
-/*       if (advertise.getId() == null) {
-            advertise.setUpdateBy(sysUser.getUsername());
-            advertise.setCreateBy(sysUser.getUsername());
-        }else {
-            advertise.setUpdateBy(sysUser.getUsername());
-        }*/
-
+    public Result saveOrUpdateAdvertise(@RequestBody  KpnSiteAdvertise advertise, @LoginUser SysUser sysUser)  {
+        if (sysUser!=null){
+            if (advertise.getId() == null) {
+                advertise.setUpdateBy(sysUser.getUsername());
+                advertise.setCreateBy(sysUser.getUsername());
+            }else {
+                advertise.setUpdateBy(sysUser.getUsername());
+            }
+        }
         if (ObjectUtil.isEmpty(advertise.getNameZh()) || ObjectUtil.isEmpty(advertise.getNameEn()) || ObjectUtil.isEmpty(advertise.getNameKh())) {
             return Result.failed("广告名称不能为空");
         }
@@ -86,10 +87,12 @@ public class KpnSiteAdvertiseController {
 
     @ApiOperation(value = "修改广告状态")
     @GetMapping("/updateEnabledAdvertise")
-    public Result updateEnabledAdvertise(@Valid @ModelAttribute KpnSiteAdvertiseUpdateCo params) {
-        // params.setUpdateBy(sysUser.getUsername());
-        Result result = advertiseService.updateEnabledAdvertise(params);
-        return result;
+    public Result updateEnabledAdvertise(@Valid @ModelAttribute KpnSiteAdvertiseUpdateCo params, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            params.setUpdateBy(sysUser.getUsername());
+        }
+        //Result result = advertiseService.updateEnabledAdvertise(params);
+        return Result.succeed("删除成功") ;
     }
 
     @ApiOperation("删除广告")

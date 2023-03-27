@@ -6,10 +6,12 @@ import com.central.backend.service.IKpnSiteChannelService;
 import com.central.backend.service.IKpnTagService;
 import com.central.backend.vo.CategoryVo;
 import com.central.backend.vo.KpnTagVo;
+import com.central.common.annotation.LoginUser;
 import com.central.common.constant.PornConstants;
 import com.central.common.model.KpnSiteChannel;
 import com.central.common.model.PageResult;
 import com.central.common.model.Result;
+import com.central.common.model.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -80,13 +82,16 @@ public class KpnSiteChannelController {
 
     @ApiOperation(value = "新增or更新频道")
     @PostMapping(value = "/saveOrUpdateSiteChannel")
-    public Result saveOrUpdateSiteChannel(@RequestBody  KpnSiteChannel siteChannel) {
-/*       if (siteChannel.getId() == null) {
-           siteChannel.setUpdateBy(sysUser.getUsername());
-           siteChannel.setCreateBy(sysUser.getUsername());
-        }else {
-           siteChannel.setUpdateBy(sysUser.getUsername());
-        }*/
+    public Result saveOrUpdateSiteChannel(@RequestBody  KpnSiteChannel siteChannel, @LoginUser SysUser sysUser) {
+
+        if (sysUser!=null) {
+            if (siteChannel.getId() == null) {
+                siteChannel.setUpdateBy(sysUser.getUsername());
+                siteChannel.setCreateBy(sysUser.getUsername());
+            }else {
+                siteChannel.setUpdateBy(sysUser.getUsername());
+            }
+        }
 
         if (ObjectUtil.isEmpty(siteChannel.getNameZh()) || ObjectUtil.isEmpty(siteChannel.getNameEn()) || ObjectUtil.isEmpty(siteChannel.getNameKh())) {
             return Result.failed("名称不能为空");
@@ -104,8 +109,10 @@ public class KpnSiteChannelController {
 
     @ApiOperation(value = "修改状态")
     @GetMapping("/updateEnabledChannel")
-    public Result updateEnabledChannel(@Valid @ModelAttribute KpnSiteChannelUpdateCo params) {
-        // params.setUpdateBy(sysUser.getUsername());
+    public Result updateEnabledChannel(@Valid @ModelAttribute KpnSiteChannelUpdateCo params, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            params.setUpdateBy(sysUser.getUsername());
+        }
         Result result = siteChannelService.updateEnabledChannel(params);
         return result;
     }
