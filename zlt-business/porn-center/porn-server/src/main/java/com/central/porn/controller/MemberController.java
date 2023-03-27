@@ -12,6 +12,7 @@ import com.central.common.language.LanguageUtil;
 import com.central.common.model.*;
 import com.central.common.model.enums.CodeEnum;
 import com.central.common.model.enums.StatusEnum;
+import com.central.common.model.ipmanage.SysWhiteIp;
 import com.central.common.model.pay.KpnSiteBankCard;
 import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.redis.lock.RedissLockUtil;
@@ -19,6 +20,7 @@ import com.central.oss.model.ObjectInfo;
 import com.central.oss.template.MinioTemplate;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.co.MemberChannelSortCo;
+import com.central.porn.entity.dto.KpnSiteAnnouncementUserDto;
 import com.central.porn.entity.vo.*;
 import com.central.porn.service.*;
 import com.central.porn.utils.PornUtil;
@@ -113,6 +115,8 @@ public class MemberController {
 
     @Autowired
     private IKpnSiteSignService iKpnSiteSignService;
+    @Autowired
+    private IKpnSiteAnnouncementUserService iKpnSiteAnnouncementUserService;
 
     /**
      * 上传头像
@@ -429,6 +433,23 @@ public class MemberController {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
         }
+    }
+    /**
+     * 新增or更新
+     */
+    @ApiOperation(value = "设置公告已读")
+    @PostMapping("/settingIsRead")
+    public Result saveOrUpdateSysWhiteIp(@RequestBody KpnSiteAnnouncementUserDto dto, @ApiIgnore @LoginUser SysUser user) {
+        if (ObjectUtil.isEmpty(dto)) {
+            return Result.failed("请求参数不能为空");
+        }
+        if (ObjectUtil.isEmpty(dto.getAnnId())) {
+            return Result.failed("公告id不能为空");
+        }
+        if (ObjectUtil.isEmpty(dto.getIsRead())) {
+            return Result.failed("状态不能为空");
+        }
+        return iKpnSiteAnnouncementUserService.saveOrUpdateAnnUser(dto,user);
     }
     @ApiOperation("查询签到配置列表")
     @ResponseBody
