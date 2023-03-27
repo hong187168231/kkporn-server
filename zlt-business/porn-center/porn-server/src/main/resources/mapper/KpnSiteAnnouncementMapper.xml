@@ -14,7 +14,7 @@
         <where>
             1=1
             <if test="p.siteId != null and  p.siteId != '' and p.siteId != 0">
-                and t.site_id = #{siteId}
+                and t.site_id = #{p.siteId}
             </if>
             <if test="p.status != null and  p.status != '' and p.status != 0">
                 and t.status = #{p.status}
