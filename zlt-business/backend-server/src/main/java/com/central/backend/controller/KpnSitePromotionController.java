@@ -45,13 +45,15 @@ public class KpnSitePromotionController {
 
     @ApiOperation(value = "保存配置")
     @PostMapping("/saveOrUpdatePromotion")
-    public Result saveOrUpdatePromotion(@RequestBody KpnSitePromotion info) {
-   /*     if (info.getId() == null) {
-            info.setUpdateBy(sysUser.getUsername());
-            info.setCreateBy(sysUser.getUsername());
-        }else {
-            info.setUpdateBy(sysUser.getUsername());
-        }*/
+    public Result saveOrUpdatePromotion(@RequestBody KpnSitePromotion info, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            if (info.getId() == null) {
+                info.setUpdateBy(sysUser.getUsername());
+                info.setCreateBy(sysUser.getUsername());
+            } else {
+                info.setUpdateBy(sysUser.getUsername());
+            }
+        }
 
         if (ObjectUtil.isEmpty(info.getSiteId())) {
             return Result.failed("站点id不能为空");

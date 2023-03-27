@@ -3,8 +3,10 @@ package com.central.backend.controller;
 import cn.hutool.core.collection.CollUtil;
 import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSiteSignService;
+import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSiteSign;
 import com.central.common.model.Result;
+import com.central.common.model.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -48,7 +50,17 @@ public class KpnSiteSignController {
 
     @ApiOperation(value = "保存签到配置")
     @PostMapping("/saveOrUpdate")
-    public Result saveOrUpdate(@RequestBody List<KpnSiteSign> list) {
+    public Result saveOrUpdate(@RequestBody List<KpnSiteSign> list, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            list.forEach(info ->{
+                if (info.getId()==null){
+                    info.setUpdateBy(sysUser.getUsername());
+                    info.setCreateBy(sysUser.getUsername());
+                } else {
+                    info.setUpdateBy(sysUser.getUsername());
+                }
+            });
+        }
         Boolean aBoolean = signService.saveOrUpdateSign(list);
 
         // add by year 删除站点签到配置缓存

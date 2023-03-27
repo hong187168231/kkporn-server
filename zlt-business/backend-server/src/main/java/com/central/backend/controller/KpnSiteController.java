@@ -75,13 +75,15 @@ public class KpnSiteController {
 
     @ApiOperation(value = "新增or更新站点")
     @PostMapping(value = "/saveOrUpdateSite")
-    public Result saveOrUpdateSite(@RequestBody  KpnSite kpnSite) {
-  /*     if (kpnSite.getId() == null) {
-           kpnSite.setUpdateBy(sysUser.getUsername());
-           kpnSite.setCreateBy(sysUser.getUsername());
-        }else {
-           kpnSite.setUpdateBy(sysUser.getUsername());
-        }*/
+    public Result saveOrUpdateSite(@RequestBody  KpnSite kpnSite, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            if (kpnSite.getId() == null) {
+                kpnSite.setUpdateBy(sysUser.getUsername());
+                kpnSite.setCreateBy(sysUser.getUsername());
+            } else {
+                kpnSite.setUpdateBy(sysUser.getUsername());
+            }
+        }
         if (ObjectUtil.isEmpty(kpnSite.getName())) {
             return Result.failed("站点名称不能为空");
         }
@@ -103,8 +105,10 @@ public class KpnSiteController {
 
     @ApiOperation(value = "修改站点状态")
     @GetMapping("/updateEnabledSite")
-    public Result updateEnabledSite(@Valid @ModelAttribute KpnSiteUpdateCo params) {
-        // params.setUpdateBy(sysUser.getUsername());
+    public Result updateEnabledSite(@Valid @ModelAttribute KpnSiteUpdateCo params, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            params.setUpdateBy(sysUser.getUsername());
+        }
         Result result = siteService.updateEnabledSite(params);
         return result;
     }

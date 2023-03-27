@@ -114,7 +114,7 @@ public class KpnSiteOrderServiceImpl extends SuperServiceImpl<KpnSiteOrderMapper
         String remark = StrUtil.format(VipChangeTypeEnum.getLogFormatByCode(VipChangeTypeEnum.CASH.getCode()),KpnSiteUserVipLogInfo.getAmount(), KpnSiteUserVipLogInfo.getCurrencyCode(), KpnSiteUserVipLogInfo.getDays());
         KpnSiteUserVipLogInfo.setRemark(remark);
         KpnSiteUserVipLogInfo.setType(VipChangeTypeEnum.CASH.getCode());
-        // KpnSiteUserVipLogInfo.setCreateBy(sysUser.getUsername());
+        KpnSiteUserVipLogInfo.setCreateBy(params.getUpdateBy());
         siteUserVipLogService.save(KpnSiteUserVipLogInfo);
 
         //添加运营报表数据

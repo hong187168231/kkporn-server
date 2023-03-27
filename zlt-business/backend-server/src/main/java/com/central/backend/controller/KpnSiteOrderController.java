@@ -2,6 +2,7 @@ package com.central.backend.controller;
 
 import com.central.backend.co.*;
 import com.central.backend.service.IKpnSiteOrderService;
+import com.central.common.annotation.LoginUser;
 import com.central.common.model.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,8 +45,10 @@ public class KpnSiteOrderController {
 
     @ApiOperation(value = "审核")
     @GetMapping("/updateStatus")
-    public Result updateStatus(@Valid @ModelAttribute KpnSiteOrderUpdateCo params) {
-        // params.setUpdateBy(sysUser.getUsername());
+    public Result updateStatus(@Valid @ModelAttribute KpnSiteOrderUpdateCo params, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            params.setUpdateBy(sysUser.getUsername());
+        }
         Result result = orderService.updateStatus(params);
         return result;
     }

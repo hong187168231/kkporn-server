@@ -49,15 +49,15 @@ public class KpnSiteAnnouncementController {
      */
     @ApiOperation(value = "新增or更新公告")
     @PostMapping("/saveOrUpdate")
-    public Result saveOrUpdate(@RequestBody KpnSiteAnnouncement announcement)  {
-    /*    if (announcement.getId() == null) {
-            announcement.setUpdateBy(sysUser.getUsername());
-            announcement.setCreateBy(sysUser.getUsername());
-        }else {
-            announcement.setUpdateBy(sysUser.getUsername());
-        }*/
-
-
+    public Result saveOrUpdate(@RequestBody KpnSiteAnnouncement announcement, @LoginUser SysUser sysUser)  {
+        if (sysUser!=null) {
+            if (announcement.getId() == null) {
+                announcement.setUpdateBy(sysUser.getUsername());
+                announcement.setCreateBy(sysUser.getUsername());
+            } else {
+                announcement.setUpdateBy(sysUser.getUsername());
+            }
+        }
         if (ObjectUtil.isEmpty(announcement.getTitleZh()) || ObjectUtil.isEmpty(announcement.getTitleEn()) || ObjectUtil.isEmpty(announcement.getTitleKh())) {
             return Result.failed("标题不能为空");
         }
@@ -91,8 +91,10 @@ public class KpnSiteAnnouncementController {
 
     @ApiOperation(value = "修改公告状态")
     @GetMapping("/updateEnabled")
-    public Result updateEnabled(@Valid @ModelAttribute KpnSiteAnnouncementUpdateCo params) {
-       // params.setUpdateBy(sysUser.getUsername());
+    public Result updateEnabled(@Valid @ModelAttribute KpnSiteAnnouncementUpdateCo params, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            params.setUpdateBy(sysUser.getUsername());
+        }
         Result result = announcementService.updateEnabled(params);
         return result;
     }

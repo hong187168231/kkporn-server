@@ -3,8 +3,10 @@ package com.central.backend.controller;
 import cn.hutool.core.util.ObjectUtil;
 import com.central.backend.service.IAsyncService;
 import com.central.backend.service.IKpnSitePlatformService;
+import com.central.common.annotation.LoginUser;
 import com.central.common.model.KpnSitePlatform;
 import com.central.common.model.Result;
+import com.central.common.model.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -48,7 +50,15 @@ public class KpnSitePlatformController {
 
     @ApiOperation(value = "保存配置")
     @PostMapping("/saveOrUpdatePlatform")
-    public Result saveOrUpdatePlatform(@RequestBody KpnSitePlatform info) {
+    public Result saveOrUpdatePlatform(@RequestBody KpnSitePlatform info, @LoginUser SysUser sysUser) {
+        if (sysUser!=null) {
+            if (info.getId() == null) {
+                info.setUpdateBy(sysUser.getUsername());
+                info.setCreateBy(sysUser.getUsername());
+            } else {
+                info.setUpdateBy(sysUser.getUsername());
+            }
+        }
         if (ObjectUtil.isEmpty(info.getSiteId())) {
             return Result.failed("站点id不能为空");
         }
