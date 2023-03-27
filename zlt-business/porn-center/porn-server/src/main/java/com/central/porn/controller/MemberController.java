@@ -11,6 +11,7 @@ import com.central.common.constant.PornConstants;
 import com.central.common.language.LanguageUtil;
 import com.central.common.model.*;
 import com.central.common.model.enums.CodeEnum;
+import com.central.common.model.enums.StatusEnum;
 import com.central.common.model.pay.KpnSiteBankCard;
 import com.central.common.model.pay.KpnSiteProduct;
 import com.central.common.redis.lock.RedissLockUtil;
@@ -34,9 +35,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -408,15 +407,20 @@ public class MemberController {
     /**
      * 获取邮件消息(公告)
      */
-    @ApiOperation(value = "获取邮件消息")
+    @ApiOperation(value = "获取公告消息")
     @GetMapping("/getAnnouncements")
     public Result<List<AnnouncementVo>> getAnnouncements(@ApiIgnore @LoginUser SysUser user) {
         try {
-            List<KpnSiteAnnouncement> kpnSiteAnnouncements = siteAnnouncementService.lambdaQuery()
-                    .eq(KpnSiteAnnouncement::getSiteId, user.getSiteId())
-                    .eq(KpnSiteAnnouncement::getStatus, true)
-                    .orderByDesc(KpnSiteAnnouncement::getSort, KpnSiteAnnouncement::getCreateTime)
-                    .list();
+            Map<String, Object> params = new HashMap<>();
+            params.put("siteId",user.getSiteId());
+            params.put("status", StatusEnum.ONE_FALSE.getStatus());
+            params.put("userId",user.getId());
+            List<AnnouncementUserVo> kpnSiteAnnouncements = siteAnnouncementService.findList(params);
+//                    siteAnnouncementService.lambdaQuery()
+//                    .eq(KpnSiteAnnouncement::getSiteId, user.getSiteId())
+//                    .eq(KpnSiteAnnouncement::getStatus, true)
+//                    .orderByDesc(KpnSiteAnnouncement::getSort, KpnSiteAnnouncement::getCreateTime)
+//                    .list();
 
             List<AnnouncementVo> announcementVos = kpnSiteAnnouncements.stream().map(AnnouncementVo::new).collect(Collectors.toList());
 
