@@ -14,10 +14,7 @@ import com.central.common.utils.I18nUtil;
 import com.central.porn.entity.PornPageResult;
 import com.central.porn.entity.dto.MovieSearchConditionDto;
 import com.central.porn.entity.vo.*;
-import com.central.porn.enums.KpnActorSortTypeEnum;
-import com.central.porn.enums.KpnMovieSortTypeEnum;
-import com.central.porn.enums.KpnSiteMovieSearchFromEnum;
-import com.central.porn.enums.KpnStableChannelEnum;
+import com.central.porn.enums.*;
 import com.central.porn.service.*;
 import com.central.user.feign.UaaService;
 import com.central.user.feign.UserService;
@@ -33,10 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -250,10 +244,29 @@ public class SiteController {
      */
     @GetMapping("/topics")
     @ApiOperation(value = "获取站点专题")
-    public Result<List<KpnSiteTopicVo>> getTopics(@RequestHeader("sid") Long sid) {
+    public Result<List<KpnSiteTopicVo>> getTopics(@RequestHeader("sid") Long sid,
+                                                  @ApiParam(value = "设备类型 H5/PC", required = true) String deviceType) {
         try {
             List<KpnSiteTopicVo> siteTopicVos = siteTopicService.getBySiteId(sid);
-            return Result.succeed(siteTopicVos, "succeed");
+            List<KpnSiteTopicVo> siteTopicVoList = new ArrayList<>();
+            for (KpnSiteTopicVo vo:siteTopicVos) {
+                if (KpnDeviceTypeEnum.H5.getRemark().equals(deviceType)) {
+                    if(KpnSiteTopicComposingEnum.ONE_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())||
+                            KpnSiteTopicComposingEnum.TWO_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())||
+                            KpnSiteTopicComposingEnum.THREE_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())||
+                            KpnSiteTopicComposingEnum.Four_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())){
+                        siteTopicVoList.add(vo);
+                    }
+                }
+                else if (KpnDeviceTypeEnum.PC.getRemark().equals(deviceType)) {
+                    if(KpnSiteTopicComposingEnum.ONE_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())||
+                            KpnSiteTopicComposingEnum.TWO_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())||
+                            KpnSiteTopicComposingEnum.THREE_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())){
+                        siteTopicVoList.add(vo);
+                    }
+                }
+            }
+            return Result.succeed(siteTopicVoList, "succeed");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Result.failed("failed");
