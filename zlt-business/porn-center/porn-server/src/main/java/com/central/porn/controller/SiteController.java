@@ -261,7 +261,8 @@ public class SiteController {
                 else if (KpnDeviceTypeEnum.PC.getRemark().equals(deviceType)) {
                     if(KpnSiteTopicComposingEnum.ONE_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())||
                             KpnSiteTopicComposingEnum.TWO_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())||
-                            KpnSiteTopicComposingEnum.THREE_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())){
+                            KpnSiteTopicComposingEnum.THREE_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())||
+                            KpnSiteTopicComposingEnum.Four_FALSE.getStatus()==Math.toIntExact(vo.getComposingId())){
                         siteTopicVoList.add(vo);
                     }
                 }
